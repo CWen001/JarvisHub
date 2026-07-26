@@ -1,0 +1,133 @@
+{
+  "source": "offline_component_reference_seed",
+  "records": [
+    {
+      "id": "cinematic-dark-hero-stage",
+      "title": "Cinematic Dark Hero Stage",
+      "category": "hero",
+      "subcategory": "full-viewport cinematic product hero",
+      "dependencies": ["framer-motion"],
+      "assetSlots": ["hero-car", "studio-background", "foreground-product"],
+      "summary": "Dark full-screen hero with glass controls, oversized display typography, red accent details, product media plane, and slow reveal motion.",
+      "sourceUrl": "https://21st.dev/community/components/example/cinematic-dark-hero-stage",
+      "componentReferencePlanCandidate": {
+        "referenceId": "cinematic-dark-hero-stage",
+        "source": "https://21st.dev/community/components/example/cinematic-dark-hero-stage",
+        "matchedSectionId": null,
+        "componentRole": "full-viewport cinematic hero",
+        "category": "hero",
+        "subcategory": "full-screen product stage",
+        "name": "Cinematic Dark Hero Stage",
+        "styleCarryover": {
+          "layout": "full-bleed product media stage with headline, glass CTA controls, and compact spec rail",
+          "material": "dark studio background, translucent glass buttons, sharp red accent letter treatment",
+          "typography": "large condensed display heading with tighter supporting sans labels"
+        },
+        "motionCarryover": {
+          "entry": "headline and controls reveal after media plate settles",
+          "ambient": "slow parallax drift on background and foreground product plane"
+        },
+        "assetSlots": [
+          {
+            "slot": "hero-car",
+            "role": "primary foreground product or subject media"
+          },
+          {
+            "slot": "studio-background",
+            "role": "dark cinematic background plate with negative space"
+          }
+        ],
+        "implementationNotes": [
+          "Use this as structural reference for image-led hero sections, not as a generic card layout.",
+          "Preserve full-viewport media scale, glass controls, and accent typography before adding decorative details."
+        ],
+        "codeEvidence": [
+          "full viewport section",
+          "media plane",
+          "glass CTA controls",
+          "framer-motion reveal"
+        ]
+      }
+    },
+    {
+      "id": "blueprint-scroll-showcase",
+      "title": "Blueprint Scroll Showcase",
+      "category": "hero",
+      "subcategory": "pinned scroll product reveal",
+      "dependencies": ["framer-motion"],
+      "assetSlots": ["blueprint-background", "product-render"],
+      "summary": "Pinned cinematic section with blueprint grid, product render, masked reveal, and technical annotation stack.",
+      "sourceUrl": "https://21st.dev/community/components/example/blueprint-scroll-showcase",
+      "componentReferencePlanCandidate": {
+        "referenceId": "blueprint-scroll-showcase",
+        "source": "https://21st.dev/community/components/example/blueprint-scroll-showcase",
+        "matchedSectionId": null,
+        "componentRole": "pinned product reveal section",
+        "category": "hero",
+        "subcategory": "blueprint pinned scroll",
+        "name": "Blueprint Scroll Showcase",
+        "styleCarryover": {
+          "layout": "wide media plane with technical annotation stack",
+          "material": "blueprint grid, subtle glow lines, dark neutral panels"
+        },
+        "motionCarryover": {
+          "scroll": "pinned mask reveal with staggered annotation entrance"
+        },
+        "assetSlots": [
+          {
+            "slot": "product-render",
+            "role": "center product render or generated visual"
+          }
+        ],
+        "implementationNotes": [
+          "Use for technical cinematic sections where blueprint grids or annotation rails match the approved preview."
+        ],
+        "codeEvidence": [
+          "pinned scroll",
+          "masked reveal",
+          "technical annotation stack"
+        ]
+      }
+    },
+    {
+      "id": "gradient-dock-actions",
+      "title": "Gradient Dock Actions",
+      "category": "controls",
+      "subcategory": "floating glass action dock",
+      "dependencies": ["framer-motion", "lucide-react"],
+      "assetSlots": ["icon-actions"],
+      "summary": "Floating glass action dock with icon buttons, hover lift, and concise CTA grouping for premium web controls.",
+      "sourceUrl": "https://21st.dev/community/components/example/gradient-dock-actions",
+      "componentReferencePlanCandidate": {
+        "referenceId": "gradient-dock-actions",
+        "source": "https://21st.dev/community/components/example/gradient-dock-actions",
+        "matchedSectionId": null,
+        "componentRole": "floating control dock",
+        "category": "controls",
+        "subcategory": "glass icon dock",
+        "name": "Gradient Dock Actions",
+        "styleCarryover": {
+          "layout": "compact dock with icon buttons and labels",
+          "material": "glass blur, fine border, restrained gradient accent"
+        },
+        "motionCarryover": {
+          "hover": "small lift and opacity shift per action"
+        },
+        "assetSlots": [
+          {
+            "slot": "icon-actions",
+            "role": "inline SVG or icon component actions"
+          }
+        ],
+        "implementationNotes": [
+          "Use only for visible controls; do not make it the primary structure for cinematic sections."
+        ],
+        "codeEvidence": [
+          "glass dock",
+          "icon button",
+          "hover lift"
+        ]
+      }
+    }
+  ]
+}

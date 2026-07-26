@@ -1,0 +1,4 @@
+interface:
+  display_name: "One-Shot Continuity Film"
+  short_description: "Canvas-native 一镜到底连续短片工作流"
+  default_prompt: "Use $flova-one-shot-continuity-film to plan and generate a canvas-native one-shot continuity film."

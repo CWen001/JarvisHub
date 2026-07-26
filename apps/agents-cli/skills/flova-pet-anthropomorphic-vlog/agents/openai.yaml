@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pet Anthropomorphic Vlog"
+  short_description: "Canvas-native 萌宠拟人短片创作工作流"
+  default_prompt: "Use $flova-pet-anthropomorphic-vlog to create a canvas-native pet anthropomorphic vlog workflow."

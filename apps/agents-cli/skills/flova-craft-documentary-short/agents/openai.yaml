@@ -1,0 +1,4 @@
+interface:
+  display_name: "Craft Documentary Short"
+  short_description: "Canvas-native 传统工艺纪录短片工作流"
+  default_prompt: "Use $flova-craft-documentary-short to create a canvas-native traditional craft documentary short workflow."

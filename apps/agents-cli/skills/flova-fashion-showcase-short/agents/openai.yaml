@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fashion Showcase Short"
+  short_description: "Canvas-native 时装服装展示短片工作流"
+  default_prompt: "Use $flova-fashion-showcase-short to produce a canvas-native fashion showcase short video."

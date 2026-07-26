@@ -1,0 +1,4 @@
+interface:
+  display_name: "Digital Human Product Spokesperson"
+  short_description: "Canvas-native 数字人商品口播视频工作流"
+  default_prompt: "Use $flova-digital-human-product-spokesperson to produce a canvas-native digital human product spokesperson video."

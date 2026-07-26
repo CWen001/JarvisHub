@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lifestyle Vlog and Food Film"
+  short_description: "Canvas-native 生活旅拍美食创作工作流"
+  default_prompt: "Use $flova-lifestyle-vlog-and-food-film to create a canvas-native lifestyle vlog, travel film, or food short workflow."

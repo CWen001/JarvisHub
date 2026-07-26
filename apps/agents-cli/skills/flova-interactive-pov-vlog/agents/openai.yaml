@@ -1,0 +1,4 @@
+interface:
+  display_name: "Interactive POV Vlog"
+  short_description: "Canvas-native 沉浸式POV互动创作工作流"
+  default_prompt: "Use $flova-interactive-pov-vlog to create a canvas-native interactive POV video workflow."

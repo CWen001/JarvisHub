@@ -1,0 +1,5 @@
+version: "1.0"
+agents:
+  - name: creative_video_production
+    default_prompt: "Use $creative-video-production to route and produce a JarvisHub creative video workflow."
+    model: gpt-5

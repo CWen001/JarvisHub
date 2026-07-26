@@ -1,0 +1,636 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model tasks {
+  id          BigInt  @id @default(autoincrement())
+  slug        String  @unique
+  name        String
+  description String?
+  completed   Int     @default(0)
+  due_date    String
+}
+
+model projects {
+  id         String  @id
+  name       String
+  created_at String
+  updated_at String
+}
+
+model flows {
+  id         String  @id
+  name       String
+  data       String
+  project_id String?
+  created_at String
+  updated_at String
+
+  @@index([project_id], map: "idx_flows_project_id")
+}
+
+model flow_versions {
+  id         String  @id
+  flow_id    String
+  name       String
+  data       String
+  reason     String  @default("legacy")
+  label      String?
+  created_at String
+
+  @@index([flow_id], map: "idx_flow_versions_flow_id")
+  @@index([flow_id, reason], map: "idx_flow_versions_flow_id_reason")
+}
+
+model workflow_executions {
+  id              String  @id
+  flow_id         String
+  flow_version_id String
+  status          String
+  concurrency     Int     @default(1)
+  trigger         String?
+  error_message   String?
+  created_at      String
+  started_at      String?
+  finished_at     String?
+
+  @@index([created_at], map: "idx_workflow_executions_created_at")
+  @@index([flow_id], map: "idx_workflow_executions_flow_id")
+  @@index([flow_version_id], map: "idx_workflow_executions_flow_version_id")
+  @@index([status], map: "idx_workflow_executions_status")
+}
+
+model workflow_node_runs {
+  id            String  @id
+  execution_id  String
+  node_id       String
+  status        String
+  attempt       Int     @default(1)
+  error_message String?
+  output_refs   String?
+  created_at    String
+  started_at    String?
+  finished_at   String?
+
+  @@unique([execution_id, node_id], map: "idx_workflow_node_runs_execution_node")
+  @@index([execution_id], map: "idx_workflow_node_runs_execution_id")
+  @@index([status], map: "idx_workflow_node_runs_status")
+}
+
+model workflow_execution_events {
+  id           String  @id
+  execution_id String
+  seq          Int
+  event_type   String
+  level        String  @default("info")
+  node_id      String?
+  message      String?
+  data         String?
+  created_at   String
+
+  @@unique([execution_id, seq], map: "idx_workflow_execution_events_execution_seq")
+  @@index([execution_id], map: "idx_workflow_execution_events_execution_id")
+  @@index([node_id], map: "idx_workflow_execution_events_node_id")
+}
+
+model model_catalog_vendors {
+  key                           String                         @id
+  name                          String
+  enabled                       Int                            @default(1)
+  base_url_hint                 String?
+  auth_type                     String                         @default("bearer")
+  auth_header                   String?
+  auth_query_param              String?
+  api_protocol                  String?
+  meta                          String?
+  created_at                    String
+  updated_at                    String
+  model_catalog_vendor_api_keys model_catalog_vendor_api_keys?
+  model_catalog_models          model_catalog_models[]
+  model_catalog_mappings        model_catalog_mappings[]
+}
+
+model model_catalog_vendor_api_keys {
+  vendor_key            String                @id
+  api_key               String
+  enabled               Int                   @default(1)
+  created_at            String
+  updated_at            String
+  model_catalog_vendors model_catalog_vendors @relation(fields: [vendor_key], references: [key], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model model_catalog_models {
+  model_key             String
+  vendor_key            String
+  model_alias           String?
+  label_zh              String
+  kind                  String
+  enabled               Int                   @default(1)
+  meta                  String?
+  created_at            String
+  updated_at            String
+  model_catalog_vendors model_catalog_vendors @relation(fields: [vendor_key], references: [key], onDelete: Cascade, onUpdate: NoAction)
+  model_catalog_default_models model_catalog_default_models[]
+
+  @@id([vendor_key, model_key])
+  @@index([enabled], map: "idx_model_catalog_models_enabled")
+  @@index([vendor_key, kind], map: "idx_model_catalog_models_vendor_kind")
+}
+
+model model_catalog_default_models {
+  slot                  String                @id
+  vendor_key            String
+  model_key             String
+  created_at            String
+  updated_at            String
+  model_catalog_models  model_catalog_models @relation(fields: [vendor_key, model_key], references: [vendor_key, model_key], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([vendor_key, model_key], map: "idx_model_catalog_default_models_model")
+}
+
+model model_catalog_mappings {
+  id                    String                @id
+  vendor_key            String
+  task_kind             String
+  name                  String
+  enabled               Int                   @default(1)
+  request_profile       String?
+  result_path           String?
+  created_at            String
+  updated_at            String
+  model_catalog_vendors model_catalog_vendors @relation(fields: [vendor_key], references: [key], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([vendor_key, task_kind, name])
+  @@index([vendor_key, task_kind], map: "idx_model_catalog_mappings_vendor_kind")
+}
+
+model prompt_samples {
+  id           String  @id
+  node_kind    String
+  scene        String
+  command_type String
+  title        String
+  prompt       String
+  description  String?
+  input_hint   String?
+  output_note  String?
+  keywords     String?
+  created_at   String
+  updated_at   String
+
+  @@index([node_kind], map: "idx_prompt_samples_kind")
+}
+
+model llm_node_presets {
+  id          String  @id
+  scope       String
+  preset_type String
+  title       String
+  prompt      String
+  description String?
+  enabled     Int     @default(1)
+  sort_order  Int?
+  created_at  String
+  updated_at  String
+
+  @@index([scope, preset_type, enabled], map: "idx_llm_node_presets_scope_type_enabled")
+}
+
+model agent_skills {
+  id          String  @id
+  key         String  @unique
+  name        String
+  description String?
+  content     String
+  enabled     Int     @default(1)
+  visible     Int     @default(1)
+  sort_order  Int?
+  created_at  String
+  updated_at  String
+
+  @@index([enabled, visible, sort_order], map: "idx_agent_skills_enabled_visible_sort")
+}
+
+model agent_presets {
+  id              String  @id
+  key             String  @unique
+  name            String
+  description     String?
+  system_prompt   String?
+  opening_message String?
+  skill_ids       String?
+  enabled         Int     @default(1)
+  visible         Int     @default(1)
+  sort_order      Int?
+  created_at      String
+  updated_at      String
+
+  @@index([enabled, visible, sort_order], map: "idx_agent_presets_enabled_visible_sort")
+}
+
+model agent_pipeline_runs {
+  id            String  @id
+  project_id    String
+  title         String
+  goal          String?
+  status        String
+  stages_json   String
+  progress_json String?
+  result_json   String?
+  error_message String?
+  created_at    String
+  updated_at    String
+  started_at    String?
+  finished_at   String?
+
+  @@index([project_id, updated_at(sort: Desc)], map: "idx_agent_pipeline_runs_project_updated")
+  @@index([status, updated_at(sort: Desc)], map: "idx_agent_pipeline_runs_status_updated")
+}
+
+model assets {
+  id         String  @id
+  name       String
+  data       String?
+  project_id String?
+  created_at String
+  updated_at String
+
+  @@index([project_id], map: "idx_assets_project")
+}
+
+model chapters {
+  id                     String  @id
+  project_id             String
+  chapter_index          Int
+  title                  String
+  summary                String?
+  status                 String
+  sort_order             Int
+  cover_asset_id         String?
+  continuity_context     String?
+  style_profile_override String?
+  legacy_chunk_index     Int?
+  source_book_id         String?
+  source_book_chapter    Int?
+  last_worked_at         String?
+  created_at             String
+  updated_at             String
+
+  @@unique([project_id, chapter_index], map: "idx_chapters_project_index_unique")
+  @@index([project_id, sort_order], map: "idx_chapters_project_sort")
+  @@index([project_id, last_worked_at], map: "idx_chapters_project_last_worked")
+}
+
+model material_assets {
+  id              String @id
+  project_id      String
+  kind            String
+  name            String
+  current_version Int    @default(1)
+  created_at      String
+  updated_at      String
+
+  @@index([project_id, kind, updated_at(sort: Desc)], map: "idx_material_assets_project")
+}
+
+model material_asset_versions {
+  id         String @id
+  asset_id   String
+  project_id String
+  version    Int
+  data_json  String
+  note       String?
+  created_at String
+
+  @@unique([asset_id, version])
+  @@index([asset_id, version(sort: Desc)], map: "idx_material_versions_asset")
+}
+
+model shot_material_refs {
+  id            String @id
+  project_id    String
+  shot_id       String
+  asset_id      String
+  asset_version Int
+  created_at    String
+  updated_at    String
+
+  @@unique([project_id, shot_id, asset_id])
+  @@index([project_id, shot_id], map: "idx_shot_material_refs_project")
+}
+
+model vendor_api_call_logs {
+  vendor        String
+  task_id       String
+  task_kind     String?
+  status        String
+  started_at    String?
+  finished_at   String?
+  duration_ms   Int?
+  error_message String?
+  created_at    String
+  updated_at    String
+  request_json  String?
+  response_json String?
+
+  @@id([vendor, task_id])
+  @@index([finished_at], map: "idx_vendor_api_call_logs_finished_at")
+  @@index([status], map: "idx_vendor_api_call_logs_status")
+  @@index([vendor, finished_at], map: "idx_vendor_api_call_logs_vendor_finished_at")
+}
+
+model api_request_logs {
+  id          String  @id
+  method      String
+  path        String
+  status      Int?
+  stage       String?
+  aborted     Int     @default(0)
+  started_at  String
+  finished_at String?
+  duration_ms Int?
+  trace_json  String?
+  created_at  String
+  updated_at  String
+
+  @@index([path, started_at], map: "idx_api_request_logs_path_started_at")
+  @@index([started_at], map: "idx_api_request_logs_started_at")
+}
+
+model prompt_evolution_runs {
+  id          String  @id
+  actor_id    String?
+  since_hours Int
+  min_samples Int
+  dry_run     Int     @default(1)
+  action      String
+  metrics_json String
+  created_at  String
+
+  @@index([created_at(sort: Desc)], map: "idx_prompt_evolution_runs_created_at")
+}
+
+model prompt_evolution_runtime {
+  id             Int     @id
+  active_run_id  String?
+  canary_percent Int     @default(5)
+  status         String  @default("idle")
+  last_action    String?
+  note           String?
+  updated_at     String
+  updated_by     String?
+}
+
+model task_statuses {
+  id           String  @id
+  task_id      String
+  provider     String
+  status       String
+  data         String?
+  created_at   String
+  updated_at   String
+  completed_at String?
+
+  @@unique([task_id, provider])
+  @@index([created_at], map: "idx_task_statuses_created_at")
+  @@index([status], map: "idx_task_statuses_status")
+}
+
+model task_results {
+  task_id      String  @id
+  vendor       String
+  kind         String
+  status       String
+  result       String
+  created_at   String
+  updated_at   String
+  completed_at String?
+
+  @@index([status], map: "idx_task_results_status")
+  @@index([updated_at], map: "idx_task_results_updated_at")
+}
+
+model video_generation_histories {
+  id              String  @id
+  node_id         String?
+  project_id      String?
+  prompt          String
+  parameters      String?
+  image_url       String?
+  task_id         String
+  generation_id   String?
+  status          String
+  video_url       String?
+  thumbnail_url   String?
+  duration        Int?
+  width           Int?
+  height          Int?
+  token_id        String?
+  provider        String
+  model           String?
+  cost            Float?
+  is_favorite     Int     @default(0)
+  rating          Int?
+  notes           String?
+  remix_target_id String?
+  created_at      String
+  updated_at      String
+
+  @@index([provider], map: "idx_video_history_provider")
+  @@index([task_id], map: "idx_video_history_task")
+}
+
+model vendor_task_refs {
+  kind       String
+  task_id    String
+  vendor     String
+  pid        String?
+  created_at String
+  updated_at String
+
+  @@id([kind, task_id])
+  @@index([kind, pid], map: "idx_vendor_task_refs_kind_pid")
+  @@index([kind, vendor], map: "idx_vendor_task_refs_kind_vendor")
+}
+
+model public_chat_sessions {
+  id          String @id
+  session_key String @unique
+  created_at  String
+  updated_at  String
+
+  @@index([updated_at(sort: Desc)], map: "idx_public_chat_sessions_updated")
+}
+
+model public_chat_messages {
+  id                   String  @id
+  session_id           String
+  role                 String
+  content              String
+  assets_json          String?
+  ask_user_prompt_json String?
+  created_at           String
+
+  @@index([session_id, created_at], map: "idx_public_chat_messages_session_created")
+}
+
+model public_chat_turn_runs {
+  id                         String  @id
+  session_id                 String
+  request_id                 String?
+  session_key                String
+  project_id                 String?
+  book_id                    String?
+  chapter_id                 String?
+  label                      String?
+  workflow_key               String
+  request_kind               String
+  user_message_id            String?
+  assistant_message_id       String?
+  output_mode                String
+  turn_verdict               String
+  turn_verdict_reasons_json  String
+  run_outcome                String  @default("hold")
+  agent_decision_json        String?
+  tool_status_summary_json   String?
+  diagnostic_flags_json      String?
+  canvas_plan_json           String?
+  asset_count                Int     @default(0)
+  canvas_write               Int     @default(0)
+  run_ms                     Int?
+  created_at                 String
+
+  @@index([project_id, created_at(sort: Desc)], map: "idx_public_chat_turn_runs_project_created")
+  @@index([session_id, created_at], map: "idx_public_chat_turn_runs_session_created")
+  @@index([turn_verdict, created_at(sort: Desc)], map: "idx_public_chat_turn_runs_verdict_created")
+  @@index([workflow_key, created_at(sort: Desc)], map: "idx_public_chat_turn_runs_workflow_created")
+}
+
+model agent_tool_invocations {
+  id              String  @id
+  principal_key   String
+  idempotency_key String
+  tool_name       String
+  context_hash    String
+  status          String
+  result_json     String?
+  error_json      String?
+  created_at      String
+  updated_at      String
+
+  @@unique([principal_key, idempotency_key], map: "idx_agent_tool_invocations_principal_key")
+  @@index([status, updated_at(sort: Desc)], map: "idx_agent_tool_invocations_status_updated")
+}
+
+model webhero_code_stage_sessions {
+  id           String @id
+  flow_id      String
+  node_id      String
+  session_id   String
+  flow_updated_at String
+  preview_node_ids_json String
+	code_input_digest String
+  status       String
+  fields_json  String
+  version      Int    @default(1)
+  created_at   String
+  updated_at   String
+  committed_at String?
+
+  @@unique([flow_id, node_id, session_id], map: "idx_webhero_code_stage_session_identity")
+  @@index([status, updated_at(sort: Desc)], map: "idx_webhero_code_stage_status_updated")
+}
+
+model memory_entries {
+  id           String @id
+  scope_type   String
+  scope_id     String
+  memory_type  String
+  title        String?
+  summary_text String?
+  content_json String
+  source_kind  String
+  source_id    String?
+  importance   Float  @default(0.6)
+  status       String @default("active")
+  created_at   String
+  updated_at   String
+
+  @@index([scope_type, scope_id, memory_type, updated_at(sort: Desc)], map: "idx_memory_entries_scope")
+  @@index([status, updated_at(sort: Desc)], map: "idx_memory_entries_status")
+}
+
+model memory_entry_tags {
+  id         String @id
+  memory_id  String
+  tag        String
+  created_at String
+
+  @@index([tag, memory_id], map: "idx_memory_entry_tags_tag")
+}
+
+model memory_links {
+  id          String @id
+  memory_id   String
+  target_type String
+  target_id   String
+  relation    String
+  created_at  String
+
+  @@index([target_type, target_id], map: "idx_memory_links_target")
+}
+
+model execution_traces {
+  id                String  @id
+  scope_type        String
+  scope_id          String
+  task_id           String?
+  request_kind      String
+  input_summary     String
+  decision_log_json String?
+  tool_calls_json   String?
+  meta_json         String?
+  result_summary    String?
+  error_code        String?
+  error_detail      String?
+  created_at        String
+
+  @@index([scope_type, scope_id, created_at(sort: Desc)], map: "idx_execution_traces_scope")
+}
+
+model dreamina_accounts {
+  id                  String  @id
+  label               String
+  cli_path            String?
+  session_root        String
+  enabled             Int     @default(1)
+  last_healthcheck_at String?
+  last_login_at       String?
+  last_error          String?
+  meta_json           String?
+  created_at          String
+  updated_at          String
+
+  @@index([updated_at(sort: Desc)], map: "idx_dreamina_accounts_updated")
+}
+
+model dreamina_project_bindings {
+  id                       String  @id
+  project_id               String
+  account_id               String
+  enabled                  Int     @default(1)
+  default_model_version    String?
+  default_ratio            String?
+  default_resolution_type  String?
+  default_video_resolution String?
+  created_at               String
+  updated_at               String
+
+  @@unique([project_id], map: "idx_dreamina_project_bindings_project")
+  @@index([updated_at(sort: Desc)], map: "idx_dreamina_project_bindings_updated")
+}

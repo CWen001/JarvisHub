@@ -1,0 +1,4 @@
+interface:
+  display_name: "Miniature World Short"
+  short_description: "Canvas-native 微缩世界情感短片工作流"
+  default_prompt: "Use $flova-miniature-world-short to create a canvas-native miniature world emotional short film."

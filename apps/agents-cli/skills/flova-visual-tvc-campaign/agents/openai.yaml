@@ -1,0 +1,4 @@
+interface:
+  display_name: "Visual TVC Campaign"
+  short_description: "Canvas-native 新品视觉TVC广告工作流"
+  default_prompt: "Use $flova-visual-tvc-campaign to plan a canvas-native premium visual TVC campaign from spokesperson and scene references."

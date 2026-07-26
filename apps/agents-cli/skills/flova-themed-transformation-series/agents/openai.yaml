@@ -1,0 +1,4 @@
+interface:
+  display_name: "Themed Transformation Series"
+  short_description: "Canvas-native 主题变身系列短片工作流"
+  default_prompt: "Use $flova-themed-transformation-series to create a canvas-native themed transformation video series."

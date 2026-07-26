@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manifesto Concept Film"
+  short_description: "Canvas-native 宣言式概念短片创作工作流"
+  default_prompt: "Use $flova-manifesto-concept-film to produce a canvas-native manifesto-driven concept film."

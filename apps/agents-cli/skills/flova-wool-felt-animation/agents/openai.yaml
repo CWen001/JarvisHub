@@ -1,0 +1,4 @@
+interface:
+  display_name: "Wool Felt Animation"
+  short_description: "Canvas-native 羊毛毡动画短片创作工作流"
+  default_prompt: "Use $flova-wool-felt-animation to create a canvas-native wool felt animation short."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Gameplay Demo Trailer"
+  short_description: "Canvas-native 游戏Demo预告创作工作流"
+  default_prompt: "Use $flova-gameplay-demo-trailer to create a canvas-native gameplay demo or game trailer workflow."

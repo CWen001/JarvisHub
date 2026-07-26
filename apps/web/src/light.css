@@ -1,0 +1,244 @@
+:root[data-mantine-color-scheme="light"] {
+  --mantine-color-body: #ffffff;
+  --mantine-color-text: #1A1C1F;
+  --mantine-color-dimmed: rgba(60, 60, 67, 0.6);
+  --mantine-color-default: #ffffff;
+  --mantine-color-default-hover: #f5f5f7;
+  /* Mantine components (e.g. SegmentedControl) use gray-6/7 for text in light mode */
+  --mantine-color-gray-6: rgba(60, 60, 67, 0.6);
+  --mantine-color-gray-7: rgba(60, 60, 67, 0.8);
+  --mantine-color-anchor: #339CFF;
+
+  --canvas-node-bg: #ffffff;
+  --canvas-node-border: rgba(0, 0, 0, 0.06);
+  --canvas-node-border-selected: rgba(51, 156, 255, 0.45);
+  --canvas-node-shadow: 0 16px 30px rgba(0, 0, 0, 0.08);
+  --canvas-node-text: #1A1C1F;
+  --canvas-node-subtext: rgba(60, 60, 67, 0.6);
+  --canvas-node-header-bg: rgba(245, 245, 247, 0.95);
+  --canvas-node-header-border: rgba(0, 0, 0, 0.04);
+  --canvas-node-chip-bg: rgba(0, 0, 0, 0.04);
+  --canvas-node-chip-text: rgba(60, 60, 67, 0.8);
+  --canvas-node-action-bg: rgba(0, 0, 0, 0.03);
+  --canvas-node-action-border: rgba(0, 0, 0, 0.06);
+  --canvas-node-action-text: #1A1C1F;
+  --canvas-node-action-hover-bg: rgba(51, 156, 255, 0.08);
+  --canvas-node-action-primary-bg: #339CFF;
+  --canvas-node-action-primary-hover-bg: #0071e3;
+  --canvas-node-action-primary-text: #ffffff;
+  --canvas-node-action-muted-text: rgba(60, 60, 67, 0.6);
+  --canvas-surface-bg: #f5f5f7;
+
+  --canvas-io-bg: rgba(255, 255, 255, 0.95);
+  --canvas-io-border: rgba(0, 0, 0, 0.1);
+  --canvas-io-border-selected: rgba(51, 156, 255, 0.5);
+  --canvas-io-text: rgba(60, 60, 67, 0.8);
+  --canvas-io-handle: #339CFF;
+
+  --canvas-group-bg: rgba(0, 0, 0, 0.02);
+  --canvas-group-border: rgba(0, 0, 0, 0.08);
+  --canvas-group-border-selected: rgba(51, 156, 255, 0.5);
+  --canvas-group-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 10px 22px rgba(0, 0, 0, 0.04);
+  --canvas-group-shadow-selected: 0 0 0 1px rgba(51, 156, 255, 0.15), 0 14px 26px rgba(51, 156, 255, 0.08);
+
+  --tc-run-card-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(245, 245, 247, 0.98));
+  --tc-run-card-border: rgba(0, 0, 0, 0.06);
+  --tc-run-card-shadow: 0 20px 42px rgba(0, 0, 0, 0.06);
+  --tc-run-accent-strong: rgba(51, 156, 255, 0.12);
+  --tc-run-accent-soft: rgba(51, 156, 255, 0.06);
+  --tc-run-accent-line: rgba(51, 156, 255, 0.7);
+  --tc-run-accent-icon: #339CFF;
+  --tc-run-code-bg: rgba(245, 245, 247, 0.96);
+  --tc-run-code-bg-strong: rgba(238, 238, 240, 0.98);
+  --tc-run-code-border: rgba(0, 0, 0, 0.06);
+  --tc-run-code-text: #1A1C1F;
+  --tc-run-error-bg: rgba(255, 59, 48, 0.06);
+  --tc-run-error-border: rgba(255, 59, 48, 0.15);
+  --tc-run-error-icon: #FF3B30;
+  --tc-run-info-bg: rgba(51, 156, 255, 0.06);
+  --tc-run-info-border: rgba(51, 156, 255, 0.12);
+
+  /* Project header redesign tokens */
+  --tc-header-bg: rgba(255, 255, 255, 0.78);
+  --tc-header-border: rgba(0, 0, 0, 0.06);
+}
+
+:root[data-mantine-color-scheme="light"] .mantine-AppShell-main {
+  background: var(--mantine-color-body) !important;
+}
+
+:root[data-mantine-color-scheme="light"] .mantine-AppShell-header,
+:root[data-mantine-color-scheme="light"] .mantine-AppShell-navbar,
+:root[data-mantine-color-scheme="light"] .mantine-AppShell-aside {
+  background: rgba(255, 255, 255, 0.86) !important;
+  border: none !important;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+:root[data-mantine-color-scheme="light"] .mantine-Button-root[data-variant="outline"] {
+  border: none !important;
+  background: rgba(0, 0, 0, 0.03) !important;
+  box-shadow: none;
+}
+:root[data-mantine-color-scheme="light"] .mantine-Button-root[data-variant="outline"]:hover {
+  border: none !important;
+  background: rgba(51, 156, 255, 0.08) !important;
+}
+:root[data-mantine-color-scheme="light"] .mantine-Button-root[data-variant="light"] {
+  border: none !important;
+  background: rgba(0, 0, 0, 0.03) !important;
+}
+:root[data-mantine-color-scheme="light"] .mantine-Button-root[data-variant="light"]:hover {
+  border: none !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+.mantine-Button-root[data-variant="subtle"] {
+  background: transparent !important;
+}
+
+:root[data-mantine-color-scheme="light"] .mantine-Paper-root[data-with-border]:not(.template-panel-shell):not(.template-panel-card):not(.template-space):not(.template-detail) {
+  border: none !important;
+  box-shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
+}
+
+:root[data-mantine-color-scheme="light"] .tc-panel-card {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow:
+    0 18px 38px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
+}
+
+:root[data-mantine-color-scheme="light"] .glass {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: none !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+:root[data-mantine-color-scheme="light"] .panel-arrow {
+  display: none;
+}
+
+:root[data-mantine-color-scheme="light"] .react-flow__controls {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  box-shadow: 0 18px 30px rgba(15, 23, 42, 0.1);
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+:root[data-mantine-color-scheme="light"] .react-flow__controls-button {
+  background: transparent !important;
+  border: none !important;
+  color: #1A1C1F !important;
+}
+:root[data-mantine-color-scheme="light"] .react-flow__controls-button:hover {
+  background: rgba(51, 156, 255, 0.08) !important;
+}
+:root[data-mantine-color-scheme="light"] .react-flow__controls-button svg {
+  stroke: currentColor !important;
+}
+
+:root[data-mantine-color-scheme="light"] .react-flow__minimap {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: none !important;
+  box-shadow: 0 18px 30px rgba(15, 23, 42, 0.12);
+}
+
+/* Canvas perf: backdrop blur is expensive while the graph is moving underneath */
+.tc-canvas[data-viewport-moving="true"] .glass,
+.tc-canvas[data-dragging="true"] .glass,
+.tc-canvas[data-viewport-moving="true"] .react-flow__controls,
+.tc-canvas[data-dragging="true"] .react-flow__controls {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+:root[data-mantine-color-scheme="light"] .react-flow__minimap-mask {
+  fill: rgba(51, 156, 255, 0.08) !important;
+}
+
+:root[data-mantine-color-scheme="light"] .react-flow__selection {
+  background: rgba(51, 156, 255, 0.2) !important;
+  border: none !important;
+  box-shadow: 0 12px 24px rgba(51, 156, 255, 0.15);
+}
+
+:root[data-mantine-color-scheme="light"] .react-flow__handle {
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(140deg, rgba(51, 156, 255, 0.22), rgba(51, 156, 255, 0.35)) !important;
+  border: none !important;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.18), 0 0 0 2px rgba(255, 255, 255, 0.7);
+  z-index: 3;
+}
+:root[data-mantine-color-scheme="light"] .react-flow__node.selected .react-flow__handle {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+:root[data-mantine-color-scheme="light"] .react-flow__handle:hover {
+  box-shadow: 0 0 0 4px rgba(51, 156, 255, 0.18), 0 10px 24px rgba(15, 23, 42, 0.12);
+}
+:root[data-mantine-color-scheme="light"] .react-flow__edge-path {
+  opacity: 0.9;
+  transition: opacity 0.12s ease;
+}
+:root[data-mantine-color-scheme="light"] .react-flow__edge:hover .react-flow__edge-path {
+  opacity: 1;
+}
+
+:root[data-mantine-color-scheme="light"] *::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+:root[data-mantine-color-scheme="light"] *::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.14);
+  border-radius: 8px;
+}
+:root[data-mantine-color-scheme="light"] *::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.25);
+}
+:root[data-mantine-color-scheme="light"] *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+:root[data-mantine-color-scheme="light"] [data-ux-panel] {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(15, 23, 42, 0.25) transparent;
+}
+:root[data-mantine-color-scheme="light"] [data-ux-panel] *::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+:root[data-mantine-color-scheme="light"] [data-ux-panel] *::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.2);
+  border-radius: 8px;
+}
+:root[data-mantine-color-scheme="light"] [data-ux-panel] *::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.35);
+}
+:root[data-mantine-color-scheme="light"] [data-ux-panel] *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+[data-compact="true"] .mantine-Button-root {
+  padding: 4px 8px !important;
+}
+[data-compact="true"] .mantine-NumberInput-input,
+[data-compact="true"] .mantine-TextInput-input,
+[data-compact="true"] textarea {
+  padding: 6px 8px !important;
+}
+[data-compact="true"] .mantine-Stack-root {
+  gap: 6px !important;
+}
+[data-compact="true"] .mantine-Group-root {
+  gap: 6px !important;
+}
+
+[data-dragging="true"] .react-flow__node:not(.selected) {
+  opacity: 0.45;
+  transition: opacity 0.12s ease;
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Scripted Short Production"
+  short_description: "Canvas-native 剧本驱动短片生产工作流"
+  default_prompt: "Use $flova-scripted-short-production to turn a script into a canvas-native short film workflow."

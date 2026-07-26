@@ -1,0 +1,4 @@
+interface:
+  display_name: "Industrial Product Promo"
+  short_description: "Canvas-native 工业产品商业宣传片工作流"
+  default_prompt: "Use $flova-industrial-product-promo to produce a canvas-native industrial product promo video."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sports Broadcast Fantasy"
+  short_description: "Canvas-native 体育转播幻想创作工作流"
+  default_prompt: "Use $flova-sports-broadcast-fantasy to create a canvas-native sports broadcast fantasy workflow."

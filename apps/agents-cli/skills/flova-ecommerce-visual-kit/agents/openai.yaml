@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ecommerce Visual Kit"
+  short_description: "Canvas-native 电商产品视觉全案工作流"
+  default_prompt: "Use $flova-ecommerce-visual-kit to create a canvas-native ecommerce product visual asset kit."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Observational Documentary Short"
+  short_description: "Canvas-native 人文观察纪录短片工作流"
+  default_prompt: "Use $flova-observational-documentary-short to create a canvas-native observational documentary short workflow."

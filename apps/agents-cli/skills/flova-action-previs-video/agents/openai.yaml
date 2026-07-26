@@ -1,0 +1,4 @@
+interface:
+  display_name: "Action Previs Video"
+  short_description: "Canvas-native 动作预演分镜视频工作流"
+  default_prompt: "Use $flova-action-previs-video to turn action ideas or previs boards into canvas-native action video clips."

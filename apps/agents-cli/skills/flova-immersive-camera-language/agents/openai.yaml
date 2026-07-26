@@ -1,0 +1,4 @@
+interface:
+  display_name: "Immersive Camera Language"
+  short_description: "Canvas-native 沉浸式POV与FPV镜头工作流"
+  default_prompt: "Use $flova-immersive-camera-language to design canvas-native POV, FPV, or handheld-follow camera language."

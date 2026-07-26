@@ -1,0 +1,4 @@
+interface:
+  display_name: "One-Take Camera Route"
+  short_description: "Canvas-native 一镜到底运镜设计工作流"
+  default_prompt: "Use $flova-one-take-camera-route to create a canvas-native one-take camera route workflow."

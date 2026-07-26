@@ -1,0 +1,4 @@
+interface:
+  display_name: "Methodology Course Video"
+  short_description: "Canvas-native 方法论课程视频生成工作流"
+  default_prompt: "Use $flova-methodology-course-video to create a canvas-native methodology course video workflow."

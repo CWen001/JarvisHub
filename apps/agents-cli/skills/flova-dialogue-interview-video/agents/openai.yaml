@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dialogue Interview Video"
+  short_description: "Canvas-native 多人对话访谈视频工作流"
+  default_prompt: "Use $flova-dialogue-interview-video to create a canvas-native dialogue or interview video workflow."

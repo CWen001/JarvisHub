@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Commercial Short"
+  short_description: "Canvas-native 商品宣传短片生成工作流"
+  default_prompt: "Use $flova-product-commercial-short to produce a canvas-native product commercial short from product references."

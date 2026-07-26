@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reference Video Remix"
+  short_description: "Canvas-native 参考视频复刻替换工作流"
+  default_prompt: "Use $flova-reference-video-remix to analyze, remix, or replace subjects in a reference video workflow."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Jewelry 12-Shot Ad"
+  short_description: "Canvas-native 首饰广告十二镜头短片工作流"
+  default_prompt: "Use $flova-jewelry-12-shot-ad to produce a canvas-native 12-shot jewelry ad vlog."

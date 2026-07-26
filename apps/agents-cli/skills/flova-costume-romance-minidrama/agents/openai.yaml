@@ -1,0 +1,4 @@
+interface:
+  display_name: "Costume Romance Minidrama"
+  short_description: "Canvas-native 古风甜宠短剧创作工作流"
+  default_prompt: "Use $flova-costume-romance-minidrama to create a canvas-native costume romance minidrama workflow."

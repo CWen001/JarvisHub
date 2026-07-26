@@ -1,0 +1,4 @@
+interface:
+  display_name: "Anime Crossover Production"
+  short_description: "Canvas-native 动画破壁短片创作工作流"
+  default_prompt: "Use $flova-anime-crossover-production to create a canvas-native anime transformation or crossover workflow."

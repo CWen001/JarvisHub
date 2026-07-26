@@ -1,0 +1,4 @@
+interface:
+  display_name: "Interior Design Exploration"
+  short_description: "Canvas-native 室内设计探索视频工作流"
+  default_prompt: "Use $flova-interior-design-exploration to create a canvas-native interior design exploration video workflow."

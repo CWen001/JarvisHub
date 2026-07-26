@@ -1,0 +1,4 @@
+interface:
+  display_name: "Aesthetic Style Routes"
+  short_description: "Canvas-native 大师美学风格路由工作流"
+  default_prompt: "Use $flova-aesthetic-style-routes to translate aesthetic style references into canvas-native creative route constraints."

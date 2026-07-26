@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+node scripts/guards/no-merge-conflict-markers.mjs --staged
+node scripts/guards/no-debugger-statement.mjs --staged

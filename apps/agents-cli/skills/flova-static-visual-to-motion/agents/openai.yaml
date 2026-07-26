@@ -1,0 +1,4 @@
+interface:
+  display_name: "Static Visual To Motion"
+  short_description: "Canvas-native 静态视觉转动态短片工作流"
+  default_prompt: "Use $flova-static-visual-to-motion to turn static visual references into a canvas-native motion/video workflow."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cinematic Lighting Planner"
+  short_description: "Canvas-native 电影布光规划生成工作流"
+  default_prompt: "Use $flova-cinematic-lighting-planner to plan cinematic lighting and camera constraints for canvas-native generation."

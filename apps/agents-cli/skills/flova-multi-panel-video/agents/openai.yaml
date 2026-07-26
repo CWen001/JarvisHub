@@ -1,0 +1,4 @@
+interface:
+  display_name: "Multi-Panel Video"
+  short_description: "Canvas-native 多宫格参考帧生视频工作流"
+  default_prompt: "Use $flova-multi-panel-video to produce a canvas-native multi-panel reference sheet video workflow."

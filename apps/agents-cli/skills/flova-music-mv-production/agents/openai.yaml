@@ -1,0 +1,4 @@
+interface:
+  display_name: "Music MV Production"
+  short_description: "Canvas-native 音乐MV创作生成工作流"
+  default_prompt: "Use $flova-music-mv-production to create a canvas-native music video workflow."

@@ -1,0 +1,23 @@
+{
+  "name": "jarvishub-workspace",
+  "private": true,
+  "packageManager": "pnpm@10.8.1",
+  "scripts": {
+    "dev": "./scripts/dev.sh local",
+    "dev:web": "pnpm --filter @jarvishub/web dev",
+    "dev:api": "pnpm --filter @jarvishub/api dev",
+    "dev:api:stable": "pnpm --filter @jarvishub/api dev:stable",
+    "dev:agents": "pnpm --filter agents dev",
+    "build": "pnpm run build:web && pnpm run build:api && pnpm run build:agents",
+    "build:web": "pnpm --filter @jarvishub/web build",
+    "build:api": "pnpm --filter @jarvishub/api build",
+    "build:agents": "pnpm --filter agents build",
+    "test": "echo \"Tests are not included in this open-source distribution.\"",
+    "compose:up": "docker compose up -d",
+    "compose:down": "docker compose down",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.6"
+  }
+}

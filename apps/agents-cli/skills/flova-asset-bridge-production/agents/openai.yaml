@@ -1,0 +1,4 @@
+interface:
+  display_name: "Asset Bridge Production"
+  short_description: "Canvas-native 独立素材续写成片工作流"
+  default_prompt: "Use $flova-asset-bridge-production to turn existing independent assets into a coherent canvas-native video plan."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "East Asian Arthouse Short"
+  short_description: "Canvas-native 东亚文艺情绪短片工作流"
+  default_prompt: "Use $flova-east-asian-arthouse-short to create a canvas-native East Asian arthouse emotional short film workflow."
