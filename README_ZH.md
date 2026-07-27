@@ -107,6 +107,42 @@ JarvisHub 由三个核心层组成：
 
 脚本以前台方式运行并汇总服务日志，按 `Ctrl+C` 可以停止本次启动的全部服务。
 
+### Docker Compose 一键启动
+
+```bash
+./scripts/dev.sh docker --build
+```
+
+Docker 模式会启动 Web、API、Agents Bridge、Trace Viewer、PostgreSQL 和 Redis。首次运行需要拉取镜像并安装依赖，可能需要几分钟；依赖会缓存在 Docker volume 中，后续启动会更快。
+
+如果 Docker Hub 拉取较慢或不可用，可以临时使用镜像代理：
+
+```bash
+DOCKERHUB_REGISTRY=mirror.gcr.io/library ./scripts/dev.sh docker --build
+```
+
+Docker 模式默认地址：
+
+| 地址 | 服务 |
+| --- | --- |
+| `http://localhost:5173` | Web |
+| `http://localhost:8788` | API |
+| `http://localhost:8799` | Agents Bridge |
+| `http://localhost:5781` | Trace API |
+| `http://localhost:5782` | Trace Web |
+
+需要避开本机已有端口时，可以在命令前覆盖：
+
+```bash
+WEB_PORT=5174 API_PORT=18788 AGENTS_PORT=18799 TRACE_API_PORT=15781 TRACE_WEB_PORT=15782 POSTGRES_PORT=15432 ./scripts/dev.sh docker --build
+```
+
+停止 Docker 服务：
+
+```bash
+docker compose -f apps/hono-api/docker-compose.yml down
+```
+
 ### 常用命令
 
 ```bash

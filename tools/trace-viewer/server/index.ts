@@ -8,6 +8,7 @@ import { createTailRegistry } from "./tail.js";
 import path from "node:path";
 
 const port = parseInt(process.env.TRACE_VIEWER_PORT ?? "5781", 10);
+const host = process.env.TRACE_VIEWER_HOST ?? "127.0.0.1";
 const serverDir = import.meta.dirname ?? path.dirname(new URL(import.meta.url).pathname);
 const repoRoot = path.resolve(serverDir, "../../..");
 const traceRoot = path.resolve(
@@ -46,7 +47,7 @@ if (fs.existsSync(webDist)) {
   });
 }
 
-console.log(`[trace-viewer] server starting on http://127.0.0.1:${port}`);
+console.log(`[trace-viewer] server starting on http://${host}:${port}`);
 console.log(`[trace-viewer] trace root: ${traceRoot}`);
 
-serve({ fetch: app.fetch, hostname: "127.0.0.1", port });
+serve({ fetch: app.fetch, hostname: host, port });

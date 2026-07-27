@@ -427,9 +427,12 @@ case "$cmd" in
       args+=(--build)
     fi
 
-    compose "${args[@]}"
-    echo "Web: http://localhost:5173"
-    echo "API: http://localhost:8788"
+    compose -f apps/hono-api/docker-compose.yml "${args[@]}"
+    echo "Web: http://localhost:${WEB_PORT:-5173}"
+    echo "API: http://localhost:${API_PORT:-8788}"
+    echo "Agents: http://localhost:${AGENTS_PORT:-8799}"
+    echo "Trace API: http://localhost:${TRACE_API_PORT:-5781}"
+    echo "Trace Web: http://localhost:${TRACE_WEB_PORT:-5782}"
     ;;
   *)
     echo "Unknown command: $cmd" >&2

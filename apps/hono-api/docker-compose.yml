@@ -2,6 +2,155 @@
 ## - Default assumes this file lives at <repo>/apps/hono-api, so shared roots resolve from ../..
 ## - For flattened deployments like <root>/hono-api + <root>/packages, set JARVISHUB_SHARED_ROOT=..
 services:
+  web:
+    image: ${DOCKERHUB_REGISTRY:-docker.io}/node:22-bookworm-slim
+    working_dir: /workspace
+    environment:
+      NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+      COREPACK_NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+      NPM_CONFIG_REGISTRY: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+      PNPM_CONFIG_REGISTRY: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+      npm_config_registry: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+      pnpm_config_registry: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+      npm_config_proxy: ""
+      npm_config_https_proxy: ""
+      HTTP_PROXY: ""
+      HTTPS_PROXY: ""
+      NO_PROXY: ""
+      http_proxy: ""
+      https_proxy: ""
+      no_proxy: ""
+    command: >-
+      sh -lc '
+      corepack enable &&
+      pnpm config set registry ${NPM_REGISTRY:-https://registry.npmmirror.com} &&
+      if [ -d node_modules/.pnpm ] &&
+        [ -f node_modules/vite/package.json ] &&
+        [ -f node_modules/react/package.json ] &&
+        [ -f node_modules/@vitejs/plugin-react/package.json ]; then
+        echo "web dependencies already installed";
+      else
+        pnpm --filter @jarvishub/web install --child-concurrency=1 --network-concurrency=1 --registry ${NPM_REGISTRY:-https://registry.npmmirror.com} --frozen-lockfile;
+      fi &&
+      exec pnpm --filter @jarvishub/web exec vite --host 0.0.0.0 --port 5173 --strictPort
+      '
+    ports:
+      - "${WEB_PORT:-5173}:5173"
+    volumes:
+      - ../..:/workspace
+      - pnpm_store:/workspace/.pnpm-store
+      - web_node_modules:/workspace/node_modules
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:5173').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      start_period: 10m
+      retries: 20
+
+  trace-api:
+    image: ${DOCKERHUB_REGISTRY:-docker.io}/node:22-bookworm-slim
+    working_dir: /workspace
+    environment:
+      TRACE_ROOT: /runtime/workspace/.agents/runtime/traces
+      TRACE_VIEWER_HOST: 0.0.0.0
+      TRACE_VIEWER_PORT: "5781"
+      HONO_API_BASE_URL: http://api:8788
+      NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+      COREPACK_NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+      NPM_CONFIG_REGISTRY: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+      PNPM_CONFIG_REGISTRY: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+      npm_config_registry: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+      pnpm_config_registry: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+      npm_config_proxy: ""
+      npm_config_https_proxy: ""
+      HTTP_PROXY: ""
+      HTTPS_PROXY: ""
+      NO_PROXY: ""
+      http_proxy: ""
+      https_proxy: ""
+      no_proxy: ""
+    command: >-
+      sh -lc '
+      corepack enable &&
+      pnpm config set registry ${NPM_REGISTRY:-https://registry.npmmirror.com} &&
+      if [ -d node_modules/.pnpm ] &&
+        [ -f tools/trace-viewer/node_modules/tsx/package.json ] &&
+        [ -f tools/trace-viewer/node_modules/hono/package.json ] &&
+        [ -f tools/trace-viewer/node_modules/@hono/node-server/package.json ]; then
+        echo "trace-viewer dependencies already installed";
+      else
+        pnpm --filter trace-viewer install --child-concurrency=1 --network-concurrency=1 --registry ${NPM_REGISTRY:-https://registry.npmmirror.com} --frozen-lockfile;
+      fi &&
+      cd tools/trace-viewer &&
+      exec pnpm exec tsx server/index.ts
+      '
+    ports:
+      - "${TRACE_API_PORT:-5781}:5781"
+    volumes:
+      - ../..:/workspace
+      - ${JARVISHUB_SHARED_ROOT:-../..}/project-data:/runtime/workspace/project-data
+      - agents_memory:/runtime/workspace/.agents
+      - trace_node_modules:/workspace/node_modules
+      - trace_viewer_node_modules:/workspace/tools/trace-viewer/node_modules
+      - pnpm_store:/workspace/.pnpm-store
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:5781/api/health').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      start_period: 10m
+      retries: 20
+
+  trace-web:
+    image: ${DOCKERHUB_REGISTRY:-docker.io}/node:22-bookworm-slim
+    working_dir: /workspace
+    environment:
+      TRACE_VIEWER_API_BASE: http://trace-api:5781
+      NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+      COREPACK_NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+      NPM_CONFIG_REGISTRY: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+      PNPM_CONFIG_REGISTRY: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+      npm_config_registry: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+      pnpm_config_registry: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+      npm_config_proxy: ""
+      npm_config_https_proxy: ""
+      HTTP_PROXY: ""
+      HTTPS_PROXY: ""
+      NO_PROXY: ""
+      http_proxy: ""
+      https_proxy: ""
+      no_proxy: ""
+    command: >-
+      sh -lc '
+      corepack enable &&
+      pnpm config set registry ${NPM_REGISTRY:-https://registry.npmmirror.com} &&
+      if [ -d node_modules/.pnpm ] &&
+        [ -f tools/trace-viewer/node_modules/vite/package.json ] &&
+        [ -f tools/trace-viewer/node_modules/react/package.json ] &&
+        [ -f tools/trace-viewer/node_modules/@vitejs/plugin-react/package.json ]; then
+        echo "trace-viewer web dependencies already installed";
+      else
+        pnpm --filter trace-viewer install --child-concurrency=1 --network-concurrency=1 --registry ${NPM_REGISTRY:-https://registry.npmmirror.com} --frozen-lockfile;
+      fi &&
+      cd tools/trace-viewer &&
+      exec pnpm exec vite web --host 0.0.0.0 --port 5782 --strictPort
+      '
+    ports:
+      - "${TRACE_WEB_PORT:-5782}:5782"
+    depends_on:
+      trace-api:
+        condition: service_healthy
+    volumes:
+      - ../..:/workspace
+      - trace_node_modules:/workspace/node_modules
+      - trace_viewer_node_modules:/workspace/tools/trace-viewer/node_modules
+      - pnpm_store:/workspace/.pnpm-store
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:5782').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      start_period: 10m
+      retries: 20
+
   postgres:
     image: ${DOCKERHUB_REGISTRY:-docker.io}/postgres:16-alpine
     environment:
@@ -47,6 +196,8 @@ services:
       AGENTS_LLM_DEBUG_PAYLOAD: "0"
       AGENTS_BRIDGE_MAX_CONCURRENCY: "16"
       AGENTS_DNS_RESULT_ORDER: "ipv4first"
+      TRACE_CAPTURE: "1"
+      TRACE_ROOT: /runtime/workspace/.agents/runtime/traces
       AGENTS_REDIS_URL: "redis://redis:6379"
       AGENTS_SESSION_CACHE_TTL_SECONDS: "600"
       AGENTS_WORKSPACE_ROOT: /runtime/workspace
@@ -77,7 +228,7 @@ services:
       fi &&
       cd /runtime/bootstrap/apps/agents-cli &&
       pnpm config set registry ${NPM_REGISTRY:-https://registry.npmmirror.com} &&
-      ( [ -f node_modules/zod/package.json ] && [ -f node_modules/redis/package.json ] && [ -f node_modules/@napi-rs/canvas/package.json ] && node -e "import(\"@napi-rs/canvas\").then((m) => m.createCanvas(1, 1).toBuffer(\"image/png\"))" || pnpm install --force --child-concurrency=1 --network-concurrency=1 --registry ${NPM_REGISTRY:-https://registry.npmmirror.com} --no-frozen-lockfile ) &&
+      ( [ -f node_modules/zod/package.json ] && [ -f node_modules/redis/package.json ] && [ -f node_modules/@napi-rs/canvas/package.json ] && node -e "import(\"@napi-rs/canvas\").then((m) => m.createCanvas(1, 1).toBuffer(\"image/png\"))" || pnpm install --force --child-concurrency=1 --network-concurrency=1 --registry ${NPM_REGISTRY:-https://registry.npmmirror.com} --frozen-lockfile ) &&
       node -e "import(\"@napi-rs/canvas\").then((m) => m.createCanvas(1, 1).toBuffer(\"image/png\"))" &&
       pnpm build &&
       node dist/cli/index.js serve --host 0.0.0.0 --port 8799 --body-limit ${AGENTS_BRIDGE_BODY_LIMIT_BYTES:-8000000}
@@ -94,11 +245,12 @@ services:
     tmpfs:
       - /runtime/bootstrap
     ports:
-      - "8799:8799"
+      - "${AGENTS_PORT:-8799}:8799"
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8799/health').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 5s
       timeout: 3s
+      start_period: 10m
       retries: 20
 
   api:
@@ -121,7 +273,7 @@ services:
         no_proxy: ""
     environment:
       NODE_ENV: development
-      PORT: ${PORT:-8788}
+      PORT: "8788"
       # Use an in-network DSN for containers. Do not reuse host-localhost DSN here.
       DATABASE_URL: ${DATABASE_URL_DOCKER:-postgresql://${POSTGRES_USER:-jarvishub}:${POSTGRES_PASSWORD:-jarvishub}@postgres:5432/${POSTGRES_DB:-jarvishub}?schema=public}
       PG_BACKUP_DIR: /app/backups
@@ -165,7 +317,7 @@ services:
       no_proxy: ""
       PG_BACKUP_KEEP_LATEST: "1"
     ports:
-      - "${PORT:-8788}:8788"
+      - "${API_PORT:-8788}:8788"
     depends_on:
       agents-bridge:
         condition: service_healthy
@@ -173,7 +325,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
-    command: sh -lc "pnpm config set registry ${NPM_REGISTRY:-https://registry.npmmirror.com} && ( [ -d node_modules/.pnpm ] && [ -f node_modules/undici/package.json ] && [ -f node_modules/prisma/package.json ] && [ -f node_modules/@prisma/client/package.json ] && [ -f node_modules/jsonrepair/package.json ] || pnpm install --child-concurrency=1 --network-concurrency=1 --registry ${NPM_REGISTRY:-https://registry.npmmirror.com} --no-frozen-lockfile ) && pnpm db:pg:backup && pnpm prisma:generate && pnpm db:pg:schema && pnpm db:pg:seed-patches && pnpm build && exec node dist/main.js"
+    command: sh -lc "pnpm config set registry ${NPM_REGISTRY:-https://registry.npmmirror.com} && ( [ -d node_modules/.pnpm ] && [ -f node_modules/undici/package.json ] && [ -f node_modules/prisma/package.json ] && [ -f node_modules/@prisma/client/package.json ] && [ -f node_modules/jsonrepair/package.json ] || pnpm install --child-concurrency=1 --network-concurrency=1 --registry ${NPM_REGISTRY:-https://registry.npmmirror.com} --frozen-lockfile ) && pnpm db:pg:backup && pnpm prisma:generate && pnpm db:pg:schema && pnpm db:pg:seed-patches && pnpm build && exec node dist/main.js"
     volumes:
       - .:/app
       - ${JARVISHUB_SHARED_ROOT:-../..}/sql:/app/sql:ro
@@ -200,6 +352,12 @@ volumes:
   hono_api_db_backups:
     driver: local
   api_node_modules:
+    driver: local
+  web_node_modules:
+    driver: local
+  trace_node_modules:
+    driver: local
+  trace_viewer_node_modules:
     driver: local
   agents_node_modules:
     driver: local

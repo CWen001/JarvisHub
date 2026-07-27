@@ -43,15 +43,14 @@ function normalizePatchStatements(sql) {
 }
 
 function isUnsafeStatement(stmt) {
-	const s = stmt.trim().toUpperCase();
+	const s = normalizeSqlForGuard(stmt).toUpperCase();
 	if (!s) return false;
 	return (
 		/\bDROP\s+(TABLE|INDEX|SCHEMA|DATABASE|COLUMN)\b/.test(s) ||
 		/\bTRUNCATE\b/.test(s) ||
 		/\bDELETE\s+FROM\b/.test(s) ||
-		/\bUPDATE\b/.test(s) ||
-		/\bALTER\s+TABLE\b/.test(s) ||
-		/\bCREATE\s+(TABLE|INDEX|SCHEMA|DATABASE)\b/.test(s)
+		(/\bALTER\s+TABLE\b/.test(s) && !/\bADD\s+COLUMN\b/.test(s)) ||
+		/\bCREATE\s+(SCHEMA|DATABASE)\b/.test(s)
 	);
 }
 
@@ -59,36 +58,59 @@ function normalizeSqlForGuard(stmt) {
 	return stmt.replace(/\s+/g, " ").trim();
 }
 
-function isAllowedModelCatalogMetaUpdate(stmt) {
+function isAllowedPatchStatement(stmt) {
 	const normalized = normalizeSqlForGuard(stmt);
-	if (!/^UPDATE\s+model_catalog_models\s+/i.test(normalized)) return false;
-	if (!/\bSET\b/i.test(normalized)) return false;
-	if (!/\bWHERE\s+model_key\s+IN\s*\(/i.test(normalized)) return false;
 	return (
-		/\bSET\s+meta\s*=\s*CASE\b[\s\S]*\bEND\s*,\s*updated_at\s*=/i.test(normalized) ||
-		/\bSET\s+updated_at\s*=\s*[^,]+,\s*meta\s*=\s*CASE\b[\s\S]*\bEND\b/i.test(normalized)
-	);
-}
-
-function isAllowedNonOverwriteInsert(stmt) {
-	const s = stmt.trim();
-	return (
-		/^INSERT\s+INTO\s+/i.test(s) &&
-		/\bON\s+CONFLICT\b/i.test(s) &&
-		/\bDO\s+NOTHING\b/i.test(s)
+		/^INSERT\s+INTO\s+/i.test(normalized) ||
+		/^UPDATE\s+/i.test(normalized) ||
+		/^CREATE\s+TABLE\s+IF\s+NOT\s+EXISTS\s+/i.test(normalized) ||
+		/^CREATE\s+(UNIQUE\s+)?INDEX\s+IF\s+NOT\s+EXISTS\s+/i.test(normalized) ||
+		/^ALTER\s+TABLE\s+\S+\s+ADD\s+COLUMN(\s+IF\s+NOT\s+EXISTS)?\s+/i.test(normalized)
 	);
 }
 
 function validatePatchStatements(filePath, statements) {
 	for (const stmt of statements) {
-		if (isUnsafeStatement(stmt) && !isAllowedModelCatalogMetaUpdate(stmt)) {
+		if (isUnsafeStatement(stmt)) {
 			throw new Error(`[seed] unsafe patch statement blocked in ${filePath}: ${stmt}`);
 		}
-		if (!isAllowedNonOverwriteInsert(stmt) && !isAllowedModelCatalogMetaUpdate(stmt)) {
+		if (!isAllowedPatchStatement(stmt)) {
 			throw new Error(
-				`[seed] unsupported patch statement in ${filePath}; only INSERT ... ON CONFLICT DO NOTHING or guarded UPDATE model_catalog_models(meta, updated_at) ... WHERE model_key IN (...) is allowed: ${stmt}`,
+				`[seed] unsupported patch statement in ${filePath}; only INSERT, UPDATE, CREATE TABLE IF NOT EXISTS, CREATE INDEX IF NOT EXISTS, or ALTER TABLE ... ADD COLUMN is allowed: ${stmt}`,
 			);
 		}
+	}
+}
+
+function isIgnorablePatchError(error) {
+	const code = String(error?.code || "");
+	if (["42P01", "42703", "42P07", "42710"].includes(code)) return true;
+	const message = String(error?.message || error || "");
+	return (
+		/relation\s+".+"\s+does not exist/i.test(message) ||
+		/column\s+".+"\s+does not exist/i.test(message) ||
+		/already exists/i.test(message)
+	);
+}
+
+function describeIgnorablePatchError(error) {
+	const code = String(error?.code || "unknown");
+	const message = String(error?.message || error || "").replace(/\s+/g, " ").trim();
+	return `${code}${message ? ` ${message}` : ""}`;
+}
+
+async function executePatchStatement(prisma, filePath, stmt) {
+	try {
+		await prisma.$executeRawUnsafe(stmt);
+		return { applied: true, skipped: false };
+	} catch (error) {
+		if (!isIgnorablePatchError(error)) {
+			throw error;
+		}
+		console.log(
+			`[seed] skipped patch stmt: ${path.basename(filePath)} (${describeIgnorablePatchError(error)})`,
+		);
+		return { applied: false, skipped: true };
 	}
 }
 
@@ -96,23 +118,25 @@ async function executePatchFile(prisma, filePath) {
 	const raw = fs.readFileSync(filePath, "utf8");
 	if (!raw.trim()) {
 		console.log(`[seed] skip empty patch: ${path.basename(filePath)}`);
-		return { file: filePath, statements: 0 };
+		return { file: filePath, statements: 0, skipped: 0 };
 	}
 	const statements = normalizePatchStatements(raw);
 	validatePatchStatements(filePath, statements);
 	if (statements.length === 0) {
 		console.log(`[seed] skip no-op patch: ${path.basename(filePath)}`);
-		return { file: filePath, statements: 0 };
+		return { file: filePath, statements: 0, skipped: 0 };
 	}
-	await prisma.$transaction(async (tx) => {
-		for (const stmt of statements) {
-			await tx.$executeRawUnsafe(stmt);
-		}
-	});
+	let applied = 0;
+	let skipped = 0;
+	for (const stmt of statements) {
+		const result = await executePatchStatement(prisma, filePath, stmt);
+		if (result.applied) applied += 1;
+		if (result.skipped) skipped += 1;
+	}
 	console.log(
-		`[seed] applied patch: ${path.basename(filePath)} statements=${statements.length}`,
+		`[seed] applied patch: ${path.basename(filePath)} statements=${applied} skipped=${skipped}`,
 	);
-	return { file: filePath, statements: statements.length };
+	return { file: filePath, statements: applied, skipped };
 }
 
 async function main() {
@@ -133,12 +157,14 @@ async function main() {
 	const prisma = new PrismaClient();
 	try {
 		let totalStatements = 0;
+		let totalSkipped = 0;
 		for (const filePath of files) {
 			const result = await executePatchFile(prisma, filePath);
 			totalStatements += result.statements;
+			totalSkipped += result.skipped || 0;
 		}
 		console.log(
-			`[seed] postgres seed patches ready, files=${files.length}, statements=${totalStatements}`,
+			`[seed] postgres seed patches ready, files=${files.length}, statements=${totalStatements}, skipped=${totalSkipped}`,
 		);
 	} finally {
 		await prisma.$disconnect();

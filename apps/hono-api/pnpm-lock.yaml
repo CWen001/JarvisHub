@@ -47,9 +47,6 @@ importers:
       bullmq:
         specifier: ^5.58.3
         version: 5.67.3
-      dotenv:
-        specifier: ^16.4.5
-        version: 16.6.1
       hono:
         specifier: ^4.6.20
         version: 4.11.8
@@ -1324,7 +1321,7 @@ packages:
     engines: {node: '>=18'}
 
   content-type@1.0.5:
-    resolution: {tarball: https://registry.npmjs.org/content-type/-/content-type-1.0.5.tgz}
+    resolution: {integrity: sha512-nTjqfcBFEipKdXCv4YDQWCfmcLZKm81ldF0pAopTvyrFGVbcR6P/VAAd5G7N+0tTr8QqiU0tFadD6FK4NtJwOA==}
     engines: {node: '>= 0.6'}
 
   cookie-signature@1.2.2:

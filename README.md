@@ -115,6 +115,42 @@ On the first run, the launcher automatically:
 
 The launcher stays in the foreground and aggregates service logs. Press `Ctrl+C` to stop the processes started by that run.
 
+### Docker Compose startup
+
+```bash
+./scripts/dev.sh docker --build
+```
+
+Docker mode starts Web, API, Agents Bridge, Trace Viewer, PostgreSQL, and Redis. The first run pulls images and installs dependencies, so it can take several minutes; dependencies are cached in Docker volumes and later starts are faster.
+
+If Docker Hub pulls are slow or unavailable, use a registry mirror for that run:
+
+```bash
+DOCKERHUB_REGISTRY=mirror.gcr.io/library ./scripts/dev.sh docker --build
+```
+
+Default Docker endpoints:
+
+| URL | Service |
+| --- | --- |
+| `http://localhost:5173` | Web |
+| `http://localhost:8788` | API |
+| `http://localhost:8799` | Agents Bridge |
+| `http://localhost:5781` | Trace API |
+| `http://localhost:5782` | Trace Web |
+
+Override host ports when the defaults are already in use:
+
+```bash
+WEB_PORT=5174 API_PORT=18788 AGENTS_PORT=18799 TRACE_API_PORT=15781 TRACE_WEB_PORT=15782 POSTGRES_PORT=15432 ./scripts/dev.sh docker --build
+```
+
+Stop the Docker services:
+
+```bash
+docker compose -f apps/hono-api/docker-compose.yml down
+```
+
 ### Common commands
 
 ```bash

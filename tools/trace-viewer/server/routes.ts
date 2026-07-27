@@ -73,8 +73,9 @@ export function createRoutes(options: {
 
   app.get("/projects", async (c) => {
     const apiPort = process.env.HONO_API_PORT ?? "8889";
+    const apiBase = (process.env.HONO_API_BASE_URL ?? `http://localhost:${apiPort}`).replace(/\/+$/, "");
     try {
-      const response = await fetch(`http://localhost:${apiPort}/projects`);
+      const response = await fetch(`${apiBase}/projects`);
       return c.json(response.ok ? await response.json() : []);
     } catch { return c.json([]); }
   });
