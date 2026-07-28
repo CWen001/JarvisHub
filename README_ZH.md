@@ -15,12 +15,20 @@
   <img src="https://img.shields.io/badge/pnpm-10.8.1-f69220.svg?logo=pnpm&logoColor=white" alt="pnpm 10.8.1">
   <img src="https://img.shields.io/badge/Python-3.10%2B-3776ab.svg?logo=python&logoColor=white" alt="Python 3.10+">
   <img src="https://img.shields.io/badge/Docker-required-2496ed.svg?logo=docker&logoColor=white" alt="Docker required">
-  <a href="docs/paper/jarvishub_paper.pdf"><img src="https://img.shields.io/badge/Paper-PDF-b31b1b.svg" alt="JarvisHub 论文 PDF"></a>
 </p>
 
-<p align="center"><a href="README.md">English</a> | <strong>中文</strong> | <a href="https://www.jarvishub.site/">项目主页</a></p>
+<p align="center">
+  <a href="https://www.jarvishub.site/"><img src="https://img.shields.io/badge/Project-Page-111111.svg?style=for-the-badge&labelColor=000000&logo=googlechrome&logoColor=white" alt="项目主页"></a>
+  <a href="https://arxiv.org/pdf/2607.23588"><img src="https://img.shields.io/badge/arXiv-Paper-111111.svg?style=for-the-badge&labelColor=000000&logo=arxiv&logoColor=white" alt="arXiv Paper"></a>
+  <a href="https://huggingface.co/papers/2607.23588"><img src="https://img.shields.io/badge/Hugging%20Face-Paper-111111.svg?style=for-the-badge&labelColor=000000&logo=huggingface&logoColor=white" alt="Hugging Face Paper"></a>
+  <a href="README.md"><img src="https://img.shields.io/badge/README-English-111111.svg?style=for-the-badge&labelColor=000000&logo=markdown&logoColor=white" alt="English README"></a>
+</p>
 
 ---
+
+## 📮 更新
+
+- [2026.7.28] 项目开源，论文已上传。
 
 ## 项目概览
 
@@ -251,7 +259,7 @@ run.sh              # 本地开发统一入口
 
 ## 📖 引用
 
-阅读 [JarvisHub 论文（PDF）](docs/paper/jarvishub_paper.pdf)。
+阅读 [JarvisHub 论文（PDF）](https://arxiv.org/pdf/2607.23588)。
 
 ---
 
