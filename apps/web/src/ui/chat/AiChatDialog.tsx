@@ -2571,10 +2571,18 @@ function RunTraceDisclosure({ children }: { children: React.ReactNode }) {
   )
 }
 
-export default function AiChatDialog({ className }: { className?: string }): JSX.Element | null {
+export default function AiChatDialog({
+  className,
+  productMode = false,
+}: {
+  className?: string
+  productMode?: boolean
+}): JSX.Element | null {
   const cardRef = React.useRef<HTMLDivElement | null>(null)
   const initialLayoutPreference = React.useMemo(() => readAiChatLayoutPreference(), [])
-  const [mode, setMode] = React.useState<'compact' | 'expanded' | 'maximized'>(initialLayoutPreference.mode)
+  const [mode, setMode] = React.useState<'compact' | 'expanded' | 'maximized'>(
+    productMode ? 'maximized' : initialLayoutPreference.mode,
+  )
   const [expandedWidthPx, setExpandedWidthPx] = React.useState<number>(
     () => clampPanelWidth(initialLayoutPreference.expandedWidthPx),
   )
@@ -4020,19 +4028,21 @@ export default function AiChatDialog({ className }: { className?: string }): JSX
   }, [])
 
   const collapseChat = React.useCallback(() => {
+    if (productMode) return
     setMode((m) => {
       if (m === 'compact') return m
       return 'compact'
     })
-  }, [])
+  }, [productMode])
 
   const toggleMaximized = React.useCallback(() => {
+    if (productMode) return
     setMode((m) => {
       if (m === 'maximized') return modeBeforeMaximizeRef.current
       modeBeforeMaximizeRef.current = m === 'expanded' ? 'expanded' : 'compact'
       return 'maximized'
     })
-  }, [])
+  }, [productMode])
 
   const onResizeHandlePointerDown = React.useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (mode !== 'expanded') return
@@ -5183,6 +5193,7 @@ export default function AiChatDialog({ className }: { className?: string }): JSX
     `tc-ai-chat--${mode}`,
     dockRight ? 'tc-ai-chat--dock-right' : '',
     isDragOver ? 'tc-ai-chat--drag-over' : '',
+    productMode ? 'tc-ai-chat--product-host' : '',
     className,
   ].filter(Boolean).join(' ')
 
@@ -5443,7 +5454,7 @@ export default function AiChatDialog({ className }: { className?: string }): JSX
           })}
         </div>
       </Modal>
-      {isMaximized && (
+      {isMaximized && !productMode && (
         <div
           aria-hidden="true"
           className="tc-ai-chat__backdrop"

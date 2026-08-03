@@ -63,6 +63,7 @@ import { buildStudioUrl, isGithubOauthCallbackRoute, isStudioRoute, type StudioO
 import { spaReplace } from './utils/spaNavigate'
 import { preloadModelOptions } from './config/useModelOptions'
 import CanvasEmptyGuide from './ui/CanvasEmptyGuide'
+import { installedVerticalExtension } from './product-host/installedExtension'
 
 const FEATURE_TOUR_VERSION = 'v2'
 
@@ -134,7 +135,13 @@ function readStudioProjectId(): string {
   }
 }
 
-function CanvasApp({ routeKey }: { routeKey?: string }): JSX.Element {
+function CanvasApp({
+  routeKey,
+  initialSurface = 'canvas',
+}: {
+  routeKey?: string
+  initialSurface?: 'product' | 'canvas'
+}): JSX.Element {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme()
   const addNode = useRFStore((s) => s.addNode)
   const subflowNodeId = useUIStore(s => s.subflowNodeId)
@@ -237,7 +244,10 @@ function CanvasApp({ routeKey }: { routeKey?: string }): JSX.Element {
     let cancelled = false
     const loadProjects = async () => {
       try {
-        const normalizedProjects = await listProjects()
+        const listedProjects = await listProjects()
+        const normalizedProjects = initialSurface === 'product'
+          ? [...listedProjects].sort((left, right) => Date.parse(right.updatedAt) - Date.parse(left.updatedAt))
+          : listedProjects
         if (cancelled) return
         setProjects(normalizedProjects)
         const existing = useUIStore.getState().currentProject
@@ -278,7 +288,7 @@ function CanvasApp({ routeKey }: { routeKey?: string }): JSX.Element {
     return () => {
       cancelled = true
     }
-  }, [auth.user?.sub, detachCurrentFlowFromProject, setCurrentProject, setCurrentFlow, setDirty])
+  }, [auth.user?.sub, detachCurrentFlowFromProject, initialSurface, setCurrentProject, setCurrentFlow, setDirty])
 
   // 当 currentProject/currentFlow 变化时，将项目与 server flow scope 同步到 URL
   React.useEffect(() => {
@@ -587,7 +597,9 @@ function CanvasApp({ routeKey }: { routeKey?: string }): JSX.Element {
         updatedAt: createdFlow.updatedAt,
       })
       setDirty(false)
-      spaReplace(buildStudioUrl({ projectId, flowId }))
+      if (initialSurface === 'canvas') {
+        spaReplace(buildStudioUrl({ projectId, flowId }))
+      }
     } catch (error: unknown) {
       const title = createdProject ? '创建画布失败' : '创建项目失败'
       setFirstProjectError(`${title}：${resolveErrorMessage(error, '网络或服务器错误')}`)
@@ -597,6 +609,7 @@ function CanvasApp({ routeKey }: { routeKey?: string }): JSX.Element {
   }, [
     firstProjectCreating,
     firstProjectName,
+    initialSurface,
     restoreCreationSession,
     setCurrentFlow,
     setCurrentProject,
@@ -949,6 +962,7 @@ function CanvasApp({ routeKey }: { routeKey?: string }): JSX.Element {
   }, [hasCanvasNodes])
 
   const headerHeight = 0
+  const isProductSurface = initialSurface === 'product'
 
   const snapshotFlowId = currentFlow?.source === 'server' && currentFlow?.id ? String(currentFlow.id) : null
   const snapshotExport = useSnapshotExport(snapshotFlowId)
@@ -980,8 +994,17 @@ function CanvasApp({ routeKey }: { routeKey?: string }): JSX.Element {
 
       {/* 移除左侧固定栏，改为悬浮灵动岛样式 */}
 
-      <AppShell.Main className="app-shell-main">
-        <Box className="app-shell-main-box" onClick={(e)=>{
+      <AppShell.Main className={`app-shell-main${isProductSurface ? ' app-shell-main--product-host' : ''}`}>
+        {isProductSurface ? (
+          <header className="product-host-header">
+            <div className="product-host-brand-mark" aria-hidden="true">W</div>
+            <div className="product-host-brand-copy">
+              <strong>{installedVerticalExtension.brand.name}</strong>
+              <span>{currentProject?.name || 'Create your first project'}</span>
+            </div>
+          </header>
+        ) : null}
+        <Box className={`app-shell-main-box${isProductSurface ? ' app-shell-main-box--product-host' : ''}`} onClick={(e)=>{
           const el = e.target as HTMLElement
           if (
             !el.closest('[data-ux-floating]') &&
@@ -992,7 +1015,7 @@ function CanvasApp({ routeKey }: { routeKey?: string }): JSX.Element {
             setActivePanel(null)
           }
         }}>
-          <Canvas className="app-canvas" />
+          <Canvas className={`app-canvas${isProductSurface ? ' app-canvas--product-hidden' : ''}`} />
           {showEmptyGuide && (
             <CanvasEmptyGuide
               mode={emptyGuideMode}
@@ -1014,7 +1037,7 @@ function CanvasApp({ routeKey }: { routeKey?: string }): JSX.Element {
       />
       <FeatureTour className="app-feature-tour" opened={featureTourOpen} steps={featureTourSteps} onClose={closeFeatureTour} />
       <BodyPortal>
-        <div className="app-header-overlay">
+        <div className={`app-header-overlay${isProductSurface ? ' app-header-overlay--product-hidden' : ''}`}>
           <Group className="app-header" p="sm" wrap="nowrap" gap="md">
             <ProjectIdentityCell
               projectName={currentProject?.name || ''}
@@ -1081,7 +1104,7 @@ function CanvasApp({ routeKey }: { routeKey?: string }): JSX.Element {
             <div id="tc-canvas-breadcrumb-slot" className="app-header-secondary-slot app-header-secondary-slot--center" />
           </div>
         </div>
-        <FloatingNav className="app-floating-nav" />
+        {!isProductSurface ? <FloatingNav className="app-floating-nav" /> : null}
         <AddNodePanel className="app-add-node-panel" />
         <ProjectPanel />
         <AssetCenterPanel />
@@ -1089,7 +1112,7 @@ function CanvasApp({ routeKey }: { routeKey?: string }): JSX.Element {
         <ModelPanel />
         <HistoryPanel />
         <MemoryPanel />
-        <AiChatDialog className="app-ai-chat-dialog" />
+        <AiChatDialog className="app-ai-chat-dialog" productMode={isProductSurface} />
       </BodyPortal>
       <ParamModal />
       <PreviewModal />
@@ -1166,44 +1189,10 @@ function matchProjectEntryRoute(): { projectId: string } | null {
   }
 }
 
-function RootEntryPage(): JSX.Element {
+function RootEntryPage({ routeKey }: { routeKey: string }): JSX.Element {
   const auth = useAuth()
-  const [loading, setLoading] = React.useState(Boolean(auth.user))
-
-  React.useEffect(() => {
-    if (!auth.user) {
-      setLoading(false)
-      return
-    }
-    let cancelled = false
-    setLoading(true)
-    listProjects()
-      .catch((error) => {
-        console.error('根入口加载项目失败，将直接进入画布', error)
-      })
-      .finally(() => {
-        if (cancelled) return
-        spaReplace(buildStudioUrl())
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false)
-      })
-    return () => {
-      cancelled = true
-    }
-  }, [auth.user?.sub])
-
   if (!auth.user) return <HomePage />
-  if (!loading) return <HomePage />
-  return (
-    <AppShell padding="md">
-      <AppShell.Main>
-        <Group justify="center" align="center" style={{ minHeight: '100vh' }}>
-          <Badge variant="light" color="gray">正在进入工作区…</Badge>
-        </Group>
-      </AppShell.Main>
-    </AppShell>
-  )
+  return <CanvasApp routeKey={routeKey} initialSurface="product" />
 }
 
 export default function App(): JSX.Element {
@@ -1242,5 +1231,5 @@ export default function App(): JSX.Element {
   if (isStudioRoute()) {
     return <CanvasApp routeKey={routeKey} />
   }
-  return <RootEntryPage />
+  return <RootEntryPage routeKey={routeKey} />
 }
