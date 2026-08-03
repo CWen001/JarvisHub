@@ -1,7 +1,7 @@
 import React from 'react'
 import { AppShell, ActionIcon, Group, Box, Button, TextInput, Badge, Text, useMantineColorScheme, Tooltip, Modal, Stack } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
-import { IconBrandGithub, IconMoonStars, IconSun, IconHelpCircle, IconRefresh, IconCamera } from '@tabler/icons-react'
+import { IconBrandGithub, IconMoonStars, IconSun, IconHelpCircle, IconRefresh, IconCamera, IconLayoutBoard, IconMessageCircle } from '@tabler/icons-react'
 import Canvas from './canvas/Canvas'
 import { sanitizeGraphForCanvas, useRFStore } from './canvas/store'
 import { SnapshotProgressDialog, useSnapshotExport } from './canvas/snapshot/SnapshotProgressDialog'
@@ -65,6 +65,11 @@ import { preloadModelOptions } from './config/useModelOptions'
 import CanvasEmptyGuide from './ui/CanvasEmptyGuide'
 import { installedVerticalExtension } from './product-host/installedExtension'
 import { ProductHistoryNavigation } from './product-host/ProductHistoryNavigation'
+import {
+  dispatchProductWorkspaceCommand,
+  PRODUCT_WORKSPACE_COMMAND,
+  type ProductWorkspaceCommand,
+} from './product-host/productWorkspace'
 
 const FEATURE_TOUR_VERSION = 'v2'
 
@@ -176,6 +181,36 @@ function CanvasApp({
   const studioFlowId = React.useMemo(() => readStudioFlowId(), [routeKey])
   const studioProjectId = React.useMemo(() => readStudioProjectId(), [routeKey])
   const [hasCanvasNodes, setHasCanvasNodes] = React.useState(() => useRFStore.getState().nodes.length > 0)
+  const [workspaceSurface, setWorkspaceSurface] = React.useState<'product' | 'canvas'>(
+    initialSurface,
+  )
+
+  React.useEffect(() => {
+    if (initialSurface !== 'product') return
+    const onWorkspaceCommand = (event: Event) => {
+      const command = (event as CustomEvent<ProductWorkspaceCommand>).detail
+      if (!command) return
+      if (command.type === 'return-to-chat') {
+        setWorkspaceSurface('product')
+        return
+      }
+      const nodeId = String(command.nodeId || '').trim()
+      if (nodeId) {
+        useRFStore.setState((state) => ({
+          nodes: state.nodes.map((node) => ({ ...node, selected: node.id === nodeId })),
+          edges: state.edges.map((edge) => ({ ...edge, selected: false })),
+        }))
+      }
+      setWorkspaceSurface('canvas')
+      if (nodeId) {
+        window.setTimeout(() => {
+          ;(window as CanvasGlobalWindow).__tcFocusNode?.(nodeId)
+        }, 0)
+      }
+    }
+    window.addEventListener(PRODUCT_WORKSPACE_COMMAND, onWorkspaceCommand)
+    return () => window.removeEventListener(PRODUCT_WORKSPACE_COMMAND, onWorkspaceCommand)
+  }, [initialSurface])
 
   const detachCurrentFlowFromProject = React.useCallback(() => {
     const uiState = useUIStore.getState()
@@ -963,7 +998,8 @@ function CanvasApp({
   }, [hasCanvasNodes])
 
   const headerHeight = 0
-  const isProductSurface = initialSurface === 'product'
+  const isProductHost = initialSurface === 'product'
+  const isProductSurface = isProductHost && workspaceSurface === 'product'
   const selectProductProject = React.useCallback((project: ProjectDto) => {
     const projectId = String(project.id || '').trim()
     if (!projectId) return
@@ -1013,6 +1049,14 @@ function CanvasApp({
               <strong>{installedVerticalExtension.brand.name}</strong>
               <span>{currentProject?.name || 'Create your first project'}</span>
             </div>
+            <Button
+              className="product-host-header__workspace-button"
+              variant="light"
+              leftSection={<IconLayoutBoard size={16} />}
+              onClick={() => dispatchProductWorkspaceCommand({ type: 'open-canvas' })}
+            >
+              Professional Workspace
+            </Button>
           </header>
         ) : null}
         <Box className={`app-shell-main-box${isProductSurface ? ' app-shell-main-box--product-host' : ''}`} onClick={(e)=>{
@@ -1116,6 +1160,15 @@ function CanvasApp({
           </div>
         </div>
         {!isProductSurface ? <FloatingNav className="app-floating-nav" /> : null}
+        {isProductHost && !isProductSurface ? (
+          <Button
+            className="product-workspace-return"
+            leftSection={<IconMessageCircle size={16} />}
+            onClick={() => dispatchProductWorkspaceCommand({ type: 'return-to-chat' })}
+          >
+            Back to Product View
+          </Button>
+        ) : null}
         {isProductSurface ? (
           <ProductHistoryNavigation
             projects={projects}

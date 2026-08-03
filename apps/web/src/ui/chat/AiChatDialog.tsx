@@ -2598,6 +2598,16 @@ export default function AiChatDialog({
   const [bubbleVisualState, setBubbleVisualState] = React.useState<'bubble' | 'panel'>(() => resolveInitialBubbleVisualState(initialLayoutPreference))
   const modeBeforeMaximizeRef = React.useRef<'compact' | 'expanded'>(initialLayoutPreference.mode)
   const previousModeRef = React.useRef<'compact' | 'expanded' | 'maximized'>(initialLayoutPreference.mode)
+  const previousProductModeRef = React.useRef(productMode)
+  React.useEffect(() => {
+    const wasProductMode = previousProductModeRef.current
+    previousProductModeRef.current = productMode
+    if (productMode) {
+      setMode('maximized')
+    } else if (wasProductMode) {
+      setMode('expanded')
+    }
+  }, [productMode])
   const bubbleTransitionTimerRef = React.useRef<number | null>(null)
   const dockRight = true
   const [autoReferenceImages, setAutoReferenceImages] = React.useState<string[]>(() => [])

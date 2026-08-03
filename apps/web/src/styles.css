@@ -15115,3 +15115,16 @@ body[data-webcut-modal-open="true"] .tc-ai-chat {
     left: 8px;
   }
 }
+
+
+.product-host-header__workspace-button {
+  margin-left: auto;
+}
+
+.product-workspace-return {
+  position: fixed;
+  z-index: 520;
+  left: 18px;
+  top: 18px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.18);
+}
