@@ -21,7 +21,15 @@ export type ChatMessage = {
   ts: string
   phase?: 'thinking' | 'final'
   kind?: 'progress' | 'result' | 'error'
-  assets?: Array<{ title: string; url: string; thumbnailUrl?: string; mediaType?: 'image' | 'video' }>
+  assets?: Array<{
+    title: string
+    url: string
+    thumbnailUrl?: string
+    mediaType?: 'image' | 'video'
+    assetId?: string
+    assetRefId?: string
+    nodeId?: string
+  }>
   turnVerdict?: {
     status: 'satisfied' | 'partial' | 'failed'
     reasons: string[]
@@ -42,6 +50,7 @@ export type ChatMessage = {
 
 export type UploadedReferenceAssetMeta = {
   assetId?: string
+  assetRefId?: string
   name?: string
 }
 
