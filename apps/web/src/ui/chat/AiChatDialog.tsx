@@ -99,6 +99,11 @@ import {
   type AiChatTabsState,
 } from './chatTabs'
 import {
+  NATIVE_CHAT_NAVIGATION_COMMAND,
+  notifyNativeChatNavigationChanged,
+  type NativeChatNavigationCommand,
+} from '../../product-host/nativeChatNavigation'
+import {
   buildAttachedDocsPromptBlock,
   classifyUploadedFile,
   formatDocSize,
@@ -2997,6 +3002,7 @@ export default function AiChatDialog({
     const persistProjectId = lastLoadedChatTabsProjectIdRef.current
     if (!persistProjectId) return
     writeAiChatTabsState(chatTabsState, persistProjectId)
+    notifyNativeChatNavigationChanged(persistProjectId)
   }, [chatTabsState])
 
   React.useEffect(() => {
@@ -5068,6 +5074,28 @@ export default function AiChatDialog({
     shouldAutoScrollRef.current = true
     setChatTabsState((prev) => selectAiChatTab(prev, tabId))
   }, [])
+
+  React.useEffect(() => {
+    const onNavigationCommand = (event: Event) => {
+      const command = (event as CustomEvent<NativeChatNavigationCommand>).detail
+      if (!command || command.projectId !== currentProjectId) {
+        if (command?.type === 'select-session' && command.projectId) {
+          const projectState = readAiChatTabsState(command.projectId)
+          const next = selectAiChatTab(projectState, command.sessionId)
+          writeAiChatTabsState(next, command.projectId)
+          notifyNativeChatNavigationChanged(command.projectId)
+        }
+        return
+      }
+      if (command.type === 'new-session') {
+        startNewConversation()
+      } else {
+        selectConversationTab(command.sessionId)
+      }
+    }
+    window.addEventListener(NATIVE_CHAT_NAVIGATION_COMMAND, onNavigationCommand)
+    return () => window.removeEventListener(NATIVE_CHAT_NAVIGATION_COMMAND, onNavigationCommand)
+  }, [currentProjectId, selectConversationTab, startNewConversation])
 
   const closeConversationTab = React.useCallback((tabId: string) => {
     const normalizedTabId = String(tabId || '').trim()

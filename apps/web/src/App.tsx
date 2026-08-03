@@ -64,6 +64,7 @@ import { spaReplace } from './utils/spaNavigate'
 import { preloadModelOptions } from './config/useModelOptions'
 import CanvasEmptyGuide from './ui/CanvasEmptyGuide'
 import { installedVerticalExtension } from './product-host/installedExtension'
+import { ProductHistoryNavigation } from './product-host/ProductHistoryNavigation'
 
 const FEATURE_TOUR_VERSION = 'v2'
 
@@ -963,6 +964,16 @@ function CanvasApp({
 
   const headerHeight = 0
   const isProductSurface = initialSurface === 'product'
+  const selectProductProject = React.useCallback((project: ProjectDto) => {
+    const projectId = String(project.id || '').trim()
+    if (!projectId) return
+    const url = new URL(window.location.href)
+    url.searchParams.set('projectId', projectId)
+    url.searchParams.delete('flowId')
+    window.history.pushState(null, '', url.toString())
+    setCurrentProject({ id: projectId, name: project.name })
+    window.dispatchEvent(new PopStateEvent('popstate'))
+  }, [setCurrentProject])
 
   const snapshotFlowId = currentFlow?.source === 'server' && currentFlow?.id ? String(currentFlow.id) : null
   const snapshotExport = useSnapshotExport(snapshotFlowId)
@@ -1105,6 +1116,13 @@ function CanvasApp({
           </div>
         </div>
         {!isProductSurface ? <FloatingNav className="app-floating-nav" /> : null}
+        {isProductSurface ? (
+          <ProductHistoryNavigation
+            projects={projects}
+            currentProjectId={String(currentProject?.id || '')}
+            onSelectProject={selectProductProject}
+          />
+        ) : null}
         <AddNodePanel className="app-add-node-panel" />
         <ProjectPanel />
         <AssetCenterPanel />
