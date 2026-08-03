@@ -517,6 +517,7 @@ function normalizeAssetInputs(value: unknown): CanvasAssetInput[] {
 }
 
 const ImageCanvasNodeKindSchema = z.enum(["image", "imageEdit"]);
+type ImageCanvasNodeKind = z.infer<typeof ImageCanvasNodeKindSchema>;
 type ImageCanvasToolStatus = "queued" | "running" | "success";
 type FlowNodeRecord = Record<string, unknown>;
 type PublicFlowCreateTaskNode = z.infer<typeof PublicFlowCreateTaskNodeSchema>;
@@ -613,6 +614,40 @@ function findFlowNodeById(nodes: unknown[], nodeId: string): FlowNodeRecord | nu
     if (readNodeId(record) === nodeId) return record;
   }
   return null;
+}
+
+export function assertImageCanvasOutputTargetCompatible(input: {
+  nodes: unknown[];
+  nodeId: string;
+  incomingKind: ImageCanvasNodeKind;
+}): FlowNodeRecord | null {
+  const existingNode = findFlowNodeById(input.nodes, input.nodeId);
+  if (!existingNode) return null;
+
+  const existingType = readNodeType(existingNode);
+  if (existingType !== "taskNode") {
+    throw new AppError(
+      `canvas_image_generate_to_canvas: node ${input.nodeId} exists but is not a taskNode; choose a new stable outputKey before generating`,
+      {
+        status: 409,
+        code: "agents_tool_node_id_kind_mismatch",
+        details: { nodeId: input.nodeId, existingType },
+      },
+    );
+  }
+
+  const existingKind = readTrimmedString(readNodeData(existingNode).kind);
+  if (existingKind && existingKind !== input.incomingKind) {
+    throw new AppError(
+      `canvas_image_generate_to_canvas: node ${input.nodeId} exists with data.kind="${existingKind}" but request kind="${input.incomingKind}"; when references make this an imageEdit, keep the existing node as a reference and choose a new stable outputKey`,
+      {
+        status: 409,
+        code: "agents_tool_node_id_kind_mismatch",
+        details: { nodeId: input.nodeId, existingKind, incomingKind: input.incomingKind },
+      },
+    );
+  }
+  return existingNode;
 }
 
 function isWebHeroNode(node: FlowNodeRecord | null | undefined): node is FlowNodeRecord {
@@ -1156,6 +1191,36 @@ export async function generateImageToCanvas(input: {
     ...(provenanceReferenceImages.length ? { referenceImages: provenanceReferenceImages } : {}),
     ...(provenanceAssetInputs.length ? { assetInputs: provenanceAssetInputs } : {}),
   };
+  const explicitNodeId = readTrimmedString(taskNode.id);
+  if (!explicitNodeId) {
+    throw new AppError(
+      "canvas_image_generate_to_canvas requires outputKey; choose a stable key such as storyboard_clip_<n:02d>_<slug>, scene_base_<slug>, character_<slug>_pose_<n:02d>, or prop_<slug>_<n:02d>.",
+      {
+        status: 400,
+        code: "agents_tool_output_key_required",
+        details: { tool: "canvas_image_generate_to_canvas" },
+      },
+    );
+  }
+  const nodeId = explicitNodeId;
+  const imageNodeKind = ImageCanvasNodeKindSchema.parse(effectiveNodeData.kind);
+  // Reject incompatible output identities before the cost-bearing provider dispatch.
+  // The optimistic write repeats this check later to cover concurrent Flow changes.
+  const preflightData = sanitizeFlowDataForStorage(mapFlowRowToDto(input.row).data ?? {});
+  const preflightParsed = PublicFlowGraphSchema.safeParse(preflightData);
+  if (!preflightParsed.success) {
+    throw new AppError("Flow data invalid", {
+      status: 500,
+      code: "flow_data_invalid",
+      details: { issues: preflightParsed.error.issues },
+    });
+  }
+  assertImageCanvasOutputTargetCompatible({
+    nodes: preflightParsed.data.nodes ?? [],
+    nodeId,
+    incomingKind: imageNodeKind,
+  });
+
   const gatewayPixelSize =
     resolvedVendor === "gateway" ? resolveGatewayPixelSize(imageSize, imageResolution) : "";
   const taskRequest: TaskRequestDto = {
@@ -1214,19 +1279,6 @@ export async function generateImageToCanvas(input: {
     });
   }
 
-  const explicitNodeId = readTrimmedString(taskNode.id);
-  if (!explicitNodeId) {
-    throw new AppError(
-      "canvas_image_generate_to_canvas requires outputKey; choose a stable key such as storyboard_clip_<n:02d>_<slug>, scene_base_<slug>, character_<slug>_pose_<n:02d>, or prop_<slug>_<n:02d>.",
-      {
-        status: 400,
-        code: "agents_tool_output_key_required",
-        details: { tool: "canvas_image_generate_to_canvas" },
-      },
-    );
-  }
-  const nodeId = explicitNodeId;
-  const imageNodeKind = ImageCanvasNodeKindSchema.parse(effectiveNodeData.kind);
   const webPageAssetForNodeId = readTrimmedString(effectiveNodeData.webPageAssetForNodeId);
   const webPageAssetMetadata = normalizeWebPageAssetMetadata(effectiveNodeData);
 	  const imagePostprocessNodeData = {
@@ -1383,31 +1435,12 @@ export async function generateImageToCanvas(input: {
       const currentNodes = Array.isArray(currentParsed.data.nodes) ? currentParsed.data.nodes : [];
       const currentEdges = Array.isArray(currentParsed.data.edges) ? currentParsed.data.edges : [];
 
-      const existingNode = findFlowNodeById(currentNodes, nodeId);
+      const existingNode = assertImageCanvasOutputTargetCompatible({
+        nodes: currentNodes,
+        nodeId,
+        incomingKind: imageNodeKind,
+      });
       if (existingNode) {
-        const existingType = readNodeType(existingNode);
-        if (existingType !== "taskNode") {
-          throw new AppError(
-            `canvas_image_generate_to_canvas: node ${nodeId} exists but is not a taskNode; pick a different stable id`,
-            {
-              status: 409,
-              code: "agents_tool_node_id_kind_mismatch",
-              details: { nodeId, existingType },
-            },
-          );
-        }
-        const existingData = readRecord(existingNode.data);
-        const existingKind = readTrimmedString(existingData.kind);
-        if (existingKind && existingKind !== imageNodeKind) {
-          throw new AppError(
-            `canvas_image_generate_to_canvas: node ${nodeId} exists with data.kind="${existingKind}" but request kind="${imageNodeKind}"; pick a different stable id`,
-            {
-              status: 409,
-              code: "agents_tool_node_id_kind_mismatch",
-              details: { nodeId, existingKind, incomingKind: imageNodeKind },
-            },
-          );
-        }
         didUpsert = true;
         // slides[i].imageUrl is derived from this image node by
         // reconcilePptMasterNodeIdentities inside applyPublicFlowGraphPatch.
