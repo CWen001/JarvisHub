@@ -15,6 +15,7 @@
     "trace:migrate": "node --loader ts-node/esm src/runtime/trace-migrate.ts",
     "diagnose:llm": "node scripts/check-llm-connectivity.mjs",
     "validate:agent-defs": "node scripts/validate-agent-defs.mjs",
+    "validate:watch-skill": "node skills/watch-design-kernel/scripts/validate-kernel.mjs",
     "watch": "node scripts/watch.mjs",
     "start": "node dist/cli/index.js",
     "postbuild": "node scripts/sync-global-config.mjs",

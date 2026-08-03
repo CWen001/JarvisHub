@@ -1,0 +1,400 @@
+{
+  "domain": "wearability",
+  "atoms": [
+    {
+      "atom_id": "watch-wrist-range-first",
+      "title": "先定义腕围覆盖再定比例",
+      "review_status": "approved",
+      "claim": "表壳跨度、刚性连接长度和表带孔位应共同服务目标腕围，不能只用单一平均腕围判断。",
+      "activation": [
+        "小腕",
+        "广泛人群",
+        "全天佩戴"
+      ],
+      "avoid_when": [
+        "明确只服务窄范围专业用户"
+      ],
+      "decision_targets": [
+        "wearability",
+        "architecture"
+      ],
+      "move": {
+        "action": "为目标腕围两端分别检查跨腕长度、下折角和闭合余量。",
+        "why": "同一表壳在不同腕围上会产生截然不同的悬空与压迫。",
+        "visible_cues": [
+          "两端表带均能贴腕下折",
+          "余带收纳不过长"
+        ],
+        "limits": [
+          "概念图不能证明腕围覆盖"
+        ],
+        "tradeoffs": [
+          "扩大覆盖可能牺牲极致一体化比例"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "多腕围佩戴样机与动作测试"
+      ]
+    },
+    {
+      "atom_id": "watch-mass-close-to-wrist",
+      "title": "视觉与实际质量靠近腕部",
+      "review_status": "approved",
+      "claim": "降低重心并减少上层悬挑通常比单纯强调轻量数字更有利于运动和全天佩戴稳定。",
+      "activation": [
+        "运动",
+        "全天佩戴",
+        "大表壳",
+        "晃动"
+      ],
+      "avoid_when": [
+        "首饰式松佩戴是明确目标"
+      ],
+      "decision_targets": [
+        "wearability",
+        "architecture"
+      ],
+      "move": {
+        "action": "让背壳接触面稳定承托，并减少远离腕部的视觉悬挑。",
+        "why": "高重心会放大转动惯量和表带勒紧需求。",
+        "visible_cues": [
+          "壳体下部内收贴腕",
+          "表带连接靠近质量中心"
+        ],
+        "limits": [
+          "不从外观推断真实重心"
+        ],
+        "tradeoffs": [
+          "贴腕体量可能增加热与皮肤接触"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "真实质量、重心和动态晃动测试"
+      ]
+    },
+    {
+      "atom_id": "watch-small-wrist-articulation",
+      "title": "小腕适配依赖连续关节链",
+      "review_status": "approved",
+      "claim": "从壳体到表带的多个柔顺转折比单一尖锐铰点更能适应小腕曲率。",
+      "activation": [
+        "小手腕",
+        "宽表带",
+        "刚性连接"
+      ],
+      "avoid_when": [
+        "硬质手镯结构"
+      ],
+      "decision_targets": [
+        "wearability",
+        "architecture"
+      ],
+      "move": {
+        "action": "把曲率变化分散到近壳连接和表带首段，避免一个位置急折。",
+        "why": "连续关节链可减少悬空、夹肤和局部折痕。",
+        "visible_cues": [
+          "近壳表带逐段下垂",
+          "佩戴侧视无突兀折角"
+        ],
+        "limits": [
+          "柔顺不等于结构耐久"
+        ],
+        "tradeoffs": [
+          "关节增多会增加缝隙和磨损点"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "小腕动作、夹肤、疲劳和寿命测试"
+      ]
+    },
+    {
+      "atom_id": "watch-strap-pressure-distribution",
+      "title": "用表带宽度与顺应性分散压力",
+      "review_status": "approved",
+      "claim": "稳定佩戴不应只依靠拉紧表带；宽度、柔顺性和接触路径应共同分散压力。",
+      "activation": [
+        "传感稳定",
+        "运动",
+        "长时佩戴",
+        "勒痕"
+      ],
+      "avoid_when": [
+        "短时松佩戴饰品"
+      ],
+      "decision_targets": [
+        "wearability"
+      ],
+      "move": {
+        "action": "在主要受力段保持足够接触宽度，并让边缘柔和退让。",
+        "why": "过度依赖张力会形成局部压点并降低长时舒适。",
+        "visible_cues": [
+          "表带受力段连续贴合",
+          "边缘不过度锐利或卷曲"
+        ],
+        "limits": [
+          "不能仅凭宽表带断言舒适"
+        ],
+        "tradeoffs": [
+          "增宽可能降低透气并显得更重"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "压力分布、出汗和长时主观舒适测试"
+      ]
+    },
+    {
+      "atom_id": "watch-one-hand-closure",
+      "title": "闭合动作应支持单手完成",
+      "review_status": "approved",
+      "claim": "日常智能手表的闭合、微调和解锁应在另一只手单独操作时保持可理解和可恢复。",
+      "activation": [
+        "频繁摘戴",
+        "运动前调整",
+        "精细动作受限"
+      ],
+      "avoid_when": [
+        "需要他人协助的专业固定装置"
+      ],
+      "decision_targets": [
+        "wearability",
+        "experience"
+      ],
+      "move": {
+        "action": "减少需要同时对准、持续捏持或高指力的步骤，并提供触觉止点。",
+        "why": "腕上闭合天然是单手、视线受限的操作。",
+        "visible_cues": [
+          "方向性明确的扣合形态",
+          "余带和释放点易找到"
+        ],
+        "limits": [
+          "易操作不能削弱意外解锁防护"
+        ],
+        "tradeoffs": [
+          "快速释放可能增加结构复杂度"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-INPUT-410",
+        "SRC-INTERACTION-110"
+      ],
+      "validation_needs": [
+        "不同手部能力、湿手和低视野条件下测试"
+      ]
+    },
+    {
+      "atom_id": "watch-skin-contact-zone",
+      "title": "区分必要接触与可退让区域",
+      "review_status": "approved",
+      "claim": "背部只有传感与稳定所需区域应持续接触皮肤，其余区域可通过曲率或通道减少闷热与压迫。",
+      "activation": [
+        "全天佩戴",
+        "皮肤敏感",
+        "大背壳",
+        "传感"
+      ],
+      "avoid_when": [
+        "非贴肤佩戴"
+      ],
+      "decision_targets": [
+        "wearability",
+        "architecture"
+      ],
+      "move": {
+        "action": "定义核心接触岛、过渡区和可通风区，而不是让整个背面等压贴肤。",
+        "why": "接触目的不同，几何和表面要求也不同。",
+        "visible_cues": [
+          "背部接触层级清晰",
+          "边缘有柔和抬升或通道"
+        ],
+        "limits": [
+          "通风造型不证明皮肤兼容性"
+        ],
+        "tradeoffs": [
+          "减少接触可能影响稳定与传感"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-THERMAL-406",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "皮肤接触、传感、汗液和热舒适联合测试"
+      ]
+    },
+    {
+      "atom_id": "watch-sweat-drain-cleanability",
+      "title": "汗液路径必须可排可清洁",
+      "review_status": "approved",
+      "claim": "运动和全天佩戴结构应避免在背壳、表带连接和装饰凹槽形成难以清洁的汗液滞留区。",
+      "activation": [
+        "运动",
+        "高温",
+        "防护纹理",
+        "多缝结构"
+      ],
+      "avoid_when": [
+        "非贴肤展示概念"
+      ],
+      "decision_targets": [
+        "wearability",
+        "architecture",
+        "cmf"
+      ],
+      "move": {
+        "action": "让凹槽有明确开口和冲洗路径，高接触区减少深纹与盲孔。",
+        "why": "汗液、皮脂和灰尘会把视觉细节转化为清洁负担。",
+        "visible_cues": [
+          "通道不形成封闭袋",
+          "接触面连续易擦拭"
+        ],
+        "limits": [
+          "可见排水路径不等于防水能力"
+        ],
+        "tradeoffs": [
+          "易清洁会限制复杂纹理"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "汗液、皮脂、冲洗和长期污渍测试"
+      ]
+    },
+    {
+      "atom_id": "watch-snag-safe-edges",
+      "title": "控制毛发、衣物与皮肤勾挂",
+      "review_status": "approved",
+      "claim": "高频接触边缘、表带连接和控件周围应减少会夹毛、刮肤或勾衣的反向缝隙与尖锐凸起。",
+      "activation": [
+        "全天佩戴",
+        "冬季衣物",
+        "长袖",
+        "金属表带"
+      ],
+      "avoid_when": [
+        "仅静态展示模型"
+      ],
+      "decision_targets": [
+        "wearability",
+        "architecture"
+      ],
+      "move": {
+        "action": "让运动缝隙远离皮肤和织物路径，并给暴露边缘连续倒圆。",
+        "why": "微小勾挂会在重复佩戴中显著降低接受度。",
+        "visible_cues": [
+          "活动连接无外露夹点",
+          "控件护肩边缘顺滑"
+        ],
+        "limits": [
+          "视觉圆滑不能替代公差验证"
+        ],
+        "tradeoffs": [
+          "封闭连接可能降低清洁和维护可达性"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "毛发、织物、夹肤与动态公差测试"
+      ]
+    },
+    {
+      "atom_id": "watch-thermal-contact-caution",
+      "title": "热舒适必须保留为验证项",
+      "review_status": "approved",
+      "claim": "持续贴肤设备的温升与热舒适必须通过规定工况测量，造型和材料观感不能证明安全。",
+      "activation": [
+        "全天佩戴",
+        "充电",
+        "高负载",
+        "金属背壳"
+      ],
+      "avoid_when": [
+        "完全不贴肤的概念"
+      ],
+      "decision_targets": [
+        "wearability",
+        "architecture"
+      ],
+      "move": {
+        "action": "在概念中避免把热性能写成既成事实，并为热源、接触区和使用工况建立验证需求。",
+        "why": "腕部持续接触使表面温度成为真实人体工学边界。",
+        "visible_cues": [
+          "接触区不过度封闭",
+          "文案明确热性能待验证"
+        ],
+        "limits": [
+          "不从材料名称推断散热或安全"
+        ],
+        "tradeoffs": [
+          "减少接触与增加隔离可能影响传感和厚度"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-THERMAL-406"
+      ],
+      "validation_needs": [
+        "按适用标准进行接触表面温升测试"
+      ]
+    },
+    {
+      "atom_id": "watch-sensor-contact-stability",
+      "title": "传感接触稳定不等于勒紧",
+      "review_status": "approved",
+      "claim": "传感稳定应由壳体姿态、表带受力路径和接触区共同实现，而不是要求用户持续过度收紧。",
+      "activation": [
+        "健康监测",
+        "运动传感",
+        "信号稳定",
+        "佩戴提示"
+      ],
+      "avoid_when": [
+        "无贴肤传感"
+      ],
+      "decision_targets": [
+        "wearability",
+        "experience"
+      ],
+      "move": {
+        "action": "让表带在壳体两侧形成稳定力矩，并提供可理解的适度松紧反馈。",
+        "why": "过紧会损害舒适，过松则可能让姿态和信号波动。",
+        "visible_cues": [
+          "壳体不易绕腕翻转",
+          "佩戴引导避免绝对化承诺"
+        ],
+        "limits": [
+          "不能从接触几何推断测量准确性"
+        ],
+        "tradeoffs": [
+          "更稳定的固定可能降低快速摘戴便利"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "不同腕围、运动强度和松紧下的信号与舒适联合验证"
+      ]
+    }
+  ]
+}

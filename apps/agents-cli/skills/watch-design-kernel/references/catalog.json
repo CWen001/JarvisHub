@@ -1,0 +1,99 @@
+{
+  "skill": "watch-design-knowledge",
+  "version": "0.2.0",
+  "review_policy": "Only approved atoms are eligible for the user-visible curated-knowledge slot.",
+  "domains": [
+    {
+      "id": "portfolio",
+      "title": "产品定位与设计方向",
+      "resource": "references/portfolio.json",
+      "atom_count": 10,
+      "signals": [
+        "用户",
+        "场景",
+        "产品族",
+        "定位",
+        "差异化",
+        "需求冲突"
+      ]
+    },
+    {
+      "id": "architecture",
+      "title": "形态、比例与构造",
+      "resource": "references/architecture.json",
+      "atom_count": 10,
+      "signals": [
+        "轮廓",
+        "表壳",
+        "屏幕",
+        "按键",
+        "表耳",
+        "厚度",
+        "防护"
+      ]
+    },
+    {
+      "id": "wearability",
+      "title": "佩戴与人体工学",
+      "resource": "references/wearability.json",
+      "atom_count": 10,
+      "signals": [
+        "小腕",
+        "全天佩戴",
+        "重量",
+        "表带",
+        "闭合",
+        "皮肤",
+        "出汗",
+        "传感接触"
+      ]
+    },
+    {
+      "id": "interaction",
+      "title": "交互与信息层级",
+      "resource": "references/interaction.json",
+      "atom_count": 10,
+      "signals": [
+        "扫视",
+        "触控",
+        "实体控件",
+        "触觉",
+        "安静",
+        "可访问性",
+        "误操作"
+      ]
+    },
+    {
+      "id": "cmf",
+      "title": "CMF 与产品身份",
+      "resource": "references/cmf.json",
+      "atom_count": 10,
+      "signals": [
+        "材料",
+        "表面",
+        "颜色",
+        "耐久",
+        "细节",
+        "装饰",
+        "表带材质"
+      ]
+    },
+    {
+      "id": "scenario-trust",
+      "title": "场景证据与可信边界",
+      "resource": "references/scenario-trust.json",
+      "atom_count": 10,
+      "signals": [
+        "通知",
+        "健康",
+        "应急",
+        "续航",
+        "防水",
+        "户外",
+        "夜间",
+        "隐私",
+        "故事板"
+      ]
+    }
+  ]
+}

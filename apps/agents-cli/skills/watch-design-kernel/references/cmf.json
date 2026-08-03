@@ -1,0 +1,399 @@
+{
+  "domain": "cmf",
+  "atoms": [
+    {
+      "atom_id": "watch-material-zoning-purpose",
+      "title": "材料分区必须对应作用",
+      "review_status": "approved",
+      "claim": "材料变化应说明接触、保护、触控、透波或视觉重音等作用，避免仅为增加复杂度而换材质。",
+      "activation": [
+        "多材料",
+        "高端感",
+        "专业感",
+        "结构分区"
+      ],
+      "avoid_when": [
+        "明确的单材质实验"
+      ],
+      "decision_targets": [
+        "cmf",
+        "architecture"
+      ],
+      "move": {
+        "action": "为每个材料区写明功能或感知角色，删除无法解释的分区。",
+        "why": "有目的的分区能让产品看起来可信、清晰且易维护。",
+        "visible_cues": [
+          "材料交界沿构造边界",
+          "高接触与高防护区域表达不同"
+        ],
+        "limits": [
+          "材料名称不证明性能"
+        ],
+        "tradeoffs": [
+          "减少分区会降低视觉丰富度"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "材料兼容、连接、耐久与射频工程验证"
+      ]
+    },
+    {
+      "atom_id": "watch-finish-hierarchy",
+      "title": "表面处理建立主次而非平均精致",
+      "review_status": "approved",
+      "claim": "高光、细磨砂和粗纹理应按视觉焦点、触摸频率和耐磨需求形成层级。",
+      "activation": [
+        "高端",
+        "金属",
+        "多个表面处理",
+        "细节过多"
+      ],
+      "avoid_when": [
+        "单一均质工具表面"
+      ],
+      "decision_targets": [
+        "cmf",
+        "signature"
+      ],
+      "move": {
+        "action": "保留一个高精度焦点，其余高接触面采用更克制、耐日常痕迹的处理。",
+        "why": "平均使用高亮和细节会削弱焦点并放大指纹与磨损。",
+        "visible_cues": [
+          "主边或主控件形成重音",
+          "大面积表面保持安静"
+        ],
+        "limits": [
+          "不从渲染推断耐磨"
+        ],
+        "tradeoffs": [
+          "克制处理可能降低首眼奢华感"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "指纹、划伤、磨耗和批次一致性测试"
+      ]
+    },
+    {
+      "atom_id": "watch-color-identity-restraint",
+      "title": "用一个角色色建立识别",
+      "review_status": "approved",
+      "claim": "智能手表的颜色识别宜由一个受控角色色和中性主体建立，而不是多个等权高饱和色竞争。",
+      "activation": [
+        "年轻化",
+        "运动感",
+        "品牌识别",
+        "配色复杂"
+      ],
+      "avoid_when": [
+        "明确的多彩主题探索"
+      ],
+      "decision_targets": [
+        "cmf",
+        "signature"
+      ],
+      "move": {
+        "action": "把角色色限制在与关键动作或结构相关的一个区域，并让主体保持兼容穿搭。",
+        "why": "腕上产品长期暴露于不同服装和场景，过多角色色会缩窄适配。",
+        "visible_cues": [
+          "颜色与主控件或内层结构绑定",
+          "大面积主体保持低噪声"
+        ],
+        "limits": [
+          "颜色不能作为唯一交互线索"
+        ],
+        "tradeoffs": [
+          "克制配色降低货架冲击力"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-EDITORIAL",
+        "SRC-INPUT-MODALITIES"
+      ],
+      "validation_needs": [
+        "不同光线、肤色、服装和色觉条件下评估"
+      ]
+    },
+    {
+      "atom_id": "watch-high-contact-durability",
+      "title": "高接触区域优先管理老化",
+      "review_status": "approved",
+      "claim": "表冠、壳体边缘、扣具和桌面接触面应预先考虑划痕、抛光和涂层磨损后的视觉状态。",
+      "activation": [
+        "高光边",
+        "涂层",
+        "全天佩戴",
+        "金属扣具"
+      ],
+      "avoid_when": [
+        "一次性展示模型"
+      ],
+      "decision_targets": [
+        "cmf",
+        "architecture"
+      ],
+      "move": {
+        "action": "把最脆弱的高亮或涂层从持续摩擦路径移开，或让老化形成可接受纹理。",
+        "why": "腕上产品频繁接触桌面、衣物和皮肤，初始效果不是完整体验。",
+        "visible_cues": [
+          "接触边采用耐痕或可老化表面",
+          "装饰涂层不位于主要摩擦点"
+        ],
+        "limits": [
+          "不能仅凭材质名判断耐久"
+        ],
+        "tradeoffs": [
+          "耐痕表面可能牺牲镜面精致感"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "磨耗、汗液、清洁剂和跌碰后的外观测试"
+      ]
+    },
+    {
+      "atom_id": "watch-sensor-window-integration",
+      "title": "传感窗口作为功能区整合",
+      "review_status": "approved",
+      "claim": "传感窗口应通过边界、色值和曲率被理解为精密功能区，而不是背部随机黑块或装饰宝石。",
+      "activation": [
+        "健康传感",
+        "透明窗口",
+        "背壳设计"
+      ],
+      "avoid_when": [
+        "无传感窗口"
+      ],
+      "decision_targets": [
+        "cmf",
+        "architecture"
+      ],
+      "move": {
+        "action": "让窗口与接触几何、光学边界和清洁路径一致，并控制无功能装饰。",
+        "why": "背部功能区影响可信度、舒适和维护。",
+        "visible_cues": [
+          "窗口边界连续且居中于接触逻辑",
+          "周边材料不制造虚假传感暗示"
+        ],
+        "limits": [
+          "造型不能证明传感准确性"
+        ],
+        "tradeoffs": [
+          "强调功能区可能削弱首饰化纯净感"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "光学、皮肤接触、密封、划伤和清洁验证"
+      ]
+    },
+    {
+      "atom_id": "watch-seam-fastener-legibility",
+      "title": "分缝和紧固件统一视觉语法",
+      "review_status": "approved",
+      "claim": "若分缝或紧固件可见，其宽度、方向、间距和表面应形成一致语法并服从结构主线。",
+      "activation": [
+        "外露螺钉",
+        "工业风",
+        "模块化",
+        "多分件"
+      ],
+      "avoid_when": [
+        "完全隐藏构造的首饰化方向"
+      ],
+      "decision_targets": [
+        "cmf",
+        "architecture"
+      ],
+      "move": {
+        "action": "选择一套分缝尺度和紧固件表达，避免真假结构混用。",
+        "why": "不一致的构造符号会让概念显得拼装和装饰化。",
+        "visible_cues": [
+          "紧固件与受力方向一致",
+          "分缝宽度和转角规律统一"
+        ],
+        "limits": [
+          "视觉语法不证明装配可行"
+        ],
+        "tradeoffs": [
+          "统一会限制局部变化"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "公差、工具可达、密封和装配顺序验证"
+      ]
+    },
+    {
+      "atom_id": "watch-optical-thickness-control",
+      "title": "透明与高光边界控制光学厚度",
+      "review_status": "approved",
+      "claim": "玻璃边缘、黑边和高光倒角会显著改变显示区的视觉厚度，应作为同一光学构造设计。",
+      "activation": [
+        "曲面玻璃",
+        "高屏占比",
+        "轻薄",
+        "高光倒角"
+      ],
+      "avoid_when": [
+        "无显示玻璃"
+      ],
+      "decision_targets": [
+        "cmf",
+        "architecture",
+        "image_evidence"
+      ],
+      "move": {
+        "action": "控制玻璃边缘反射、遮蔽边界和壳体高光，避免多层亮线叠加。",
+        "why": "渲染中的亮边可能把轻薄结构读成厚重层叠。",
+        "visible_cues": [
+          "显示边界只有一个主高光",
+          "黑边与壳体边界关系清楚"
+        ],
+        "limits": [
+          "渲染不能证明真实光学效果"
+        ],
+        "tradeoffs": [
+          "减少亮边会降低珠宝感"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "真实材料样件在多角度光线下评估"
+      ]
+    },
+    {
+      "atom_id": "watch-strap-material-context",
+      "title": "表带材料服从皮肤与场景",
+      "review_status": "approved",
+      "claim": "表带材料应同时回应佩戴时长、汗液、清洁、服装和正式程度，而不是只与表壳颜色匹配。",
+      "activation": [
+        "运动",
+        "会议",
+        "全天佩戴",
+        "可换表带"
+      ],
+      "avoid_when": [
+        "非佩戴展示"
+      ],
+      "decision_targets": [
+        "wearability",
+        "cmf"
+      ],
+      "move": {
+        "action": "以主场景选择接触面材料与表面，再用外侧颜色和纹理承载表达。",
+        "why": "皮肤侧与外观侧承担不同要求。",
+        "visible_cues": [
+          "内侧易清洁且边缘柔和",
+          "外侧纹理与场景正式度一致"
+        ],
+        "limits": [
+          "不宣称过敏安全或材料寿命"
+        ],
+        "tradeoffs": [
+          "双层或复合结构增加厚度和制造复杂度"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "皮肤相容、汗液、弯折、清洁和服装搭配测试"
+      ]
+    },
+    {
+      "atom_id": "watch-patina-aging-intent",
+      "title": "预先决定老化是隐藏还是表达",
+      "review_status": "approved",
+      "claim": "材料与表面应明确选择掩盖日常痕迹、均匀老化或允许个性化包浆，不能把老化留成意外。",
+      "activation": [
+        "天然材料",
+        "金属",
+        "户外",
+        "长期陪伴"
+      ],
+      "avoid_when": [
+        "严格无痕的短期展示"
+      ],
+      "decision_targets": [
+        "cmf",
+        "signature"
+      ],
+      "move": {
+        "action": "根据产品角色确定可接受的磨损类型，并让高接触区的老化路径一致。",
+        "why": "长期使用后的外观会改变用户对品质和身份的判断。",
+        "visible_cues": [
+          "纹理方向可吸收细划痕",
+          "角色色不依赖易磨薄层"
+        ],
+        "limits": [
+          "包浆概念不能掩盖腐蚀或涂层失效"
+        ],
+        "tradeoffs": [
+          "允许老化不适合所有审美与正式场景"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "加速老化与真实佩戴样本评审"
+      ]
+    },
+    {
+      "atom_id": "watch-no-ornament-without-role",
+      "title": "删除没有作用的装饰",
+      "review_status": "approved",
+      "claim": "腕上小尺度产品的每条槽、环、刻度和色块都应服务结构、操作、信息或身份中的至少一项。",
+      "activation": [
+        "装饰堆叠",
+        "科技感",
+        "表圈刻度",
+        "多色细节"
+      ],
+      "avoid_when": [
+        "纯艺术首饰探索"
+      ],
+      "decision_targets": [
+        "cmf",
+        "signature",
+        "architecture"
+      ],
+      "move": {
+        "action": "逐项说明细节作用，无法说明者删除或降级。",
+        "why": "小尺度上的无效细节会迅速形成噪声并制造虚假能力暗示。",
+        "visible_cues": [
+          "签名细节数量有限",
+          "装饰与操作或构造位置一致"
+        ],
+        "limits": [
+          "情感与身份作用也可成立但需明确"
+        ],
+        "tradeoffs": [
+          "删减会降低首眼复杂度和炫技感"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "缩略图、实物尺度和用户语义评审"
+      ]
+    }
+  ]
+}

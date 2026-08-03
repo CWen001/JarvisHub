@@ -1,0 +1,404 @@
+{
+  "domain": "scenario-trust",
+  "atoms": [
+    {
+      "atom_id": "watch-notification-boundary",
+      "title": "通知只保留可行动信息",
+      "review_status": "approved",
+      "claim": "腕上通知应优先呈现来源、重要性与下一动作，并限制低价值打断。",
+      "activation": [
+        "通知过载",
+        "会议",
+        "专注",
+        "健康提醒"
+      ],
+      "avoid_when": [
+        "专用警报设备"
+      ],
+      "decision_targets": [
+        "experience"
+      ],
+      "move": {
+        "action": "把通知分成需立即处理、可稍后处理和仅记录三类，并匹配不同反馈强度。",
+        "why": "腕部贴身反馈具有更高打断性。",
+        "visible_cues": [
+          "优先级可一瞥识别",
+          "低价值通知不占据全屏"
+        ],
+        "limits": [
+          "不能替用户错误地压低安全警报"
+        ],
+        "tradeoffs": [
+          "过滤可能漏掉用户主观重视的信息"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "真实一周通知日志与打断感评估"
+      ]
+    },
+    {
+      "atom_id": "watch-health-not-diagnosis",
+      "title": "健康洞察不得伪装诊断",
+      "review_status": "approved",
+      "claim": "概念级健康体验应表达趋势、提醒或求助入口，不应把未验证传感与算法写成诊断或治疗承诺。",
+      "activation": [
+        "健康",
+        "医疗",
+        "风险识别",
+        "生理指标"
+      ],
+      "avoid_when": [
+        "已有适用监管和临床证据的明确产品范围"
+      ],
+      "decision_targets": [
+        "experience",
+        "image_evidence"
+      ],
+      "move": {
+        "action": "使用中性状态、趋势与建议复核语言，并把准确性和临床有效性列为验证需求。",
+        "why": "视觉确定感容易让概念超出证据边界。",
+        "visible_cues": [
+          "不显示诊断性结论",
+          "提供复测、咨询或求助路径"
+        ],
+        "limits": [
+          "不作医疗级能力承诺"
+        ],
+        "tradeoffs": [
+          "克制措辞降低戏剧性和营销冲击"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "法规、临床、算法和人因联合评审"
+      ]
+    },
+    {
+      "atom_id": "watch-emergency-action-clarity",
+      "title": "应急动作以可发现和可取消为核心",
+      "review_status": "approved",
+      "claim": "应急入口必须在压力下可找到、可确认状态并能处理误触，同时不依赖复杂菜单。",
+      "activation": [
+        "SOS",
+        "跌倒",
+        "户外风险",
+        "照护"
+      ],
+      "avoid_when": [
+        "无应急能力"
+      ],
+      "decision_targets": [
+        "experience",
+        "architecture"
+      ],
+      "move": {
+        "action": "使用稳定实体入口或简单组合动作，并提供倒计时、反馈和取消路径。",
+        "why": "压力、受伤或低视野会降低精细操作和记忆能力。",
+        "visible_cues": [
+          "入口可盲辨",
+          "触发、发送和取消状态清楚"
+        ],
+        "limits": [
+          "不能假设网络、定位或救援永远可用"
+        ],
+        "tradeoffs": [
+          "高可达性会增加误触风险"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-INPUT-410",
+        "SRC-INTERACTION-110"
+      ],
+      "validation_needs": [
+        "压力情境、误触、断连和救援链路测试"
+      ]
+    },
+    {
+      "atom_id": "watch-battery-behavior-transparency",
+      "title": "续航不足时保持核心行为可预测",
+      "review_status": "approved",
+      "claim": "概念应定义低电量时哪些能力保留、降级或停止，而不是只给出未经验证的续航数字。",
+      "activation": [
+        "长续航",
+        "户外",
+        "健康监测",
+        "应急"
+      ],
+      "avoid_when": [
+        "无电池概念"
+      ],
+      "decision_targets": [
+        "experience"
+      ],
+      "move": {
+        "action": "建立渐进降级层级，并在用户仍有行动时间时解释影响。",
+        "why": "可预测的降级比突然失去关键能力更能建立信任。",
+        "visible_cues": [
+          "剩余核心能力清晰",
+          "节能模式不伪装成全功能状态"
+        ],
+        "limits": [
+          "不承诺具体续航或充电性能"
+        ],
+        "tradeoffs": [
+          "保留核心能力会限制其他视觉与后台功能"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-SIMPLICITY",
+        "SRC-HCD-210"
+      ],
+      "validation_needs": [
+        "功耗预算、降级逻辑和用户理解测试"
+      ]
+    },
+    {
+      "atom_id": "watch-water-use-not-image-proof",
+      "title": "涉水造型不等于防水能力",
+      "review_status": "approved",
+      "claim": "概念可表达游泳、雨天或清洁场景，但不得从密封外观或图像推断防水等级。",
+      "activation": [
+        "游泳",
+        "雨天",
+        "户外",
+        "清洗"
+      ],
+      "avoid_when": [
+        "明确不接触水"
+      ],
+      "decision_targets": [
+        "architecture",
+        "image_evidence"
+      ],
+      "move": {
+        "action": "把按键、开孔、扬声器和表带在湿态下的操作作为设计问题，并标记防水验证。",
+        "why": "涉水能力取决于不可见结构、材料、老化和测试。",
+        "visible_cues": [
+          "湿态交互不过度依赖触控",
+          "文案不出现未经验证等级"
+        ],
+        "limits": [
+          "不从渲染宣称防水"
+        ],
+        "tradeoffs": [
+          "密封与排水需求会约束声音、控件和维修"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "适用等级、老化、按键和声学路径工程测试"
+      ]
+    },
+    {
+      "atom_id": "watch-outdoor-glare",
+      "title": "户外可读性优先控制反射与层级",
+      "review_status": "approved",
+      "claim": "户外可读性不仅是峰值亮度问题，还受玻璃反射、表面高光、字号层级和扫视时间影响。",
+      "activation": [
+        "跑步",
+        "骑行",
+        "登山",
+        "强光"
+      ],
+      "avoid_when": [
+        "室内专用"
+      ],
+      "decision_targets": [
+        "experience",
+        "cmf",
+        "image_evidence"
+      ],
+      "move": {
+        "action": "减少显示周围竞争高光，并用少量大信息承载关键状态。",
+        "why": "强光和移动会同时降低对比与注意时间。",
+        "visible_cues": [
+          "主信息对比明确",
+          "玻璃和壳体高光不穿过关键区域"
+        ],
+        "limits": [
+          "渲染不能证明阳光可读性"
+        ],
+        "tradeoffs": [
+          "高对比简化会减少丰富表盘表达"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "真实显示、太阳光、偏振眼镜和运动扫视测试"
+      ]
+    },
+    {
+      "atom_id": "watch-night-low-disturbance",
+      "title": "夜间体验降低光、声和认知唤醒",
+      "review_status": "approved",
+      "claim": "夜间使用应减少大面积亮屏、突发声音和复杂决策，只保留必要状态与低干扰控制。",
+      "activation": [
+        "睡眠",
+        "夜间照护",
+        "床边",
+        "起夜"
+      ],
+      "avoid_when": [
+        "紧急警报"
+      ],
+      "decision_targets": [
+        "experience",
+        "cmf"
+      ],
+      "move": {
+        "action": "使用低亮局部信息、短触觉和简单关闭或延后动作。",
+        "why": "贴身设备的反馈可能打扰佩戴者和同处空间的人。",
+        "visible_cues": [
+          "暗背景与局部信息",
+          "夜间动作不要求多步导航"
+        ],
+        "limits": [
+          "低干扰不能导致重要状态不可见"
+        ],
+        "tradeoffs": [
+          "减少提示会提高错过风险"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-MULTIMODAL",
+        "SRC-HCD-210"
+      ],
+      "validation_needs": [
+        "暗适应、同室影响、触觉可感知与误操作测试"
+      ]
+    },
+    {
+      "atom_id": "watch-workout-sweat-control",
+      "title": "高汗运动保留可靠控制路径",
+      "review_status": "approved",
+      "claim": "高汗和剧烈运动场景中，核心暂停、分段和求助动作不应只依赖精细触控。",
+      "activation": [
+        "跑步",
+        "骑行",
+        "高汗",
+        "手套"
+      ],
+      "avoid_when": [
+        "低强度静态活动"
+      ],
+      "decision_targets": [
+        "architecture",
+        "experience",
+        "wearability"
+      ],
+      "move": {
+        "action": "给一个或两个核心动作稳定实体映射，并让反馈可在移动中确认。",
+        "why": "汗液、震动和分心会降低触控准确与视觉确认。",
+        "visible_cues": [
+          "控件可盲辨且防误触",
+          "关键状态使用大信息和触觉确认"
+        ],
+        "limits": [
+          "不宣称湿态输入性能已验证"
+        ],
+        "tradeoffs": [
+          "实体映射减少可配置自由"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-INPUT-410",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "汗液、手套、振动、疲劳和低温条件测试"
+      ]
+    },
+    {
+      "atom_id": "watch-social-privacy-legibility",
+      "title": "让佩戴者知道旁人能看到什么",
+      "review_status": "approved",
+      "claim": "腕上健康、消息和身份信息应考虑旁观可见性，并为敏感内容提供可预测的隐藏层级。",
+      "activation": [
+        "会议",
+        "健康数据",
+        "消息",
+        "公共交通"
+      ],
+      "avoid_when": [
+        "公开展示是任务目的"
+      ],
+      "decision_targets": [
+        "experience"
+      ],
+      "move": {
+        "action": "首屏只显示中性提示，抬腕确认或主动操作后再展开敏感内容。",
+        "why": "手腕常处于他人视线中，隐私不仅是数据权限也是社会可见性。",
+        "visible_cues": [
+          "锁定状态不泄露正文",
+          "展开动作由佩戴者主动触发"
+        ],
+        "limits": [
+          "不能保证任何角度绝对不可见"
+        ],
+        "tradeoffs": [
+          "隐私层级增加查看步骤"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "不同姿态、距离和社会场景的可见性测试"
+      ]
+    },
+    {
+      "atom_id": "watch-hardest-moment-evidence",
+      "title": "用最困难时刻检验概念",
+      "review_status": "approved",
+      "claim": "场景故事应展示最容易失败的真实时刻，而不是只展示准备和成功结果。",
+      "activation": [
+        "故事板",
+        "概念验证",
+        "场景叙事",
+        "风险较高"
+      ],
+      "avoid_when": [
+        "纯静物 CMF 展示"
+      ],
+      "decision_targets": [
+        "image_evidence",
+        "experience",
+        "wearability"
+      ],
+      "move": {
+        "action": "选择一个会暴露佩戴、可读性、控制或信任问题的困难节点，并明确设计如何应对。",
+        "why": "困难时刻能把概念主张转化为可讨论的视觉证据。",
+        "visible_cues": [
+          "动作、环境和限制同时出现",
+          "结果由设计决策而非旁白推动"
+        ],
+        "limits": [
+          "生成图仍是未验证概念证据"
+        ],
+        "tradeoffs": [
+          "真实困难会降低宣传画面的完美感"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "用真实用户复演困难节点并记录失败模式"
+      ]
+    }
+  ]
+}

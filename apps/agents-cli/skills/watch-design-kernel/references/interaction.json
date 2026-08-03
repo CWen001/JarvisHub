@@ -1,0 +1,395 @@
+{
+  "domain": "interaction",
+  "atoms": [
+    {
+      "atom_id": "watch-glance-priority",
+      "title": "一瞥只回答一个首要问题",
+      "review_status": "approved",
+      "claim": "腕上首屏应优先回答当前情境中最重要的一个问题，其余信息按需展开。",
+      "activation": [
+        "信息过多",
+        "表盘设计",
+        "运动或通勤扫视"
+      ],
+      "avoid_when": [
+        "专门的数据分析界面"
+      ],
+      "decision_targets": [
+        "experience"
+      ],
+      "move": {
+        "action": "定义首要状态、次级趋势和后续动作三层，而不是平铺所有指标。",
+        "why": "腕上交互通常短暂且伴随其他活动。",
+        "visible_cues": [
+          "单一主数字或主状态",
+          "次级信息明显降级"
+        ],
+        "limits": [
+          "紧急状态可打破常规层级"
+        ],
+        "tradeoffs": [
+          "深层信息需要额外一步"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "移动和分心条件下测试读取时间与正确率"
+      ]
+    },
+    {
+      "atom_id": "watch-one-primary-action",
+      "title": "每个关键界面突出一个主动作",
+      "review_status": "approved",
+      "claim": "小屏关键界面应有一个明确主动作，避免多个同权操作竞争有限触控与注意资源。",
+      "activation": [
+        "多按钮",
+        "训练控制",
+        "确认流程"
+      ],
+      "avoid_when": [
+        "并列比较本身是任务核心"
+      ],
+      "decision_targets": [
+        "experience"
+      ],
+      "move": {
+        "action": "将最高频或最高时效动作置于最稳定位置，其他动作延后或交给实体控件。",
+        "why": "减少选择竞争能降低扫视和误触成本。",
+        "visible_cues": [
+          "主动作尺寸与位置占优",
+          "次动作不使用同等视觉权重"
+        ],
+        "limits": [
+          "危险操作不能仅因高频而成为默认"
+        ],
+        "tradeoffs": [
+          "低频动作可发现性下降"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-INTERACTION-110",
+        "SRC-TARGET-258"
+      ],
+      "validation_needs": [
+        "任务成功率、误触和可发现性测试"
+      ]
+    },
+    {
+      "atom_id": "watch-touch-target-spacing",
+      "title": "触控目标同时考虑尺寸与间距",
+      "review_status": "approved",
+      "claim": "腕上触控设计应把目标尺寸与相邻间距作为一组约束，尤其关注移动、湿手与动作能力差异。",
+      "activation": [
+        "小图标",
+        "密集列表",
+        "运动触控",
+        "无障碍"
+      ],
+      "avoid_when": [
+        "纯展示且无触控"
+      ],
+      "decision_targets": [
+        "experience"
+      ],
+      "move": {
+        "action": "扩大关键目标的可点击区域，并避免小目标紧邻其他操作。",
+        "why": "手指比精细指针更大且更不精确，腕部还可能在移动。",
+        "visible_cues": [
+          "关键操作具有清晰留白",
+          "小图标的命中区域大于图形本身"
+        ],
+        "limits": [
+          "网页 CSS 像素指标不能直接当作硬件毫米规格"
+        ],
+        "tradeoffs": [
+          "更大目标会降低同屏信息密度"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-TARGET-258",
+        "SRC-INPUT-MODALITIES"
+      ],
+      "validation_needs": [
+        "在目标显示尺寸与真实动作条件下测量误触率"
+      ]
+    },
+    {
+      "atom_id": "watch-physical-control-recovery",
+      "title": "实体控件承担不中断的恢复动作",
+      "review_status": "approved",
+      "claim": "在汗水、手套、移动或屏幕被遮挡时，实体控件应优先承担暂停、返回或确认等恢复性动作。",
+      "activation": [
+        "运动",
+        "户外",
+        "湿手",
+        "手套"
+      ],
+      "avoid_when": [
+        "纯触控轻交互产品"
+      ],
+      "decision_targets": [
+        "architecture",
+        "experience"
+      ],
+      "move": {
+        "action": "把最需要可靠触发的一个动作绑定到可盲辨实体控件，并保持跨状态一致。",
+        "why": "实体反馈可在视觉与触控条件退化时提供备用路径。",
+        "visible_cues": [
+          "控件位置稳定",
+          "形态和触觉提示其角色"
+        ],
+        "limits": [
+          "实体控件也需防误触和故障处理"
+        ],
+        "tradeoffs": [
+          "增加开孔、体量和学习成本"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-INPUT-410",
+        "SRC-INTERACTION-110"
+      ],
+      "validation_needs": [
+        "湿手、手套、振动与无视觉条件下测试"
+      ]
+    },
+    {
+      "atom_id": "watch-haptic-language",
+      "title": "触觉反馈应形成少量可区分语法",
+      "review_status": "approved",
+      "claim": "触觉模式应限制数量，并围绕确认、提醒和警告建立稳定差异，避免每个功能自定义节奏。",
+      "activation": [
+        "安静交互",
+        "通知",
+        "无障碍",
+        "运动反馈"
+      ],
+      "avoid_when": [
+        "无触觉执行器"
+      ],
+      "decision_targets": [
+        "experience"
+      ],
+      "move": {
+        "action": "用强度、节奏和重复次数建立三到四类核心触觉语义。",
+        "why": "有限且一致的模式更容易在非视觉情境中学习和辨认。",
+        "visible_cues": [
+          "屏幕状态与触觉语义一致",
+          "高优先级反馈具有独特节奏"
+        ],
+        "limits": [
+          "个体触觉敏感度差异很大"
+        ],
+        "tradeoffs": [
+          "减少模式会限制功能级个性化"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-MULTIMODAL",
+        "SRC-INTERACTION-110"
+      ],
+      "validation_needs": [
+        "不同用户、佩戴松紧和环境下的辨识测试"
+      ]
+    },
+    {
+      "atom_id": "watch-quiet-context",
+      "title": "安静场景以私密反馈为默认",
+      "review_status": "approved",
+      "claim": "会议、照护和夜间场景应优先使用克制视觉与触觉反馈，避免默认声音和大幅亮屏。",
+      "activation": [
+        "会议",
+        "夜间",
+        "私密",
+        "照护"
+      ],
+      "avoid_when": [
+        "安全警报需要更强通道"
+      ],
+      "decision_targets": [
+        "experience",
+        "cmf"
+      ],
+      "move": {
+        "action": "建立安静模式下的低亮扫视、短触觉确认和无声实体控制。",
+        "why": "腕上反馈同时影响佩戴者和周围社会环境。",
+        "visible_cues": [
+          "低干扰信息层级",
+          "可盲操作的静音控制"
+        ],
+        "limits": [
+          "不能让关键警报因安静而不可感知"
+        ],
+        "tradeoffs": [
+          "私密反馈可能更易被错过"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-MULTIMODAL",
+        "SRC-HCD-210"
+      ],
+      "validation_needs": [
+        "安静环境中的可感知性与社会接受度测试"
+      ]
+    },
+    {
+      "atom_id": "watch-motion-alternative",
+      "title": "手势与拖拽必须有简单替代",
+      "review_status": "approved",
+      "claim": "依赖抬腕、旋转、拖拽或精细手势的功能应提供点击或实体控件替代路径。",
+      "activation": [
+        "手势控制",
+        "拖拽",
+        "动作能力差异",
+        "运动中使用"
+      ],
+      "avoid_when": [
+        "动作本身是不可替代的测量对象"
+      ],
+      "decision_targets": [
+        "experience"
+      ],
+      "move": {
+        "action": "为关键动作提供单击、按键或自动超时后的等价路径。",
+        "why": "并非所有用户或场景都能稳定完成复杂动作。",
+        "visible_cues": [
+          "替代操作可发现",
+          "失败后出现明确恢复入口"
+        ],
+        "limits": [
+          "替代路径不能隐藏在更复杂流程里"
+        ],
+        "tradeoffs": [
+          "多路径会增加界面与测试复杂度"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-INPUT-MODALITIES",
+        "SRC-INTERACTION-110"
+      ],
+      "validation_needs": [
+        "动作受限、单手和移动情境可达性测试"
+      ]
+    },
+    {
+      "atom_id": "watch-error-reversibility",
+      "title": "高代价动作优先可撤销",
+      "review_status": "approved",
+      "claim": "在小屏和短时注意条件下，高代价操作应采用可撤销、延迟提交或明确确认，而不是依赖精细防误触。",
+      "activation": [
+        "删除",
+        "结束记录",
+        "应急联系",
+        "支付或隐私"
+      ],
+      "avoid_when": [
+        "必须立即执行的安全动作"
+      ],
+      "decision_targets": [
+        "experience"
+      ],
+      "move": {
+        "action": "根据后果选择撤销窗口、二次确认或长按，并保持恢复入口可见。",
+        "why": "误触无法完全消除，恢复设计能降低真实损失。",
+        "visible_cues": [
+          "结果状态明确",
+          "撤销或取消入口及时出现"
+        ],
+        "limits": [
+          "确认层级不能阻碍紧急任务"
+        ],
+        "tradeoffs": [
+          "保护步骤会增加完成时间"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-INTERACTION-110",
+        "SRC-TARGET-258"
+      ],
+      "validation_needs": [
+        "误操作率、恢复成功率和紧急完成时间测试"
+      ]
+    },
+    {
+      "atom_id": "watch-progressive-disclosure",
+      "title": "腕上信息逐层展开",
+      "review_status": "approved",
+      "claim": "复杂信息应从状态摘要到行动建议再到详细数据逐层展开，避免把手机页面缩小到腕上。",
+      "activation": [
+        "健康数据",
+        "训练指标",
+        "复杂通知",
+        "小屏"
+      ],
+      "avoid_when": [
+        "单一简单工具"
+      ],
+      "decision_targets": [
+        "experience"
+      ],
+      "move": {
+        "action": "首层只显示当前意义，第二层提供下一动作，详细分析交给后续页面或接力设备。",
+        "why": "渐进披露匹配短暂扫视与有限屏幕。",
+        "visible_cues": [
+          "首层摘要完整可理解",
+          "深入入口与返回路径稳定"
+        ],
+        "limits": [
+          "关键风险信息不能被埋藏"
+        ],
+        "tradeoffs": [
+          "深入查看需要更多步骤"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-SIMPLICITY",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "不同经验用户的理解、导航和返回测试"
+      ]
+    },
+    {
+      "atom_id": "watch-accessibility-multimodal",
+      "title": "关键状态不依赖单一感官通道",
+      "review_status": "approved",
+      "claim": "关键提醒、状态与确认应至少通过两种可理解通道表达，并允许调整强度或关闭非必要通道。",
+      "activation": [
+        "无障碍",
+        "健康提醒",
+        "高噪声",
+        "视觉受限"
+      ],
+      "avoid_when": [
+        "单通道本身是受控实验变量"
+      ],
+      "decision_targets": [
+        "experience"
+      ],
+      "move": {
+        "action": "组合视觉、触觉和可选声音，同时让颜色之外还有形状、文字或节奏线索。",
+        "why": "环境与个体能力会让任何单一通道失效。",
+        "visible_cues": [
+          "颜色不是唯一状态区别",
+          "触觉和视觉反馈可对应"
+        ],
+        "limits": [
+          "多模态不是同时最大强度输出"
+        ],
+        "tradeoffs": [
+          "增加设置与一致性维护成本"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-MULTIMODAL",
+        "SRC-INPUT-MODALITIES"
+      ],
+      "validation_needs": [
+        "听觉、视觉、触觉差异用户与多环境测试"
+      ]
+    }
+  ]
+}

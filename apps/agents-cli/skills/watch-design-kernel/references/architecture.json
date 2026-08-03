@@ -1,0 +1,390 @@
+{
+  "domain": "architecture",
+  "atoms": [
+    {
+      "atom_id": "watch-silhouette-distance-read",
+      "title": "先建立远距轮廓识别",
+      "review_status": "approved",
+      "claim": "手表身份首先由表壳、显示区、表带和控件的整体轮廓关系建立，细节只能强化不能替代。",
+      "activation": [
+        "身份感不足",
+        "细节过多",
+        "概念缩略图不可读"
+      ],
+      "avoid_when": [
+        "故意追求匿名工具感"
+      ],
+      "decision_targets": [
+        "architecture",
+        "signature",
+        "image_evidence"
+      ],
+      "move": {
+        "action": "用一个主轮廓动作和一个次级转折建立缩略图级识别。",
+        "why": "腕上产品常在远距、运动和短暂扫视中被感知。",
+        "visible_cues": [
+          "表壳与表带形成清晰外轮廓",
+          "控件只作为次级重音"
+        ],
+        "limits": [
+          "不依赖夸张到影响佩戴的轮廓"
+        ],
+        "tradeoffs": [
+          "轮廓克制会减少局部炫技空间"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "用小尺寸、不同角度和佩戴姿态盲测识别"
+      ]
+    },
+    {
+      "atom_id": "watch-case-display-ratio",
+      "title": "表壳与显示区比例表达角色",
+      "review_status": "approved",
+      "claim": "显示开口、边界结构和外壳体量的比例应共同表达精密、轻盈或防护角色。",
+      "activation": [
+        "屏占比诉求",
+        "强防护诉求",
+        "轻薄诉求"
+      ],
+      "avoid_when": [
+        "显示形态尚未确定"
+      ],
+      "decision_targets": [
+        "architecture"
+      ],
+      "move": {
+        "action": "先定义显示区与承载结构的视觉占比，再分配边框、防护唇和装饰。",
+        "why": "相同比例在不同角色下传达的耐护与精致程度不同。",
+        "visible_cues": [
+          "显示边界连续",
+          "承载结构厚薄有主次"
+        ],
+        "limits": [
+          "视觉比例不等于实际结构尺寸"
+        ],
+        "tradeoffs": [
+          "极窄视觉边界可能削弱防护表达"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "结构堆叠和跌落边界需工程验证"
+      ]
+    },
+    {
+      "atom_id": "watch-visual-thickness-layering",
+      "title": "通过分层管理视觉厚度",
+      "review_status": "approved",
+      "claim": "视觉轻薄应通过中框、背壳、玻璃和表带连接的分层与退让建立，不能依靠虚假的绝对薄度。",
+      "activation": [
+        "轻薄",
+        "全天佩戴",
+        "厚壳体"
+      ],
+      "avoid_when": [
+        "厚重本身是明确身份"
+      ],
+      "decision_targets": [
+        "architecture",
+        "image_evidence"
+      ],
+      "move": {
+        "action": "让接触腕部的下层收敛，主中框保持连续，上层显示边界适度退让。",
+        "why": "分层能在保留容积的同时减少侧视笨重感。",
+        "visible_cues": [
+          "背壳视觉内收",
+          "侧面主线连续",
+          "玻璃不过度悬浮"
+        ],
+        "limits": [
+          "不声称真实厚度或内部空间已解决"
+        ],
+        "tradeoffs": [
+          "层次增加可能带来缝隙与清洁负担"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "验证堆叠、密封、装配和清洁可行性"
+      ]
+    },
+    {
+      "atom_id": "watch-control-protrusion-hierarchy",
+      "title": "控件凸出量必须有层级",
+      "review_status": "approved",
+      "claim": "旋钮与按键的凸出量、护肩和触达空间应按使用频率与误触风险分级。",
+      "activation": [
+        "多个实体控件",
+        "运动中操作",
+        "易误触"
+      ],
+      "avoid_when": [
+        "无实体控件概念"
+      ],
+      "decision_targets": [
+        "architecture",
+        "experience"
+      ],
+      "move": {
+        "action": "让主控件可盲触，次控件更收敛，并以护肩或间距区分。",
+        "why": "一致凸出会模糊主次并增加衣物勾挂或误触。",
+        "visible_cues": [
+          "主控件具有可触知轮廓",
+          "次控件与壳体更齐平"
+        ],
+        "limits": [
+          "护肩不能阻碍有效按压"
+        ],
+        "tradeoffs": [
+          "高可触达性可能增加视觉体量"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-INPUT-410"
+      ],
+      "validation_needs": [
+        "戴手套、运动和屈腕姿态下测试触达与误触"
+      ]
+    },
+    {
+      "atom_id": "watch-crown-button-separation",
+      "title": "旋转与按压动作需要物理分离",
+      "review_status": "approved",
+      "claim": "相邻控件若承担不同动作，应通过位置、形状、纹理或阻尼形成可盲辨差异。",
+      "activation": [
+        "旋钮加按键",
+        "盲操作",
+        "运动控制"
+      ],
+      "avoid_when": [
+        "单一组合控件已被验证"
+      ],
+      "decision_targets": [
+        "architecture",
+        "experience"
+      ],
+      "move": {
+        "action": "至少使用两种物理线索区分旋转、短按与长按。",
+        "why": "小尺度和移动情境会放大相邻控件混淆。",
+        "visible_cues": [
+          "截然不同的截面或纹理",
+          "足够的指腹分离空间"
+        ],
+        "limits": [
+          "差异不能只依赖颜色"
+        ],
+        "tradeoffs": [
+          "分离会占用壳体边缘空间"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-INPUT-410",
+        "SRC-INTERACTION-110"
+      ],
+      "validation_needs": [
+        "闭眼与运动状态下验证控件辨识率"
+      ]
+    },
+    {
+      "atom_id": "watch-lugless-articulation",
+      "title": "小腕优先采用近壳转折",
+      "review_status": "approved",
+      "claim": "表带越早在表壳附近向下转折，越能减少有效跨腕长度并改善小腕贴合。",
+      "activation": [
+        "小手腕",
+        "大显示区",
+        "全天佩戴"
+      ],
+      "avoid_when": [
+        "刚性一体式手镯概念"
+      ],
+      "decision_targets": [
+        "architecture",
+        "wearability"
+      ],
+      "move": {
+        "action": "缩短刚性表耳或采用隐藏转轴，让表带从壳体边缘附近下垂。",
+        "why": "决定小腕适配的不只是壳宽，还有不可弯曲的端到端跨度。",
+        "visible_cues": [
+          "表带近壳自然下折",
+          "侧视没有长直悬臂"
+        ],
+        "limits": [
+          "转轴空间和耐久尚需工程验证"
+        ],
+        "tradeoffs": [
+          "近壳转折可能压缩天线、连接和快拆空间"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "覆盖目标腕围的实体样机贴合测试"
+      ]
+    },
+    {
+      "atom_id": "watch-strap-case-continuity",
+      "title": "表带连接决定整机姿态",
+      "review_status": "approved",
+      "claim": "表带与表壳的宽度、切线和转折连续性决定手表看起来是稳定一体、轻快分离还是专业模块化。",
+      "activation": [
+        "整机不协调",
+        "强调一体感",
+        "模块化表带"
+      ],
+      "avoid_when": [
+        "刻意强调可替换拼装"
+      ],
+      "decision_targets": [
+        "architecture",
+        "signature"
+      ],
+      "move": {
+        "action": "让连接区只承担一种主关系：连续、夹持或悬置。",
+        "why": "同时使用多种关系会让表壳和表带像来自不同产品。",
+        "visible_cues": [
+          "宽度与切线有明确延续或断开",
+          "连接件不成为无意义装饰"
+        ],
+        "limits": [
+          "视觉连续不代表结构连续"
+        ],
+        "tradeoffs": [
+          "强一体感可能降低第三方表带兼容"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "验证换带、摆动、缝隙和受力路径"
+      ]
+    },
+    {
+      "atom_id": "watch-sensor-back-transition",
+      "title": "背部传感区需要柔和过渡",
+      "review_status": "approved",
+      "claim": "传感窗口与背壳的高度、曲率和边界应减少局部压点，同时保持接触定位清晰。",
+      "activation": [
+        "全天健康监测",
+        "传感凸台",
+        "舒适性"
+      ],
+      "avoid_when": [
+        "无皮肤接触传感"
+      ],
+      "decision_targets": [
+        "architecture",
+        "wearability"
+      ],
+      "move": {
+        "action": "用宽缓曲面和连续边界过渡到传感区，避免窄而尖的台阶。",
+        "why": "局部几何会集中压力并影响佩戴感受。",
+        "visible_cues": [
+          "背壳连续弧面",
+          "传感区边缘圆顺且易清洁"
+        ],
+        "limits": [
+          "不能从造型推断信号质量"
+        ],
+        "tradeoffs": [
+          "更宽过渡会占用背部面积"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-THERMAL-406"
+      ],
+      "validation_needs": [
+        "压力分布、皮肤接触、信号和清洁测试"
+      ]
+    },
+    {
+      "atom_id": "watch-protection-without-bulk",
+      "title": "防护表达集中在风险边界",
+      "review_status": "approved",
+      "claim": "专业防护感应集中在玻璃边缘、控件和关键冲击路径，而不是让所有表面等厚等硬。",
+      "activation": [
+        "户外",
+        "耐护",
+        "轻量专业"
+      ],
+      "avoid_when": [
+        "明确要求最大化视觉厚重"
+      ],
+      "decision_targets": [
+        "architecture",
+        "cmf"
+      ],
+      "move": {
+        "action": "在高风险边缘形成局部护唇或结构筋，其余区域视觉减重。",
+        "why": "选择性防护能表达可信风险意识，同时保留佩戴友好体量。",
+        "visible_cues": [
+          "显示区和控件有定向保护",
+          "低风险面保持简洁"
+        ],
+        "limits": [
+          "不能声称实际跌落等级"
+        ],
+        "tradeoffs": [
+          "局部防护可能产生积尘和视觉不对称"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "冲击路径、跌落、密封和清洁工程验证"
+      ]
+    },
+    {
+      "atom_id": "watch-service-seam-honesty",
+      "title": "构造分缝应说明装配逻辑",
+      "review_status": "approved",
+      "claim": "可见分缝、紧固件和材料交界应与合理装配或维护逻辑一致，避免纯装饰的假结构。",
+      "activation": [
+        "工业感",
+        "模块化",
+        "可维护表达",
+        "分件较多"
+      ],
+      "avoid_when": [
+        "无缝首饰化概念"
+      ],
+      "decision_targets": [
+        "architecture",
+        "cmf"
+      ],
+      "move": {
+        "action": "只保留能解释材料、受力或装配边界的可见分缝。",
+        "why": "结构诚实能提高产品可信度并减少装饰噪声。",
+        "visible_cues": [
+          "分缝沿真实体块边界运行",
+          "紧固件位置具有受力逻辑"
+        ],
+        "limits": [
+          "概念阶段仍不能宣称可维修性"
+        ],
+        "tradeoffs": [
+          "真实分缝可能降低纯净感并增加密封挑战"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "装配、密封、公差和维护路径验证"
+      ]
+    }
+  ]
+}

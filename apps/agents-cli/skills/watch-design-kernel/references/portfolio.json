@@ -1,0 +1,395 @@
+{
+  "domain": "portfolio",
+  "atoms": [
+    {
+      "atom_id": "watch-context-before-feature",
+      "title": "先定义使用情境，再定义功能形态",
+      "review_status": "approved",
+      "claim": "智能手表的设计方向应从明确的用户、任务与环境出发，而不是从功能清单或流行造型出发。",
+      "activation": [
+        "需求很简短",
+        "只有功能词",
+        "场景模糊"
+      ],
+      "avoid_when": [
+        "用户已经给出清晰且经验证的场景"
+      ],
+      "decision_targets": [
+        "experience",
+        "architecture"
+      ],
+      "move": {
+        "action": "选择一个高频主情境作为形态与交互判断的共同锚点。",
+        "why": "同一功能在通勤、运动和照护情境中的优先级与可见证据不同。",
+        "visible_cues": [
+          "主场景对应的表盘层级",
+          "与动作相匹配的控件布局"
+        ],
+        "limits": [
+          "不把单一场景误写成全部使用范围"
+        ],
+        "tradeoffs": [
+          "聚焦会降低泛化表达"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210"
+      ],
+      "validation_needs": [
+        "用目标用户任务走查主情境是否真实高频"
+      ]
+    },
+    {
+      "atom_id": "watch-family-fit-first",
+      "title": "产品族角色先于造型新奇",
+      "review_status": "approved",
+      "claim": "概念必须先说明它在产品组合中承担的角色，再判断哪些创新值得进入外观和体验。",
+      "activation": [
+        "未指定产品族",
+        "希望差异化",
+        "概念容易泛化"
+      ],
+      "avoid_when": [
+        "明确是跨族或新族探索"
+      ],
+      "decision_targets": [
+        "architecture",
+        "signature"
+      ],
+      "move": {
+        "action": "先确定最强产品族适配与补位关系，再选择可识别的设计动作。",
+        "why": "没有组合角色的创新容易成为无法取舍的元素堆叠。",
+        "visible_cues": [
+          "与角色一致的体量",
+          "与角色一致的控件和材质优先级"
+        ],
+        "limits": [
+          "不模仿任何真实品牌现有产品"
+        ],
+        "tradeoffs": [
+          "组合一致性会约束极端造型自由"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "对照内部产品组合验证补位是否成立"
+      ]
+    },
+    {
+      "atom_id": "watch-hero-scenario-anchor",
+      "title": "用英雄场景约束完整概念",
+      "review_status": "approved",
+      "claim": "一个可复述的英雄场景能把定位、佩戴、交互和视觉证据连接成同一条设计因果链。",
+      "activation": [
+        "方向元素过多",
+        "多种场景竞争",
+        "图像难以聚焦"
+      ],
+      "avoid_when": [
+        "明确要求并列比较多个概念"
+      ],
+      "decision_targets": [
+        "experience",
+        "image_evidence"
+      ],
+      "move": {
+        "action": "用一个最能暴露设计价值与难点的场景决定首要体验和主视图。",
+        "why": "英雄场景让设计取舍可观察而非停留在口号。",
+        "visible_cues": [
+          "主动作在图像中可读",
+          "关键控件和信息处于使用姿态"
+        ],
+        "limits": [
+          "不能用理想化场景掩盖真实困难"
+        ],
+        "tradeoffs": [
+          "其他场景只能作为兼容性要求"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "验证英雄场景是否覆盖最高价值与最高风险时刻"
+      ]
+    },
+    {
+      "atom_id": "watch-primary-design-tension",
+      "title": "明确一个主设计矛盾",
+      "review_status": "approved",
+      "claim": "强概念通常围绕一个可陈述的主矛盾建立，例如保护与轻薄、信息丰富与安静扫视。",
+      "activation": [
+        "需求包含冲突目标",
+        "概念缺少主线",
+        "设计原则太多"
+      ],
+      "avoid_when": [
+        "目标之间不存在真实冲突"
+      ],
+      "decision_targets": [
+        "architecture",
+        "experience",
+        "signature"
+      ],
+      "move": {
+        "action": "把最影响用户价值的冲突写成方向命题，并让每项决策表明站位。",
+        "why": "显式矛盾能帮助排除无关创新并建立一致性。",
+        "visible_cues": [
+          "一个主导比例动作",
+          "一个与矛盾对应的体验动作"
+        ],
+        "limits": [
+          "不把所有要求都包装成矛盾"
+        ],
+        "tradeoffs": [
+          "明确站位意味着接受一侧损失"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "与利益相关者确认主矛盾优先级"
+      ]
+    },
+    {
+      "atom_id": "watch-target-user-specificity",
+      "title": "用户描述必须影响设计",
+      "review_status": "approved",
+      "claim": "目标用户只有在改变比例、佩戴、交互或表达取舍时才是有效的设计输入。",
+      "activation": [
+        "只有人口属性",
+        "用户画像宽泛",
+        "概念套用模板"
+      ],
+      "avoid_when": [
+        "用户差异确实不影响当前设计范围"
+      ],
+      "decision_targets": [
+        "wearability",
+        "experience"
+      ],
+      "move": {
+        "action": "把用户描述转译为可观察的能力、习惯、姿态和社会情境约束。",
+        "why": "人口标签本身不能指导控件、佩戴和信息层级。",
+        "visible_cues": [
+          "符合动作能力的交互目标",
+          "符合腕围和场景的佩戴结构"
+        ],
+        "limits": [
+          "避免刻板印象和未经证实的能力假设"
+        ],
+        "tradeoffs": [
+          "更具体的用户会缩小普适叙事"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210"
+      ],
+      "validation_needs": [
+        "通过访谈或任务观察验证关键用户假设"
+      ]
+    },
+    {
+      "atom_id": "watch-everyday-or-specialist",
+      "title": "区分日常核心与专业核心",
+      "review_status": "approved",
+      "claim": "日常型与专业型手表应采用不同的暴露程度、控制密度和耐护表达，不能只靠换材质区分。",
+      "activation": [
+        "运动与日常混合",
+        "专业功能诉求",
+        "全天佩戴诉求"
+      ],
+      "avoid_when": [
+        "明确的跨族实验需要刻意融合"
+      ],
+      "decision_targets": [
+        "architecture",
+        "experience",
+        "cmf"
+      ],
+      "move": {
+        "action": "选择日常优先、专业优先或清晰的双模式架构，并据此控制外显复杂度。",
+        "why": "任务频率和失败成本决定信息与实体控制应被看见多少。",
+        "visible_cues": [
+          "控件密度与角色一致",
+          "防护和材质表达与角色一致"
+        ],
+        "limits": [
+          "不能用视觉强悍替代真实能力"
+        ],
+        "tradeoffs": [
+          "双模式会增加认知与结构复杂度"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "验证主任务频率、失败成本和佩戴时长"
+      ]
+    },
+    {
+      "atom_id": "watch-ecosystem-role",
+      "title": "定义手表在设备生态中的角色",
+      "review_status": "approved",
+      "claim": "手表应明确哪些任务在腕上完成、哪些只做入口、哪些应转移到更适合的设备。",
+      "activation": [
+        "功能过多",
+        "手表替代手机",
+        "跨设备任务"
+      ],
+      "avoid_when": [
+        "完全离线且任务闭环已明确"
+      ],
+      "decision_targets": [
+        "experience"
+      ],
+      "move": {
+        "action": "为关键任务指定腕上完成、快速确认或接力三种角色。",
+        "why": "小屏和短时交互不适合无差别承载完整流程。",
+        "visible_cues": [
+          "腕上只保留关键状态与动作",
+          "复杂步骤具有清晰接力点"
+        ],
+        "limits": [
+          "不假设连接永远可靠"
+        ],
+        "tradeoffs": [
+          "接力可降低独立性"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "测试断连、单手和移动状态下的任务闭环"
+      ]
+    },
+    {
+      "atom_id": "watch-differentiate-through-behavior",
+      "title": "优先用行为建立差异化",
+      "review_status": "approved",
+      "claim": "比起追加装饰，围绕一个独特而有用的交互或佩戴行为建立差异更容易形成可信身份。",
+      "activation": [
+        "要求新颖",
+        "造型装饰堆叠",
+        "产品身份薄弱"
+      ],
+      "avoid_when": [
+        "纯表达型限量概念"
+      ],
+      "decision_targets": [
+        "experience",
+        "signature"
+      ],
+      "move": {
+        "action": "选择一个高价值行为，并让形态、控件、反馈和视觉细节共同支持它。",
+        "why": "行为差异能在使用中反复被感知，而非只在静态图中成立。",
+        "visible_cues": [
+          "实体与数字反馈成对",
+          "签名元素有明确操作或佩戴作用"
+        ],
+        "limits": [
+          "行为必须可学习且不妨碍核心任务"
+        ],
+        "tradeoffs": [
+          "强行为身份可能降低中性通用感"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-INTERACTION-110",
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "用任务测试确认差异行为可发现、可记忆"
+      ]
+    },
+    {
+      "atom_id": "watch-cross-family-boundary",
+      "title": "跨族探索需要明确继承与背离",
+      "review_status": "approved",
+      "claim": "跨产品族概念应明确从各族继承什么、拒绝什么，避免成为特征拼盘。",
+      "activation": [
+        "跨族探索",
+        "融合多个系列",
+        "新家族探索"
+      ],
+      "avoid_when": [
+        "已有单一明确产品族"
+      ],
+      "decision_targets": [
+        "architecture",
+        "signature",
+        "cmf"
+      ],
+      "move": {
+        "action": "限制为两到三个可解释的继承项，并声明一个关键背离。",
+        "why": "有限继承能保留谱系可读性，同时为新角色留出空间。",
+        "visible_cues": [
+          "可追溯但非复制的比例或构造",
+          "新的主签名动作"
+        ],
+        "limits": [
+          "不引用真实品牌造型作为生成目标"
+        ],
+        "tradeoffs": [
+          "减少熟悉特征可能降低即时识别"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-EDITORIAL"
+      ],
+      "validation_needs": [
+        "用盲评检查概念是否独立且角色清晰"
+      ]
+    },
+    {
+      "atom_id": "watch-assumption-to-validation",
+      "title": "把关键假设转成验证计划",
+      "review_status": "approved",
+      "claim": "概念阶段可以合理推断，但高影响推断必须显式进入验证需求，而不是被图像表现掩盖。",
+      "activation": [
+        "缺少数据",
+        "性能目标",
+        "工程相关推断",
+        "医疗或健康语境"
+      ],
+      "avoid_when": [
+        "已有可追溯验证证据"
+      ],
+      "decision_targets": [
+        "architecture",
+        "wearability",
+        "experience"
+      ],
+      "move": {
+        "action": "标出会改变概念方向的假设，并为每项指定最低可行验证。",
+        "why": "图像容易让未验证结论显得已经成立。",
+        "visible_cues": [
+          "用户文案明确概念级状态",
+          "设计状态保留验证需求"
+        ],
+        "limits": [
+          "不把验证需求写成已达成指标"
+        ],
+        "tradeoffs": [
+          "诚实的不确定性会降低展示的确定感"
+        ]
+      },
+      "evidence_refs": [
+        "SRC-HCD-210",
+        "SRC-THERMAL-406"
+      ],
+      "validation_needs": [
+        "建立用户、人体工学和工程验证责任清单"
+      ]
+    }
+  ]
+}

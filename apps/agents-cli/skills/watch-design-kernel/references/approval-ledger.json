@@ -1,0 +1,367 @@
+{
+  "skill": "watch-design-knowledge",
+  "published_version": "0.2.0",
+  "published_at": "2026-07-14T13:39:40.079419+00:00",
+  "atoms": [
+    {
+      "review_code": "P01",
+      "atom_id": "watch-context-before-feature",
+      "review_digest": "565928aca9f969c32b59cae3db4e817aaff310d83fff4e8caf2fc7b646223d75",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "P02",
+      "atom_id": "watch-family-fit-first",
+      "review_digest": "e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "P03",
+      "atom_id": "watch-hero-scenario-anchor",
+      "review_digest": "e935c9da9f03cb860c53aa2f0925e2948fc63de363d48ddd60fb3dfa06022b8d",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "P04",
+      "atom_id": "watch-primary-design-tension",
+      "review_digest": "2d09bb89bb390be1f7aabcb503b90e91a3aa29fda959749bb0e2341dd349b929",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "P05",
+      "atom_id": "watch-target-user-specificity",
+      "review_digest": "1bb7977a5ded1280eb46c60a3f35726adf0bda393830229d3c14c4b36bbec9f5",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "P06",
+      "atom_id": "watch-everyday-or-specialist",
+      "review_digest": "246e5e349e315dce12667a9e6ddebbc0d961ccd599e84f1b890cbb5136f200b5",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "P07",
+      "atom_id": "watch-ecosystem-role",
+      "review_digest": "35959291a29ac63f67e1cc631380f8d2c3bd0a7f779cada0ee7a617b2c4849fd",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "P08",
+      "atom_id": "watch-differentiate-through-behavior",
+      "review_digest": "b86f663fceb1284ccc86c3314afd7224e05118d4c0683748c526ef30030eeca9",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "P09",
+      "atom_id": "watch-cross-family-boundary",
+      "review_digest": "44c96224b2621d76b9a4bcabe864907f313152f4b8c1f3005be95734645aef92",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "P10",
+      "atom_id": "watch-assumption-to-validation",
+      "review_digest": "feb1e6ba3b1fb29fa5d6f612d473d3a3299bfc812328c66f3cea40333cc5b841",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "A01",
+      "atom_id": "watch-silhouette-distance-read",
+      "review_digest": "22744f2a0b53d51c020355c3550b7382c6aaadd159a82e862891ca9fb5b57e95",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "A02",
+      "atom_id": "watch-case-display-ratio",
+      "review_digest": "0b25056bd64309ec27b04ac906d4a85d56d64a68b661652c41510d936d98c4d8",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "A03",
+      "atom_id": "watch-visual-thickness-layering",
+      "review_digest": "ac9b5da6d6c685cde4dbc25f1df3365393ef4a4cd3341cfc5d3fe628598bf9a4",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "A04",
+      "atom_id": "watch-control-protrusion-hierarchy",
+      "review_digest": "a8607f61300cb7dc0d111471cf5b92d8b8039d76f4ca2aa2ad9200f472eb0b9a",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "A05",
+      "atom_id": "watch-crown-button-separation",
+      "review_digest": "0e7c97421167cd5dd3f02655c606d72d7982a25a2f122a4c533a4cbf69982f61",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "A06",
+      "atom_id": "watch-lugless-articulation",
+      "review_digest": "575930f155d47e60d23e20d87df2ce1afc67412c86130eaf26575c110661c0a8",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "A07",
+      "atom_id": "watch-strap-case-continuity",
+      "review_digest": "062fec296783eb15792c09457b589a5d37dc99def6e54a2026223db41362002a",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "A08",
+      "atom_id": "watch-sensor-back-transition",
+      "review_digest": "95c98e85dc413265511321ffbbafee31602dba86219e5d78252dd319a0a55d3f",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "A09",
+      "atom_id": "watch-protection-without-bulk",
+      "review_digest": "514869453eb42fb652a311ed1825f0ded1671aa3a148fafae66c00d5005e29b5",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "A10",
+      "atom_id": "watch-service-seam-honesty",
+      "review_digest": "70c41e07e7c48f3d4b1b8a439fe09fb22c4f94f21d6068b6386e605f4c16bd58",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "W01",
+      "atom_id": "watch-wrist-range-first",
+      "review_digest": "36c9415b5c0797dc2a78d08ca6b51de757db79af4196a05f857a4abab3869d27",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "W02",
+      "atom_id": "watch-mass-close-to-wrist",
+      "review_digest": "3040f824583bc46ab3bb131b65f9f8df1eed2d86646e9e1e8ff55ff88777bb4f",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "W03",
+      "atom_id": "watch-small-wrist-articulation",
+      "review_digest": "4617708934a1d0a2e59ed3855c8362f440c1b06790b7f45e8d2667cd8ca66b10",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "W04",
+      "atom_id": "watch-strap-pressure-distribution",
+      "review_digest": "96664dcbd0ffb7314ba79e6aa006f821cdc1c9040ef1e5536f503e893394a900",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "W05",
+      "atom_id": "watch-one-hand-closure",
+      "review_digest": "c676f6404778a84a5d2dd380aa4ce98ec1e4aeed5b60e1274f163c80df7804db",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "W06",
+      "atom_id": "watch-skin-contact-zone",
+      "review_digest": "0b4ac1f0e0775e8b56eadb8a893536b65a5ca49b9dec95e3344b19a70b6a5b9e",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "W07",
+      "atom_id": "watch-sweat-drain-cleanability",
+      "review_digest": "8602101e49e2bc0bbc9c4230c3c01e722fffb033f76a6a96a63fa4af6cb9b72b",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "W08",
+      "atom_id": "watch-snag-safe-edges",
+      "review_digest": "3862d4f87ef8749cdc33544916f2043bd5fe635d2504e0fdaa9c15d60a625c6b",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "W09",
+      "atom_id": "watch-thermal-contact-caution",
+      "review_digest": "2add87c02b6b7624f0467201ef46c6aa703e14bcf78e34f781ab4b8f2e5a3e49",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "W10",
+      "atom_id": "watch-sensor-contact-stability",
+      "review_digest": "28c1e6ed8c5d55d547527a200757b79c0f0a874f7fa8881a90ee273ef4ae71d4",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "I01",
+      "atom_id": "watch-glance-priority",
+      "review_digest": "12931c3996d1f7f81366c17faf890f7d6c109767911a1be23a045e89ae516fe8",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "I02",
+      "atom_id": "watch-one-primary-action",
+      "review_digest": "17101c689286ef325891909934f22c27967695469a622164f3b743dc2e925fa1",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "I03",
+      "atom_id": "watch-touch-target-spacing",
+      "review_digest": "00a23902aeda7978717f18b590ef833463b668ce75a95d42c3cedeba42fb6df4",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "I04",
+      "atom_id": "watch-physical-control-recovery",
+      "review_digest": "9b0d98e8038148ccb6ba1054ea3d387f1b6999a0206835b1973be04eb92822c1",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "I05",
+      "atom_id": "watch-haptic-language",
+      "review_digest": "d86249e92ce403d0a1d7a2e0d683b95c42c4a116edef46cd36120bf16a0f2707",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "I06",
+      "atom_id": "watch-quiet-context",
+      "review_digest": "51ef3bb4e17d28232a2e9388f7442b24fbcb963681f0f6796b87a249aa316711",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "I07",
+      "atom_id": "watch-motion-alternative",
+      "review_digest": "c42e60a687b7ec7a9c2a8669666cda0a2bff673de6e41ac3043d1a7c235acbc4",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "I08",
+      "atom_id": "watch-error-reversibility",
+      "review_digest": "dba84b2843b1b3f26417ec7cb2b52dd59c2a5482f458d3df47f0a56fe94bfc47",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "I09",
+      "atom_id": "watch-progressive-disclosure",
+      "review_digest": "9ccbe9caf4b0c3f415997e78eecfc34dcd5845c9fd24e5ce844786b209c583fc",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "I10",
+      "atom_id": "watch-accessibility-multimodal",
+      "review_digest": "015459828209b32a9e258a0ada3f584564f0c3d6bee3c24c397500ded6165752",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "C01",
+      "atom_id": "watch-material-zoning-purpose",
+      "review_digest": "f6ad7222ffc44c364212f706cb9e5c5dc9e0960057fefabf91447da3b7ae496d",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "C02",
+      "atom_id": "watch-finish-hierarchy",
+      "review_digest": "c0a92334357b1172ce653dab17198363165462d401eff39ae190b60dee7b7871",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "C03",
+      "atom_id": "watch-color-identity-restraint",
+      "review_digest": "bd94bc063c27cee202e59e54dbdbc55d4449c11c28446dfc6c29b936ce679b6c",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "C04",
+      "atom_id": "watch-high-contact-durability",
+      "review_digest": "2c93ddbf01b71aa4770ea3fad280efe8e10346de6f773402d2ef5b4fa1a0c34c",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "C05",
+      "atom_id": "watch-sensor-window-integration",
+      "review_digest": "2ba82194b69bd41197bdcada852e22cc560e76cf666a5f85d679621a92532f8a",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "C06",
+      "atom_id": "watch-seam-fastener-legibility",
+      "review_digest": "6b383e2bec93c11212a2982ecd84b85b2b552abe9f50c76ce4546055002b2aaf",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "C07",
+      "atom_id": "watch-optical-thickness-control",
+      "review_digest": "ea46b6510d2a219d67b0fda3584fad8ca9b3628b54c5f87957ca5e00e32f74cc",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "C08",
+      "atom_id": "watch-strap-material-context",
+      "review_digest": "d5ae9a2374638a414336bd4cde8311915b863236481bda26ab2f61960ff96965",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "C09",
+      "atom_id": "watch-patina-aging-intent",
+      "review_digest": "585043c1699e640565d2bb62ba9bcb465a8408003ae70f4dda0aeecd132c4e20",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "C10",
+      "atom_id": "watch-no-ornament-without-role",
+      "review_digest": "549e6a538c35a0d9431ec4a190d051d50c89c754a5e62f4973f287804bccf67d",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "S01",
+      "atom_id": "watch-notification-boundary",
+      "review_digest": "34e1164226b4aa897c556be1030da54c6ca830ea6328fc21a79221d76893ce5c",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "S02",
+      "atom_id": "watch-health-not-diagnosis",
+      "review_digest": "cfe230ac1308141b8fce376e703614698840bb9f3ff04c0e7e942a7a1e0223c2",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "S03",
+      "atom_id": "watch-emergency-action-clarity",
+      "review_digest": "96ea959d4dde32780cc6cd22da56b13cb5cae553a98c5cf059c2daa8c464479d",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "S04",
+      "atom_id": "watch-battery-behavior-transparency",
+      "review_digest": "b2b38d90761c08d0635ed411b85022293f79cd75a7b29d46a498849ded305de2",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "S05",
+      "atom_id": "watch-water-use-not-image-proof",
+      "review_digest": "9c01173ca732e31a59ebdc8582ede26104baa9ecc83a841c762ee0241d2f88e1",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "S06",
+      "atom_id": "watch-outdoor-glare",
+      "review_digest": "55a8dbf88fbb0c509eeb147c7734c56ea7bd8e9d95eb3d380ec49c72f4b2b269",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "S07",
+      "atom_id": "watch-night-low-disturbance",
+      "review_digest": "4f7c27fba967c486afa44e925b033789fb19f8f02d9339980f7767c58153e5cb",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "S08",
+      "atom_id": "watch-workout-sweat-control",
+      "review_digest": "daa7489ac6140d98a88de4eda5739f7e338943764fc1bfb025eb6494b5e46d6f",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "S09",
+      "atom_id": "watch-social-privacy-legibility",
+      "review_digest": "7c0acbd0a354d3387769cfe7521e8aa3b91d3068f64b06363922a7623d94664d",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    },
+    {
+      "review_code": "S10",
+      "atom_id": "watch-hardest-moment-evidence",
+      "review_digest": "2b26cd00b6cd8bc958ec8bffa4d66a9ecd6b889b618fe0032a5703788054d19b",
+      "notes": "Accepted as-is for personal development, testing, and learning use."
+    }
+  ]
+}

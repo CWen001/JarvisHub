@@ -1,0 +1,35 @@
+{
+  "name": "watch-design-kernel",
+  "version": "0.1.0",
+  "base_model": {
+    "id": "concept-image",
+    "version": "1.0.0",
+    "resource": "references/concept-image-base-model.md",
+    "source": "watch-openai/prototype/concept_image_basemodel_experiment.py",
+    "source_status": "experimental source asset adapted for native Jarvis prompt authoring"
+  },
+  "design_dialogue": {
+    "resource": "references/design-dialogue.md",
+    "recommended_card_count": { "minimum": 3, "maximum": 6 }
+  },
+  "knowledge": {
+    "catalog_version": "0.2.0",
+    "catalog": "references/catalog.json",
+    "approval_ledger": "references/approval-ledger.json",
+    "domains": [
+      "portfolio",
+      "architecture",
+      "wearability",
+      "interaction",
+      "cmf",
+      "scenario-trust"
+    ]
+  },
+  "runtime": {
+    "agent": "media",
+    "skill_tool": "Skill",
+    "image_tool": "canvas_image_generate_to_canvas",
+    "provenance_field": "sourceEvidence"
+  },
+  "usage_scope": "internal development, testing, and learning; commercial content clearance pending"
+}
