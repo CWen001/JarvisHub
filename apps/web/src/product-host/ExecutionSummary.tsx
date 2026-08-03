@@ -67,6 +67,7 @@ export function ExecutionSummary({ run }: { run: LiveChatRunRecord | null }): JS
         onClose={() => setTraceOpened(false)}
         position="right"
         size={420}
+        zIndex={800}
         title="Execution trace"
       >
         <Stack gap="md">

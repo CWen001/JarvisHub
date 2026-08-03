@@ -63,6 +63,7 @@ export function AgentWorkspace({
         onClose={() => setHistoryOpened(false)}
         position="left"
         size={320}
+        zIndex={800}
         title="Project history"
         overlayProps={{ backgroundOpacity: 0.22, blur: 1 }}
       >
