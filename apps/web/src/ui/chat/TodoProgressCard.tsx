@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Collapse, Group, Loader, Stack, Text, ThemeIcon, UnstyledButton } from '@mantine/core'
 import {
   IconCheck,
@@ -18,6 +18,7 @@ import {
 export type TodoProgressCardProps = {
   items: ChatTodoItem[]
   active?: boolean
+  compact?: boolean
   defaultOpen?: boolean
   title?: string
 }
@@ -109,6 +110,7 @@ function TodoStatusMark({ status }: { status: ChatTodoItem['status'] }) {
 export function TodoProgressCard({
   items,
   active = true,
+  compact = false,
   defaultOpen,
   title = 'Progress',
 }: TodoProgressCardProps) {
@@ -123,11 +125,16 @@ export function TodoProgressCard({
     typeof defaultOpen === 'boolean' ? defaultOpen : hasInProgress || hasWaiting || hasBlocked,
   )
 
+  useEffect(() => {
+    if (compact && !active) setOpen(false)
+  }, [active, compact])
+
   if (total === 0) return null
 
   return (
     <div
       className="tc-todo-progress"
+      data-compact={compact ? 'true' : 'false'}
       style={{
         border: '1px solid var(--mantine-color-dark-5)',
         borderRadius: 8,
@@ -137,6 +144,8 @@ export function TodoProgressCard({
       <UnstyledButton
         className="tc-todo-progress__header"
         onClick={() => setOpen((prev) => !prev)}
+        aria-expanded={open}
+        aria-label={`${open ? '折叠' : '展开'}${title}`}
         style={{ width: '100%' }}
       >
         <Group gap={8} wrap="nowrap" align="center">
@@ -149,15 +158,22 @@ export function TodoProgressCard({
           >
             <IconListCheck size={14} />
           </ThemeIcon>
+          {compact ? (
+            <span className="tc-todo-progress__toggle" aria-hidden="true">
+              {open ? <IconChevronDown size={14} /> : <IconChevronRight size={14} />}
+            </span>
+          ) : null}
           <Text className="tc-todo-progress__label" size="sm" fw={600}>
             {`${title} ${completed}/${total}`}
           </Text>
           {showRunningLoader ? (
             <Loader className="tc-todo-progress__running-loader" size="xs" />
           ) : null}
-          <Group gap={4} ml="auto" wrap="nowrap" align="center">
-            {open ? <IconChevronDown size={14} /> : <IconChevronRight size={14} />}
-          </Group>
+          {!compact ? (
+            <Group gap={4} ml="auto" wrap="nowrap" align="center">
+              {open ? <IconChevronDown size={14} /> : <IconChevronRight size={14} />}
+            </Group>
+          ) : null}
         </Group>
       </UnstyledButton>
       <Collapse in={open}>

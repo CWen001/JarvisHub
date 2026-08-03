@@ -2413,6 +2413,7 @@ export function ChatBubble({
       <TodoProgressCard
         items={topTodoItems}
         active={topTodoActive}
+        compact={projectArtifacts}
         defaultOpen={isThinkingMessage}
         title="主任务 Todo"
       />

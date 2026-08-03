@@ -15198,6 +15198,25 @@ body[data-webcut-modal-open="true"] .tc-ai-chat {
   padding-block: 7px;
 }
 
+.tc-todo-progress[data-compact="true"],
+.tc-todo-progress[data-compact="true"] .tc-todo-progress__header,
+.tc-todo-progress[data-compact="true"] .tc-todo-progress__header > .mantine-Group-root {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.tc-todo-progress[data-compact="true"] .tc-todo-progress__header-icon,
+.tc-todo-progress[data-compact="true"] .tc-todo-progress__toggle,
+.tc-todo-progress[data-compact="true"] .tc-todo-progress__running-loader {
+  flex: 0 0 auto;
+}
+
+.tc-todo-progress[data-compact="true"] .tc-todo-progress__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 .native-artifact-card {
   width: min(420px, 100%);
