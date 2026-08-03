@@ -188,12 +188,11 @@ function CanvasApp({
   )
 
   React.useEffect(() => {
-    if (initialSurface !== 'product') return
     const onWorkspaceCommand = (event: Event) => {
       const command = (event as CustomEvent<ProductWorkspaceCommand>).detail
       if (!command) return
       if (command.type === 'return-to-chat') {
-        setWorkspaceSurface('product')
+        if (initialSurface === 'product') setWorkspaceSurface('product')
         return
       }
       const nodeId = String(command.nodeId || '').trim()
@@ -203,7 +202,7 @@ function CanvasApp({
           edges: state.edges.map((edge) => ({ ...edge, selected: false })),
         }))
       }
-      setWorkspaceSurface('canvas')
+      if (initialSurface === 'product') setWorkspaceSurface('canvas')
       if (nodeId) {
         window.setTimeout(() => {
           ;(window as CanvasGlobalWindow).__tcFocusNode?.(nodeId)
