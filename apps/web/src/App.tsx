@@ -63,7 +63,7 @@ import { buildStudioUrl, isGithubOauthCallbackRoute, isStudioRoute, type StudioO
 import { spaReplace } from './utils/spaNavigate'
 import { preloadModelOptions } from './config/useModelOptions'
 import CanvasEmptyGuide from './ui/CanvasEmptyGuide'
-import type { VerticalExtensionDescriptor } from './product-host/productHost'
+import type { VerticalBrand, VerticalExtensionDescriptor } from './product-host/productHost'
 import { ProductHistoryNavigation } from './product-host/ProductHistoryNavigation'
 import {
   dispatchProductWorkspaceCommand,
@@ -144,11 +144,11 @@ function readStudioProjectId(): string {
 function CanvasApp({
   routeKey,
   initialSurface = 'canvas',
-  productBrandName = 'JarvisHub',
+  productBrand = { name: 'JarvisHub', mark: 'J', accentColor: '#4967dc' },
 }: {
   routeKey?: string
   initialSurface?: 'product' | 'canvas'
-  productBrandName?: string
+  productBrand?: VerticalBrand
 }): JSX.Element {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme()
   const addNode = useRFStore((s) => s.addNode)
@@ -1057,10 +1057,13 @@ function CanvasApp({
 
       <AppShell.Main className={`app-shell-main${isProductSurface ? ' app-shell-main--product-host' : ''}`}>
         {isProductSurface ? (
-          <header className="product-host-header">
-            <div className="product-host-brand-mark" aria-hidden="true">W</div>
+          <header
+            className="product-host-header"
+            style={{ '--product-brand-accent': productBrand.accentColor } as React.CSSProperties}
+          >
+            <div className="product-host-brand-mark" aria-hidden="true">{productBrand.mark}</div>
             <div className="product-host-brand-copy">
-              <strong>{productBrandName}</strong>
+              <strong>{productBrand.name}</strong>
               <span>{currentProject?.name || 'Create your first project'}</span>
             </div>
             <Group className="product-host-header__actions" gap="xs">
@@ -1295,7 +1298,7 @@ function RootEntryPage({
     <CanvasApp
       routeKey={routeKey}
       initialSurface={extension ? 'product' : 'canvas'}
-      productBrandName={extension?.brand.name}
+      productBrand={extension?.brand}
     />
   )
 }

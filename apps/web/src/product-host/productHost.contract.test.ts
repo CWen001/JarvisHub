@@ -15,14 +15,18 @@ function discoveryWith(...skillKeys: string[]): NativeSkillDiscovery {
 }
 
 describe('Vertical Product Host contract', () => {
+  const brand = { name: 'Broken', mark: 'B', accentColor: '#123456' }
+
   it.each([
-    [{ brand: { name: 'Broken' }, skillRoot: 'skills/example' }, 'id'],
+    [{ brand, skillRoot: 'skills/example' }, 'id'],
     [{ id: 'broken', skillRoot: 'skills/example' }, 'brand'],
-    [{ id: 'broken', brand: { name: 'Broken' } }, 'skillRoot'],
-    [{ id: 'Not Stable', brand: { name: 'Broken' }, skillRoot: 'skills/example' }, 'id'],
-    [{ id: 'broken', brand: { name: '' }, skillRoot: 'skills/example' }, 'brand.name'],
-    [{ id: 'broken', brand: { name: 'Broken' }, skillRoot: '../example' }, 'skillRoot'],
-    [{ id: 'broken', brand: { name: 'Broken' }, skillRoot: 'skills/example', callback: () => undefined }, 'only id, brand, and skillRoot'],
+    [{ id: 'broken', brand }, 'skillRoot'],
+    [{ id: 'Not Stable', brand, skillRoot: 'skills/example' }, 'id'],
+    [{ id: 'broken', brand: { ...brand, name: '' }, skillRoot: 'skills/example' }, 'brand.name'],
+    [{ id: 'broken', brand: { ...brand, mark: '' }, skillRoot: 'skills/example' }, 'brand.mark'],
+    [{ id: 'broken', brand: { ...brand, accentColor: 'blue' }, skillRoot: 'skills/example' }, 'brand.accentColor'],
+    [{ id: 'broken', brand, skillRoot: '../example' }, 'skillRoot'],
+    [{ id: 'broken', brand, skillRoot: 'skills/example', callback: () => undefined }, 'only id, brand, and skillRoot'],
   ])('fails before native discovery for invalid descriptor %o', async (descriptor, expectedMessage) => {
     const discoverSkills = vi.fn(discoveryWith('example'))
 
@@ -40,7 +44,7 @@ describe('Vertical Product Host contract', () => {
 
     expect(installation).toEqual({
       extensionId: 'watch-design',
-      brand: { name: 'Watch Design Studio' },
+      brand: { name: 'Watch Design Studio', mark: 'W', accentColor: '#4967dc' },
       skill: { key: 'watch-design-kernel', name: 'watch-design-kernel' },
     })
   })
@@ -52,7 +56,7 @@ describe('Vertical Product Host contract', () => {
 
     expect(installation).toEqual({
       extensionId: 'fixture-design',
-      brand: { name: 'Fixture Design Lab' },
+      brand: { name: 'Fixture Design Lab', mark: 'F', accentColor: '#7c3aed' },
       skill: { key: 'fixture-design-kernel', name: 'fixture-design-kernel' },
     })
   })

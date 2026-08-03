@@ -2,6 +2,8 @@ import { listRuntimeAgentSkills } from '../api/server'
 
 export type VerticalBrand = Readonly<{
   name: string
+  mark: string
+  accentColor: string
 }>
 
 export type VerticalExtensionDescriptor = Readonly<{
@@ -33,6 +35,7 @@ type VerticalProductHostDependencies = Readonly<{
 }>
 
 const DESCRIPTOR_FIELDS = ['brand', 'id', 'skillRoot'] as const
+const BRAND_FIELDS = ['accentColor', 'mark', 'name'] as const
 const STABLE_ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const SKILL_ROOT_SEGMENT_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
@@ -65,13 +68,24 @@ export function validateVerticalExtensionDescriptor(
   }
 
   assertRecord(value.brand)
-  const brandFields = Object.keys(value.brand)
-  if (brandFields.length !== 1 || brandFields[0] !== 'name') {
-    throw descriptorError('brand must contain exactly one name')
+  const brandFields = Object.keys(value.brand).sort()
+  if (
+    brandFields.length !== BRAND_FIELDS.length
+    || brandFields.some((field, index) => field !== BRAND_FIELDS[index])
+  ) {
+    throw descriptorError('brand must contain exactly name, mark, and accentColor')
   }
   const brandName = typeof value.brand.name === 'string' ? value.brand.name.trim() : ''
-  if (!brandName) {
-    throw descriptorError('brand.name must be a non-empty string')
+  if (!brandName) throw descriptorError('brand.name must be a non-empty string')
+  const brandMark = typeof value.brand.mark === 'string' ? value.brand.mark.trim() : ''
+  if (!brandMark || brandMark.length > 4) {
+    throw descriptorError('brand.mark must contain 1–4 visible characters')
+  }
+  const accentColor = typeof value.brand.accentColor === 'string'
+    ? value.brand.accentColor.trim().toLowerCase()
+    : ''
+  if (!/^#[a-f0-9]{6}$/.test(accentColor)) {
+    throw descriptorError('brand.accentColor must be a six-digit hex color')
   }
 
   const skillRoot = typeof value.skillRoot === 'string' ? value.skillRoot.trim() : ''
@@ -87,7 +101,11 @@ export function validateVerticalExtensionDescriptor(
 
   return Object.freeze({
     id,
-    brand: Object.freeze({ name: brandName }),
+    brand: Object.freeze({
+      name: brandName,
+      mark: brandMark,
+      accentColor,
+    }),
     skillRoot,
   })
 }

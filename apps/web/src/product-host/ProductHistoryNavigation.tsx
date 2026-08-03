@@ -2,7 +2,7 @@ import React from 'react'
 import { ActionIcon, Button, ScrollArea, Text, Tooltip } from '@mantine/core'
 import { IconChevronDown, IconChevronRight, IconMessage, IconMessagePlus } from '@tabler/icons-react'
 import type { ProjectDto } from '../api/server'
-import { readAiChatTabsState } from '../ui/chat/chatTabs'
+import { peekAiChatTabsState } from '../ui/chat/chatTabs'
 import {
   dispatchNativeChatNavigation,
   NATIVE_CHAT_NAVIGATION_CHANGED,
@@ -67,7 +67,7 @@ export function ProductHistoryNavigation({
           {projects.map((project) => {
             const expanded = expandedProjectIds.has(project.id)
             const current = project.id === currentProjectId
-            const chatState = readAiChatTabsState(project.id)
+            const chatState = peekAiChatTabsState(project.id) ?? { activeTabId: '', tabs: [] }
             return (
               <section className="product-history-nav__project" key={project.id}>
                 <div className={`product-history-nav__project-row${current ? ' is-current' : ''}`}>

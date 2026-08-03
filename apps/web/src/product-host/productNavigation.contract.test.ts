@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { peekAiChatTabsState } from '../ui/chat/chatTabs'
 import { buildProjectSessionNavigation } from './productNavigationModel'
 
 it('keeps native Chat Sessions grouped under their owning Projects', () => {
@@ -33,4 +34,16 @@ it('keeps native Chat Sessions grouped under their owning Projects', () => {
       latestSessionId: 's3',
     },
   ])
+})
+
+it('observes projects without creating native Session records during navigation render', () => {
+  let writes = 0
+  const storage = {
+    getItem: () => null,
+    setItem: () => { writes += 1 },
+    removeItem: () => undefined,
+  }
+
+  expect(peekAiChatTabsState('project-without-sessions', { storage })).toBeNull()
+  expect(writes).toBe(0)
 })

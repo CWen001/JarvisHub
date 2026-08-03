@@ -2988,6 +2988,7 @@ export default function AiChatDialog({
     skipNextChatTabsPersistRef.current = true
     const loaded = readAiChatTabsState(currentProjectId)
     setChatTabsState(loaded)
+    notifyNativeChatNavigationChanged(currentProjectId)
   }, [currentProjectId])
 
   React.useEffect(() => {

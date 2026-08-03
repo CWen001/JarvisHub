@@ -267,6 +267,21 @@ export function writeAiChatTabsState(
   writeByProjectRecord(storage, record)
 }
 
+export function peekAiChatTabsState(
+  projectId: string,
+  input?: AiChatTabsEnvironment,
+): AiChatTabsState | null {
+  const normalizedProjectId = normalizeString(projectId)
+  const storage = getStorage(input)
+  if (!normalizedProjectId || !storage) return null
+  const existing = readByProjectRecord(storage)[normalizedProjectId]
+  if (existing) return existing
+  const migratedTabs = readLegacyTabsForProject(storage, normalizedProjectId)
+  return migratedTabs.length
+    ? { activeTabId: migratedTabs[0]!.id, tabs: migratedTabs }
+    : null
+}
+
 export function readAiChatTabsState(
   projectId: string,
   input?: AiChatTabsEnvironment,

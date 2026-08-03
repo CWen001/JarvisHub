@@ -26,7 +26,7 @@ A prior provider-backed Watch generation in this same project verified native Me
 
 ## Known MVP limits
 
-- Brand configuration intentionally contains only the product name; full visual identity, motion, and responsive polish remain later work.
+- Brand configuration intentionally contains only the product name, compact mark, and accent color; full visual identity, motion, and responsive polish remain later work.
 - Artifact Card enhancement requires stable native asset identity plus a matching Canvas node; otherwise it deliberately falls back to the existing thumbnail.
 - Asset Center attaches only media that the existing Chat reference path can consume; text and webpage assets retain their native Asset Center actions.
 - Fixture Extension is contract-test-only and is never exposed as a selectable category.
