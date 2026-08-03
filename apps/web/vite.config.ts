@@ -86,6 +86,9 @@ export default defineConfig(({ command, mode }) => {
         transformMixedEsModules: true,
       },
       rollupOptions: {
+        input: env.VITE_NATIVE_ENTRY === '1'
+          ? resolve(__dirname, 'native.html')
+          : resolve(__dirname, 'index.html'),
         output: {
           manualChunks: createManualChunks,
         },

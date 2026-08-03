@@ -63,7 +63,7 @@ import { buildStudioUrl, isGithubOauthCallbackRoute, isStudioRoute, type StudioO
 import { spaReplace } from './utils/spaNavigate'
 import { preloadModelOptions } from './config/useModelOptions'
 import CanvasEmptyGuide from './ui/CanvasEmptyGuide'
-import { installedVerticalExtension } from './product-host/installedExtension'
+import type { VerticalExtensionDescriptor } from './product-host/productHost'
 import { ProductHistoryNavigation } from './product-host/ProductHistoryNavigation'
 import {
   dispatchProductWorkspaceCommand,
@@ -144,9 +144,11 @@ function readStudioProjectId(): string {
 function CanvasApp({
   routeKey,
   initialSurface = 'canvas',
+  productBrandName = 'JarvisHub',
 }: {
   routeKey?: string
   initialSurface?: 'product' | 'canvas'
+  productBrandName?: string
 }): JSX.Element {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme()
   const addNode = useRFStore((s) => s.addNode)
@@ -928,6 +930,10 @@ function CanvasApp({
   }, [auth.user?.sub])
 
   React.useEffect(() => {
+    if (initialSurface === 'product') {
+      setFeatureTourOpen(false)
+      return
+    }
     if (!auth.user) return
     if (!tourSeenKey) return
     try {
@@ -936,7 +942,7 @@ function CanvasApp({
     } catch {
       setFeatureTourOpen(true)
     }
-  }, [auth.user?.sub, tourSeenKey])
+  }, [auth.user?.sub, initialSurface, tourSeenKey])
 
   const closeFeatureTour = React.useCallback(() => {
     setFeatureTourOpen(false)
@@ -1055,7 +1061,7 @@ function CanvasApp({
           <header className="product-host-header">
             <div className="product-host-brand-mark" aria-hidden="true">W</div>
             <div className="product-host-brand-copy">
-              <strong>{installedVerticalExtension.brand.name}</strong>
+              <strong>{productBrandName}</strong>
               <span>{currentProject?.name || 'Create your first project'}</span>
             </div>
             <Group className="product-host-header__actions" gap="xs">
@@ -1277,13 +1283,29 @@ function matchProjectEntryRoute(): { projectId: string } | null {
   }
 }
 
-function RootEntryPage({ routeKey }: { routeKey: string }): JSX.Element {
+function RootEntryPage({
+  routeKey,
+  extension,
+}: {
+  routeKey: string
+  extension?: VerticalExtensionDescriptor
+}): JSX.Element {
   const auth = useAuth()
   if (!auth.user) return <HomePage />
-  return <CanvasApp routeKey={routeKey} initialSurface="product" />
+  return (
+    <CanvasApp
+      routeKey={routeKey}
+      initialSurface={extension ? 'product' : 'canvas'}
+      productBrandName={extension?.brand.name}
+    />
+  )
 }
 
-export default function App(): JSX.Element {
+export default function App({
+  extension,
+}: {
+  extension?: VerticalExtensionDescriptor
+} = {}): JSX.Element {
   // Re-render on SPA navigation.
   const [, forceRender] = React.useState(0)
   const routeKey = typeof window !== 'undefined' ? `${window.location.pathname}${window.location.search}` : ''
@@ -1319,5 +1341,5 @@ export default function App(): JSX.Element {
   if (isStudioRoute()) {
     return <CanvasApp routeKey={routeKey} />
   }
-  return <RootEntryPage routeKey={routeKey} />
+  return <RootEntryPage routeKey={routeKey} extension={extension} />
 }

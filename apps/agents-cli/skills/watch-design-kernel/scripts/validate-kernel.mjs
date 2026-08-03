@@ -22,6 +22,7 @@ assert(skill.includes("name: watch-design-kernel"), "SKILL.md has the wrong skil
 assert(skill.includes("sourceEvidence"), "SKILL.md must require native sourceEvidence provenance");
 assert(skill.includes("按此策略生成") && skill.includes("调整策略"), "SKILL.md must use the two native Design Dialogue options");
 assert(skill.includes("task_contract.userConstraints"), "SKILL.md must carry accepted visible decisions through userConstraints");
+assert(skill.includes("question` itself must literally contain all 3–6 complete Markdown cards"), "SKILL.md must require cards inside the native ask_user question");
 assert(!skill.includes("strategyCards"), "SKILL.md must not extend the ask_user schema");
 assert(manifest.design_dialogue?.recommended_card_count?.minimum === 3, "Design Dialogue minimum card count must be 3");
 assert(manifest.design_dialogue?.recommended_card_count?.maximum === 6, "Design Dialogue maximum card count must be 6");

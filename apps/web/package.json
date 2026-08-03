@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build --mode production",
+    "build:native": "VITE_NATIVE_ENTRY=1 vite build --mode production",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
