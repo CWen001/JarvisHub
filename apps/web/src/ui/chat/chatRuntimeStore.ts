@@ -64,6 +64,12 @@ export type ChatTabRuntimeState = {
   chatSessionLane: ChatSessionLane
   historyLoadError: string
   manualReferenceImages: string[]
+  manualReferenceVideos: Array<{
+    url: string
+    thumbnailUrl?: string
+    label: string
+    nodeId?: string
+  }>
   hiddenAutoReferenceUrls: string[]
   hiddenAutoReferenceVideoUrls: string[]
   uploadedReferenceAssetMeta: Record<string, UploadedReferenceAssetMeta>
@@ -79,6 +85,7 @@ export function createEmptyChatTabRuntime(activeSkill: ChatSelectableSkill | nul
     chatSessionLane: 'general',
     historyLoadError: '',
     manualReferenceImages: [],
+    manualReferenceVideos: [],
     hiddenAutoReferenceUrls: [],
     hiddenAutoReferenceVideoUrls: [],
     uploadedReferenceAssetMeta: {},

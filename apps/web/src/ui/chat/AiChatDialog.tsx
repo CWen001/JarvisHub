@@ -2753,6 +2753,7 @@ export default function AiChatDialog({
   const chatSessionLane = activeTabRuntime.chatSessionLane
   const historyLoadError = activeTabRuntime.historyLoadError
   const manualReferenceImages = activeTabRuntime.manualReferenceImages
+  const manualReferenceVideos = activeTabRuntime.manualReferenceVideos || []
   const hiddenAutoReferenceUrls = activeTabRuntime.hiddenAutoReferenceUrls
   const hiddenAutoReferenceVideoUrls = activeTabRuntime.hiddenAutoReferenceVideoUrls
   const uploadedReferenceAssetMeta = activeTabRuntime.uploadedReferenceAssetMeta
@@ -3719,8 +3720,16 @@ export default function AiChatDialog({
       })
     })
     visibleAutoReferenceVideos.forEach(push)
+    manualReferenceVideos.forEach((item, index) => push({
+      key: `video:manual:${item.nodeId || index}:${item.url}`,
+      kind: 'video',
+      url: item.url,
+      label: item.label,
+      ...(item.nodeId ? { nodeId: item.nodeId } : {}),
+      ...(item.thumbnailUrl ? { thumbnailUrl: item.thumbnailUrl } : {}),
+    }))
     return merged
-  }, [referenceImages, visibleAutoReferenceVideos])
+  }, [manualReferenceVideos, referenceImages, visibleAutoReferenceVideos])
 
   React.useEffect(() => {
     referenceImagesRef.current = referenceImages
@@ -3853,7 +3862,27 @@ export default function AiChatDialog({
           },
         },
       }))
-      addReferenceImagesSafe([url], { source: 'Artifact' })
+      if (command.asset.mediaType === 'video') {
+        updateTabRuntime(activeTabId, (current) => {
+          const currentVideos = current.manualReferenceVideos || []
+          if (currentVideos.some((item) => item.url === url)) return current
+          return {
+            ...current,
+            manualReferenceVideos: [
+              ...currentVideos,
+              {
+                url,
+                label: name || 'Reference video',
+                ...(command.asset.thumbnailUrl ? { thumbnailUrl: command.asset.thumbnailUrl } : {}),
+                ...(command.asset.nodeId ? { nodeId: command.asset.nodeId } : {}),
+              },
+            ],
+          }
+        })
+        toast('已添加 1 个参考视频（Artifact）', 'success')
+      } else {
+        addReferenceImagesSafe([url], { source: 'Artifact' })
+      }
       if (command.type === 'modify') {
         setDraft((current) => current || `请基于「${name || '当前资产'}」继续修改：`)
       }
@@ -3869,6 +3898,7 @@ export default function AiChatDialog({
     updateTabRuntime(activeTabId, (current) => ({
       ...current,
       manualReferenceImages: [],
+      manualReferenceVideos: [],
       uploadedReferenceAssetMeta: {},
       hiddenAutoReferenceUrls: autoNow,
       hiddenAutoReferenceVideoUrls: autoVideosNow,
@@ -4456,7 +4486,8 @@ export default function AiChatDialog({
           merged.push(item)
         }
         selectedAssetInputs.forEach(push)
-        referenceImagesPayload.forEach((url) => {
+        referenceMedia.forEach((reference) => {
+          const url = String(reference.url || '').trim()
           const uploadedMeta = uploadedReferenceAssetMeta[url] || null
           push({
             url,

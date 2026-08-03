@@ -15,7 +15,7 @@ export type NativeArtifactChatCommand = Readonly<{
   asset: NativeArtifactSource
 }>
 
-function dispatchChatCommand(command: NativeArtifactChatCommand): void {
+export function dispatchNativeArtifactChatCommand(command: NativeArtifactChatCommand): void {
   window.dispatchEvent(new CustomEvent(NATIVE_ARTIFACT_CHAT_COMMAND, { detail: command }))
 }
 
@@ -80,7 +80,7 @@ export function NativeArtifactCard({ asset }: { asset: NativeArtifactSource }): 
             <ActionIcon
               variant="subtle"
               aria-label="Continue modifying"
-              onClick={() => dispatchChatCommand({ type: 'modify', asset })}
+              onClick={() => dispatchNativeArtifactChatCommand({ type: 'modify', asset })}
             >
               <IconPencil size={15} />
             </ActionIcon>
@@ -89,7 +89,7 @@ export function NativeArtifactCard({ asset }: { asset: NativeArtifactSource }): 
             <ActionIcon
               variant="subtle"
               aria-label="Use as reference"
-              onClick={() => dispatchChatCommand({ type: 'reference', asset })}
+              onClick={() => dispatchNativeArtifactChatCommand({ type: 'reference', asset })}
             >
               <IconPaperclip size={15} />
             </ActionIcon>

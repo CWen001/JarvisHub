@@ -8,6 +8,8 @@ export type CanvasNodeAsset = {
   label: string
   url?: string
   thumbnailUrl?: string
+  assetId?: string
+  assetRefId?: string
   text?: string
 }
 
@@ -70,7 +72,17 @@ export function collectNodeCanvasAsset(node: unknown): CanvasNodeAsset | null {
     if (!url) return null
     const item = readResultItem(data.imageResults, data.imagePrimaryIndex)
     const thumbnailUrl = str((item as { thumbnailUrl?: unknown } | null)?.thumbnailUrl) || url
-    return { nodeId, kind: 'image', label, url, thumbnailUrl }
+    const assetId = str(item?.assetId) || str(data.assetId)
+    const assetRefId = str(item?.assetRefId) || str(data.assetRefId)
+    return {
+      nodeId,
+      kind: 'image',
+      label,
+      url,
+      thumbnailUrl,
+      ...(assetId ? { assetId } : {}),
+      ...(assetRefId ? { assetRefId } : {}),
+    }
   }
 
   if (coreType === 'video') {
@@ -79,7 +91,17 @@ export function collectNodeCanvasAsset(node: unknown): CanvasNodeAsset | null {
     const item = readResultItem(data.videoResults, data.videoPrimaryIndex)
     const thumbnailUrl =
       str((item as { thumbnailUrl?: unknown } | null)?.thumbnailUrl) || str(data.videoThumbnailUrl)
-    return { nodeId, kind: 'video', label, url, thumbnailUrl: thumbnailUrl || undefined }
+    const assetId = str(item?.assetId) || str(data.assetId)
+    const assetRefId = str(item?.assetRefId) || str(data.assetRefId)
+    return {
+      nodeId,
+      kind: 'video',
+      label,
+      url,
+      thumbnailUrl: thumbnailUrl || undefined,
+      ...(assetId ? { assetId } : {}),
+      ...(assetRefId ? { assetRefId } : {}),
+    }
   }
 
   // Remaining text-family nodes (text, character, pptDeck without page HTML).

@@ -1,7 +1,7 @@
 import React from 'react'
 import { AppShell, ActionIcon, Group, Box, Button, TextInput, Badge, Text, useMantineColorScheme, Tooltip, Modal, Stack } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
-import { IconBrandGithub, IconMoonStars, IconSun, IconHelpCircle, IconRefresh, IconCamera, IconLayoutBoard, IconMessageCircle } from '@tabler/icons-react'
+import { IconBrandGithub, IconMoonStars, IconSun, IconHelpCircle, IconRefresh, IconCamera, IconLayoutBoard, IconMessageCircle, IconPhoto } from '@tabler/icons-react'
 import Canvas from './canvas/Canvas'
 import { sanitizeGraphForCanvas, useRFStore } from './canvas/store'
 import { SnapshotProgressDialog, useSnapshotExport } from './canvas/snapshot/SnapshotProgressDialog'
@@ -1011,6 +1011,15 @@ function CanvasApp({
     window.dispatchEvent(new PopStateEvent('popstate'))
   }, [setCurrentProject])
 
+  React.useEffect(() => {
+    if (typeof document === 'undefined') return
+    if (isProductSurface) document.documentElement.dataset.productHost = 'true'
+    else delete document.documentElement.dataset.productHost
+    return () => {
+      delete document.documentElement.dataset.productHost
+    }
+  }, [isProductSurface])
+
   const snapshotFlowId = currentFlow?.source === 'server' && currentFlow?.id ? String(currentFlow.id) : null
   const snapshotExport = useSnapshotExport(snapshotFlowId)
   const handleExportSnapshot = React.useCallback(() => {
@@ -1049,14 +1058,22 @@ function CanvasApp({
               <strong>{installedVerticalExtension.brand.name}</strong>
               <span>{currentProject?.name || 'Create your first project'}</span>
             </div>
-            <Button
-              className="product-host-header__workspace-button"
-              variant="light"
-              leftSection={<IconLayoutBoard size={16} />}
-              onClick={() => dispatchProductWorkspaceCommand({ type: 'open-canvas' })}
-            >
-              Professional Workspace
-            </Button>
+            <Group className="product-host-header__actions" gap="xs">
+              <Button
+                variant="subtle"
+                leftSection={<IconPhoto size={16} />}
+                onClick={() => setActivePanel('gallery')}
+              >
+                Assets
+              </Button>
+              <Button
+                variant="light"
+                leftSection={<IconLayoutBoard size={16} />}
+                onClick={() => dispatchProductWorkspaceCommand({ type: 'open-canvas' })}
+              >
+                Professional Workspace
+              </Button>
+            </Group>
           </header>
         ) : null}
         <Box className={`app-shell-main-box${isProductSurface ? ' app-shell-main-box--product-host' : ''}`} onClick={(e)=>{

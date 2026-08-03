@@ -14,7 +14,7 @@ import {
   Transition,
   useMantineColorScheme,
 } from '@mantine/core'
-import { IconAlertTriangle, IconArchive, IconCloudUpload, IconCopy, IconDownload, IconFileText, IconPhoto, IconPlus, IconRefresh, IconVideo, IconWorld } from '@tabler/icons-react'
+import { IconAlertTriangle, IconArchive, IconCloudUpload, IconCopy, IconDownload, IconFileText, IconPaperclip, IconPhoto, IconPlus, IconRefresh, IconVideo, IconWorld } from '@tabler/icons-react'
 import { useUIStore } from './uiStore'
 import { calculateSafeMaxHeight } from './utils/panelPosition'
 import { exportAssetsZip, listServerAssets, rehostServerAssets, type AssetZipKind, type ServerAssetDto } from '../api/server'
@@ -28,6 +28,8 @@ import { collectCanvasAssetsForZip } from './assetCenterExport'
 import { collectCanvasAssets, type CanvasNodeAsset } from './canvasAssetModel'
 import { downloadBlob } from '../utils/download'
 import { useViewportVisibility } from '../domain/resource-runtime/hooks/useViewportVisibility'
+import { buildAssetChatReference } from './assetChatReference'
+import { dispatchNativeArtifactChatCommand } from './chat/NativeArtifactCard'
 
 type AssetKind = 'all' | 'image' | 'video' | 'text' | 'webpage'
 type Scope = 'canvas' | 'all'
@@ -276,6 +278,16 @@ export default function AssetCenterPanel(): JSX.Element | null {
     }
   }
 
+  const attachAssetToChat = React.useCallback((input: Parameters<typeof buildAssetChatReference>[0]) => {
+    const reference = buildAssetChatReference(input)
+    if (!reference) {
+      toast('This asset cannot be used as a Chat reference', 'warning')
+      return
+    }
+    dispatchNativeArtifactChatCommand({ type: 'reference', asset: reference })
+    toast('Attached to the current Chat', 'success')
+  }, [])
+
   const kindIcons: Record<AssetKind, JSX.Element> = {
     all: <IconPhoto size={14} />,
     image: <IconPhoto size={14} />,
@@ -465,6 +477,26 @@ export default function AssetCenterPanel(): JSX.Element | null {
                               <IconPlus size={12} />
                             </ActionIcon>
                           </Tooltip>
+                          {item.url && (item.kind === 'image' || item.kind === 'video') ? (
+                            <Tooltip label="Use as Chat reference">
+                              <ActionIcon
+                                className="asset-center-panel-card-reference"
+                                variant="subtle"
+                                size="xs"
+                                onClick={() => attachAssetToChat({
+                                  kind: item.kind,
+                                  title: item.label,
+                                  url: item.url,
+                                  thumbnailUrl: item.thumbnailUrl,
+                                  assetId: item.assetId,
+                                  assetRefId: item.assetRefId,
+                                  nodeId: item.nodeId,
+                                })}
+                              >
+                                <IconPaperclip size={12} />
+                              </ActionIcon>
+                            </Tooltip>
+                          ) : null}
                           {item.url && (
                             <Tooltip label="Copy link">
                               <ActionIcon className="asset-center-panel-card-copy" variant="subtle" size="xs" onClick={() => handleCopy(item.url!)}>
@@ -571,6 +603,25 @@ export default function AssetCenterPanel(): JSX.Element | null {
                                 <IconPlus size={12} />
                               </ActionIcon>
                             </Tooltip>
+                            {url && (kind === 'image' || kind === 'video') ? (
+                              <Tooltip label="Use as Chat reference">
+                                <ActionIcon
+                                  className="asset-center-panel-card-reference"
+                                  variant="subtle"
+                                  size="xs"
+                                  onClick={() => attachAssetToChat({
+                                    kind,
+                                    title: asset.name || String(data.prompt || ''),
+                                    url,
+                                    thumbnailUrl: data.thumbnailUrl,
+                                    assetId: asset.id,
+                                    assetRefId: data.assetRefId,
+                                  })}
+                                >
+                                  <IconPaperclip size={12} />
+                                </ActionIcon>
+                              </Tooltip>
+                            ) : null}
                             {url && (
                               <Tooltip label="Copy link">
                                 <ActionIcon className="asset-center-panel-card-copy" variant="subtle" size="xs" onClick={() => handleCopy(url)}>
