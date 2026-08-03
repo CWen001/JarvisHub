@@ -1,7 +1,7 @@
 import React from 'react'
 import { AppShell, ActionIcon, Group, Box, Button, TextInput, Badge, Text, useMantineColorScheme, Tooltip, Modal, Stack } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
-import { IconBrandGithub, IconMoonStars, IconSun, IconHelpCircle, IconRefresh, IconCamera, IconLayoutBoard, IconMessageCircle, IconPhoto } from '@tabler/icons-react'
+import { IconBrandGithub, IconMoonStars, IconSun, IconHelpCircle, IconRefresh, IconCamera, IconMessageCircle } from '@tabler/icons-react'
 import Canvas from './canvas/Canvas'
 import { sanitizeGraphForCanvas, useRFStore } from './canvas/store'
 import { SnapshotProgressDialog, useSnapshotExport } from './canvas/snapshot/SnapshotProgressDialog'
@@ -42,6 +42,7 @@ import MemoryPanel from './ui/memory/MemoryPanel'
 import ParamModal from './ui/ParamModal'
 import PreviewModal from './ui/PreviewModal'
 import AiChatDialog from './ui/chat/AiChatDialog'
+import { AgentWorkspace } from './product-host/AgentWorkspace'
 import { runNodeRemote } from './runner/remoteRunner'
 import { Background } from '@xyflow/react'
 import { FeatureTour, type FeatureTourStep } from './ui/tour/FeatureTour'
@@ -64,7 +65,6 @@ import { spaReplace } from './utils/spaNavigate'
 import { preloadModelOptions } from './config/useModelOptions'
 import CanvasEmptyGuide from './ui/CanvasEmptyGuide'
 import type { VerticalBrand, VerticalExtensionDescriptor } from './product-host/productHost'
-import { ProductHistoryNavigation } from './product-host/ProductHistoryNavigation'
 import {
   dispatchProductWorkspaceCommand,
   PRODUCT_WORKSPACE_COMMAND,
@@ -192,6 +192,7 @@ function CanvasApp({
       const command = (event as CustomEvent<ProductWorkspaceCommand>).detail
       if (!command) return
       if (command.type === 'return-to-chat') {
+        setActivePanel(null)
         if (initialSurface === 'product') setWorkspaceSurface('product')
         return
       }
@@ -202,6 +203,7 @@ function CanvasApp({
           edges: state.edges.map((edge) => ({ ...edge, selected: false })),
         }))
       }
+      setActivePanel(null)
       if (initialSurface === 'product') setWorkspaceSurface('canvas')
       if (nodeId) {
         window.setTimeout(() => {
@@ -211,7 +213,7 @@ function CanvasApp({
     }
     window.addEventListener(PRODUCT_WORKSPACE_COMMAND, onWorkspaceCommand)
     return () => window.removeEventListener(PRODUCT_WORKSPACE_COMMAND, onWorkspaceCommand)
-  }, [initialSurface])
+  }, [initialSurface, setActivePanel])
 
   const detachCurrentFlowFromProject = React.useCallback(() => {
     const uiState = useUIStore.getState()
@@ -1056,34 +1058,6 @@ function CanvasApp({
       {/* 移除左侧固定栏，改为悬浮灵动岛样式 */}
 
       <AppShell.Main className={`app-shell-main${isProductSurface ? ' app-shell-main--product-host' : ''}`}>
-        {isProductSurface ? (
-          <header
-            className="product-host-header"
-            style={{ '--product-brand-accent': productBrand.accentColor } as React.CSSProperties}
-          >
-            <div className="product-host-brand-mark" aria-hidden="true">{productBrand.mark}</div>
-            <div className="product-host-brand-copy">
-              <strong>{productBrand.name}</strong>
-              <span>{currentProject?.name || 'Create your first project'}</span>
-            </div>
-            <Group className="product-host-header__actions" gap="xs">
-              <Button
-                variant="subtle"
-                leftSection={<IconPhoto size={16} />}
-                onClick={() => setActivePanel('gallery')}
-              >
-                Assets
-              </Button>
-              <Button
-                variant="light"
-                leftSection={<IconLayoutBoard size={16} />}
-                onClick={() => dispatchProductWorkspaceCommand({ type: 'open-canvas' })}
-              >
-                Professional Workspace
-              </Button>
-            </Group>
-          </header>
-        ) : null}
         <Box className={`app-shell-main-box${isProductSurface ? ' app-shell-main-box--product-host' : ''}`} onClick={(e)=>{
           const el = e.target as HTMLElement
           if (
@@ -1095,13 +1069,17 @@ function CanvasApp({
             setActivePanel(null)
           }
         }}>
-          <Canvas className={`app-canvas${isProductSurface ? ' app-canvas--product-hidden' : ''}`} />
-          {showEmptyGuide && (
-            <CanvasEmptyGuide
-              mode={emptyGuideMode}
-              onGoToProjects={() => spaReplace('/projects')}
-            />
-          )}
+          {!isProductSurface ? (
+            <>
+              <Canvas className="app-canvas" />
+              {showEmptyGuide && (
+                <CanvasEmptyGuide
+                  mode={emptyGuideMode}
+                  onGoToProjects={() => spaReplace('/projects')}
+                />
+              )}
+            </>
+          ) : null}
         </Box>
       </AppShell.Main>
 
@@ -1117,7 +1095,8 @@ function CanvasApp({
       />
       <FeatureTour className="app-feature-tour" opened={featureTourOpen} steps={featureTourSteps} onClose={closeFeatureTour} />
       <BodyPortal>
-        <div className={`app-header-overlay${isProductSurface ? ' app-header-overlay--product-hidden' : ''}`}>
+        {!isProductSurface ? (
+          <div className="app-header-overlay">
           <Group className="app-header" p="sm" wrap="nowrap" gap="md">
             <ProjectIdentityCell
               projectName={currentProject?.name || ''}
@@ -1132,6 +1111,17 @@ function CanvasApp({
             <div id="tc-canvas-visibility-slot" className="app-header-visibility-slot" />
             <div className="app-header-divider" aria-hidden="true" />
             <Group className="app-header-actions" gap="xs" wrap="nowrap">
+              {isProductHost ? (
+                <Button
+                  className="product-workspace-return"
+                  size="xs"
+                  variant="light"
+                  leftSection={<IconMessageCircle size={16} />}
+                  onClick={() => dispatchProductWorkspaceCommand({ type: 'return-to-chat' })}
+                >
+                  Agent Workspace
+                </Button>
+              ) : null}
               <Button className="app-save-button" size="xs" onClick={doSave} disabled={!isDirty} loading={saving} data-tour="save-button">Save</Button>
               <Tooltip className="app-refresh-flow-tooltip" label="Refresh canvas from server">
                 <ActionIcon
@@ -1183,24 +1173,9 @@ function CanvasApp({
           <div className="app-header-secondary-row">
             <div id="tc-canvas-breadcrumb-slot" className="app-header-secondary-slot app-header-secondary-slot--center" />
           </div>
-        </div>
+          </div>
+        ) : null}
         {!isProductSurface ? <FloatingNav className="app-floating-nav" /> : null}
-        {isProductHost && !isProductSurface ? (
-          <Button
-            className="product-workspace-return"
-            leftSection={<IconMessageCircle size={16} />}
-            onClick={() => dispatchProductWorkspaceCommand({ type: 'return-to-chat' })}
-          >
-            Back to Product View
-          </Button>
-        ) : null}
-        {isProductSurface ? (
-          <ProductHistoryNavigation
-            projects={projects}
-            currentProjectId={String(currentProject?.id || '')}
-            onSelectProject={selectProductProject}
-          />
-        ) : null}
         <AddNodePanel className="app-add-node-panel" />
         <ProjectPanel />
         <AssetCenterPanel />
@@ -1208,7 +1183,18 @@ function CanvasApp({
         <ModelPanel />
         <HistoryPanel />
         <MemoryPanel />
-        <AiChatDialog className="app-ai-chat-dialog" productMode={isProductSurface} />
+        {isProductSurface ? (
+          <AgentWorkspace
+            brand={productBrand}
+            projects={projects}
+            currentProject={currentProject}
+            onSelectProject={selectProductProject}
+            onOpenAssets={() => setActivePanel('gallery')}
+            onOpenProfessionalWorkspace={() => dispatchProductWorkspaceCommand({ type: 'open-canvas' })}
+          />
+        ) : (
+          <AiChatDialog className="app-ai-chat-dialog" surface="native" />
+        )}
       </BodyPortal>
       <ParamModal />
       <PreviewModal />

@@ -12,10 +12,12 @@ export function ProductHistoryNavigation({
   projects,
   currentProjectId,
   onSelectProject,
+  onNavigate,
 }: {
   projects: readonly ProjectDto[]
   currentProjectId: string
   onSelectProject: (project: ProjectDto) => void
+  onNavigate?: () => void
 }): JSX.Element {
   const [expandedProjectIds, setExpandedProjectIds] = React.useState<Set<string>>(
     () => new Set(currentProjectId ? [currentProjectId] : []),
@@ -52,10 +54,13 @@ export function ProductHistoryNavigation({
             <ActionIcon
               variant="subtle"
               aria-label="New conversation"
-              onClick={() => dispatchNativeChatNavigation({
-                type: 'new-session',
-                projectId: currentProjectId,
-              })}
+              onClick={() => {
+                dispatchNativeChatNavigation({
+                  type: 'new-session',
+                  projectId: currentProjectId,
+                })
+                onNavigate?.()
+              }}
             >
               <IconMessagePlus size={17} />
             </ActionIcon>
@@ -108,6 +113,7 @@ export function ProductHistoryNavigation({
                               projectId: project.id,
                               sessionId: session.id,
                             })
+                            onNavigate?.()
                           }}
                         >
                           <IconMessage size={13} />
@@ -118,10 +124,13 @@ export function ProductHistoryNavigation({
                       <button
                         type="button"
                         className="product-history-nav__session product-history-nav__session--new"
-                        onClick={() => dispatchNativeChatNavigation({
-                          type: 'new-session',
-                          projectId: project.id,
-                        })}
+                        onClick={() => {
+                          dispatchNativeChatNavigation({
+                            type: 'new-session',
+                            projectId: project.id,
+                          })
+                          onNavigate?.()
+                        }}
                       >
                         <IconMessagePlus size={13} />
                         <span>New conversation</span>

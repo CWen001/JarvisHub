@@ -14916,8 +14916,9 @@ body[data-webcut-modal-open="true"] .tc-ai-chat {
   border-color: rgba(96, 165, 250, 0.34);
 }
 
-/* Vertical Product Host: Chat is the dominant surface; the native Canvas stays
-   mounted underneath so Project/Flow state remains authoritative. */
+/* Vertical Product Host: Agent Workspace and Professional Workspace are
+   separate surfaces. Native Project/Flow state stays authoritative without
+   rendering the Professional Canvas behind Agent Workspace. */
 .app-shell-main--product-host {
   min-height: 100vh;
   background:
@@ -14935,8 +14936,8 @@ body[data-webcut-modal-open="true"] .tc-ai-chat {
   gap: 12px;
   padding: 0 22px;
   border-bottom: 1px solid rgba(148, 163, 184, 0.18);
-  background: color-mix(in srgb, var(--mantine-color-body) 92%, transparent);
-  backdrop-filter: blur(18px);
+  background: var(--mantine-color-body);
+  backdrop-filter: none;
 }
 
 .product-host-brand-mark {
@@ -14957,19 +14958,29 @@ body[data-webcut-modal-open="true"] .tc-ai-chat {
   line-height: 1.25;
 }
 
+.product-host-project-trigger {
+  appearance: none;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.product-host-project-trigger:hover span {
+  color: var(--mantine-color-text);
+}
+
 .product-host-brand-copy span {
   color: var(--mantine-color-dimmed);
   font-size: 12px;
 }
 
 .app-shell-main-box--product-host {
-  background: transparent;
-}
-
-.app-canvas--product-hidden,
-.app-header-overlay--product-hidden {
-  visibility: hidden;
-  pointer-events: none;
+  min-height: 100vh;
+  background: var(--mantine-color-body);
 }
 
 .tc-ai-chat--product-host.tc-ai-chat--maximized {
@@ -14986,6 +14997,9 @@ body[data-webcut-modal-open="true"] .tc-ai-chat {
 
 .tc-ai-chat--product-host .tc-ai-chat__card {
   border-radius: 20px !important;
+  background: var(--mantine-color-body) !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   box-shadow: 0 22px 70px rgba(15, 23, 42, 0.10);
 }
 
@@ -15004,19 +15018,13 @@ body[data-webcut-modal-open="true"] .tc-ai-chat {
 
 
 .product-history-nav {
-  position: fixed;
-  z-index: 400;
-  left: 16px;
-  top: 80px;
-  bottom: 20px;
-  width: 248px;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  border-radius: 18px;
-  background: color-mix(in srgb, var(--mantine-color-body) 94%, transparent);
-  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.07);
+  background: var(--mantine-color-body);
 }
 
 .product-history-nav__heading {
@@ -15103,14 +15111,10 @@ body[data-webcut-modal-open="true"] .tc-ai-chat {
 }
 
 .tc-ai-chat--product-host.tc-ai-chat--maximized {
-  left: 280px;
+  left: 24px;
 }
 
 @media (max-width: 860px) {
-  .product-history-nav {
-    display: none;
-  }
-
   .tc-ai-chat--product-host.tc-ai-chat--maximized {
     left: 8px;
   }
@@ -15122,11 +15126,76 @@ body[data-webcut-modal-open="true"] .tc-ai-chat {
 }
 
 .product-workspace-return {
-  position: fixed;
-  z-index: 520;
-  left: 18px;
-  top: 18px;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.18);
+  white-space: nowrap;
+}
+
+.agent-workspace-history-drawer,
+.product-execution-trace-drawer {
+  --drawer-offset: 0px;
+  z-index: 800;
+}
+
+.product-execution-summary {
+  flex: 0 0 auto;
+  width: calc(100% - 12px);
+  margin: 0 6px 2px;
+  padding: 8px 10px;
+  border: 1px solid rgba(51, 156, 255, 0.16);
+  border-radius: 12px;
+  background: var(--mantine-color-body);
+}
+
+.product-execution-summary[data-phase="failed"] {
+  border-color: rgba(245, 158, 11, 0.28);
+}
+
+.product-execution-summary__main {
+  min-width: 0;
+}
+
+.product-execution-summary__meta {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.product-execution-trace__task {
+  min-width: 0;
+  padding: 8px;
+  border-radius: 10px;
+  background: rgba(148, 163, 184, 0.08);
+}
+
+.product-execution-trace__task-main,
+.product-execution-trace__task-copy {
+  min-width: 0;
+}
+
+.tc-ai-chat--product-host .tc-ai-chat__composer-shell {
+  gap: 6px;
+}
+
+.tc-ai-chat--product-host .tc-ai-chat__composer {
+  padding: 10px !important;
+  border-radius: 16px !important;
+}
+
+.tc-ai-chat--product-host.tc-ai-chat--maximized .tc-ai-chat__composer-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: "tools input actions";
+  gap: 8px;
+  align-items: end;
+}
+
+.tc-ai-chat--product-host.tc-ai-chat--maximized .tc-ai-chat__input-slot {
+  grid-area: input;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.tc-ai-chat--product-host .tc-ai-chat__input .mantine-Textarea-input {
+  min-height: 34px;
+  padding-block: 7px;
 }
 
 
@@ -15168,7 +15237,7 @@ body[data-webcut-modal-open="true"] .tc-ai-chat {
 
 
 :root[data-product-host='true'] .asset-center-panel-root {
-  left: 280px !important;
+  left: 24px !important;
   top: 78px !important;
   z-index: 620 !important;
 }

@@ -46,7 +46,16 @@ for (const extension of [installedVerticalExtension, fixtureExtension]) {
       }
       expect(resolveNativeArtifactProjection({
         asset,
-        nodes: [{ id: 'node-1', data: { kind: 'image', imageUrl: asset.url, status: 'success' } }],
+        nodes: [{
+          id: 'node-1',
+          data: {
+            kind: 'image',
+            imageUrl: asset.url,
+            assetId: asset.assetId,
+            assetRefId: asset.assetRefId,
+            status: 'success',
+          },
+        }],
       }).kind).toBe('artifact-card')
       expect(buildAssetChatReference({
         kind: 'image',

@@ -28,12 +28,6 @@ function text(value: unknown): string {
   return typeof value === 'string' ? value.trim() : ''
 }
 
-function normalizeStatus(value: unknown): 'queued' | 'running' | 'success' | 'failed' {
-  const status = text(value)
-  if (status === 'queued' || status === 'running' || status === 'failed') return status
-  return 'success'
-}
-
 export function resolveNativeArtifactProjection(input: Readonly<{
   asset: NativeArtifactSource
   nodes: readonly unknown[]
@@ -46,12 +40,17 @@ export function resolveNativeArtifactProjection(input: Readonly<{
   const url = text(input.asset.url)
   const node = input.nodes.find((candidate) => {
     const record = candidate as { id?: unknown } | null
-    if (requestedNodeId && text(record?.id) === requestedNodeId) return true
     const canvasAsset = collectNodeCanvasAsset(candidate)
-    return Boolean(canvasAsset?.url && canvasAsset.url === url)
+    if (!canvasAsset) return false
+    if (requestedNodeId && text(record?.id) !== requestedNodeId) return false
+    const assetIdMatches = assetId && text(canvasAsset.assetId) === assetId
+    const assetRefIdMatches = assetRefId && text(canvasAsset.assetRefId) === assetRefId
+    return Boolean(assetIdMatches || assetRefIdMatches)
   }) as { id?: unknown; data?: Record<string, unknown> } | undefined
   const nodeId = text(node?.id)
-  if (!url || !nodeId) return { kind: 'native-thumbnail' }
+  if (!url || !nodeId || text(node?.data?.status) !== 'success') {
+    return { kind: 'native-thumbnail' }
+  }
 
   const inferredVideo = input.asset.mediaType === 'video' || /\.(mp4|mov|webm|mkv)(\?|$)/i.test(url)
   return {
@@ -63,6 +62,6 @@ export function resolveNativeArtifactProjection(input: Readonly<{
     ...(assetId ? { assetId } : {}),
     ...(assetRefId ? { assetRefId } : {}),
     nodeId,
-    status: normalizeStatus(node?.data?.status),
+    status: 'success',
   }
 }
