@@ -49,23 +49,44 @@ it.each([
   expect(resolveSuccessfulMediaResultArtifact({ result, nodes: [] })).toBeNull()
 })
 
-it('recovers a persisted Artifact from a completed same-turn Tool snapshot', () => {
-  expect(resolveSuccessfulToolSnapshotArtifacts({
-    toolCallsByTurn: {
-      'turn-1': [{
-        toolCallId: 'tool-1',
-        toolName: 'canvas_image_generate_to_canvas',
+it.each([
+  {
+    source: 'terminal media result',
+    call: {
+      toolCallId: 'tool-1',
+      toolName: 'canvas_image_generate_to_canvas',
+      status: 'succeeded',
+      media: {
+        kind: 'image',
         status: 'succeeded',
-        media: {
-          kind: 'image',
-          status: 'succeeded',
-          pending: false,
-          nodeId: 'node-1',
-          taskId: 'task-1',
-          url: succeeded.url,
-        },
-      }],
+        pending: false,
+        nodeId: 'node-1',
+        taskId: 'task-1',
+        url: succeeded.url,
+      },
     },
+  },
+  {
+    source: 'synchronous completed media Tool output',
+    call: {
+      toolCallId: 'tool-1',
+      toolName: 'canvas_image_generate_to_canvas',
+      status: 'succeeded',
+      outputJson: {
+        ok: true,
+        data: {
+          nodeId: 'node-1',
+          status: 'success',
+          pending: false,
+          imageUrl: succeeded.url,
+          assetId: 'asset-1',
+        },
+      },
+    },
+  },
+])('recovers a persisted Artifact from a completed same-turn $source', ({ call }) => {
+  expect(resolveSuccessfulToolSnapshotArtifacts({
+    toolCallsByTurn: { 'turn-1': [call] },
     nodes: [{
       id: 'node-1',
       data: {
