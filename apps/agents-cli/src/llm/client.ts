@@ -475,6 +475,11 @@ export class LLMClient implements LLMAdapter {
       stream: upstreamStream,
     };
 
+    const reasoningEffort = String(process.env.AGENTS_REASONING_EFFORT || "").trim();
+    if (reasoningEffort) {
+      payload.reasoning = { effort: reasoningEffort };
+    }
+
     if (request.system) {
       if (this.responsesInstructionsKey === "instructions") {
         payload.instructions = request.system;

@@ -7,6 +7,7 @@ import { appendTraceEvent } from "../../trace";
 import { writeUserExecutionTrace, buildUserMemoryContext, formatMemoryContextForPrompt } from "../memory/memory.service";
 import type { PublicChatPromptContext, PublicChatReferenceImageSlot } from "./chat-prompt.types";
 import { buildPublicChatExecutionPlanningDirective } from "./public-chat-execution-planning";
+import { countRecoveredAgentDispatchValidationFailures } from "./agents-tool-recovery";
 import { detectPptIntent, buildPptMasterSystemPromptAddendum } from "./agents-tool-bridge.ppt-master-prompt";
 import {
 	buildPublicChatExpectedDeliverySummary,
@@ -419,6 +420,7 @@ type ToolStatusSummary = {
 
 type ToolExecutionIssueSummary = {
 	failedToolCalls: number;
+	recoveredFailedToolCalls: number;
 	deniedToolCalls: number;
 	blockedToolCalls: number;
 	coordinationBlockedToolCalls: number;
@@ -1779,8 +1781,17 @@ function summarizeBridgeToolExecutionIssues(input: {
 	toolCalls: BridgeToolCall[];
 	toolStatusSummary: ToolStatusSummary;
 }): ToolExecutionIssueSummary {
-	const failedToolCalls =
+	const rawFailedToolCalls =
 		typeof input.toolStatusSummary.failedToolCalls === "number" ? input.toolStatusSummary.failedToolCalls : 0;
+	const observedFailedToolCalls = input.toolCalls.filter((toolCall) => toolCall.status === "failed");
+	const recoveredFailedToolCalls = countRecoveredAgentDispatchValidationFailures(observedFailedToolCalls.length
+		? input.toolCalls
+		: []);
+	const failedToolCalls = Math.max(
+		rawFailedToolCalls - recoveredFailedToolCalls,
+		observedFailedToolCalls.length - recoveredFailedToolCalls,
+		0,
+	);
 	const deniedToolCalls =
 		typeof input.toolStatusSummary.deniedToolCalls === "number" ? input.toolStatusSummary.deniedToolCalls : 0;
 	const observedBlockedToolCalls = input.toolCalls.filter((toolCall) => toolCall.status === "blocked");
@@ -1800,6 +1811,7 @@ function summarizeBridgeToolExecutionIssues(input: {
 	);
 	return {
 		failedToolCalls,
+		recoveredFailedToolCalls,
 		deniedToolCalls,
 		blockedToolCalls,
 		coordinationBlockedToolCalls,
@@ -3481,6 +3493,7 @@ function buildDiagnosticFlags(input: {
 			title: "存在工具执行异常",
 			detail:
 				`failed=${input.toolExecutionIssues.failedToolCalls}, ` +
+				`recoveredFailed=${input.toolExecutionIssues.recoveredFailedToolCalls}, ` +
 				`denied=${input.toolExecutionIssues.deniedToolCalls}, ` +
 				`blocked=${input.toolExecutionIssues.blockedToolCalls}, ` +
 				`coordinationBlocked=${input.toolExecutionIssues.coordinationBlockedToolCalls}, ` +
@@ -6620,7 +6633,7 @@ export async function runAgentsBridgeChatTask(
 				`bridgeToolCalls=${bridgeToolCalls.length}`,
 				`turns=${traceTurns.length}`,
 				`toolStatuses=succeeded:${toolStatusSummary.succeededToolCalls},failed:${toolStatusSummary.failedToolCalls},denied:${toolStatusSummary.deniedToolCalls},blocked:${toolStatusSummary.blockedToolCalls}`,
-				`toolIssueSummary=failed:${toolExecutionIssues.failedToolCalls},denied:${toolExecutionIssues.deniedToolCalls},blocked:${toolExecutionIssues.blockedToolCalls},coordinationBlocked:${toolExecutionIssues.coordinationBlockedToolCalls},actionableBlocked:${toolExecutionIssues.actionableBlockedToolCalls}`,
+				`toolIssueSummary=failed:${toolExecutionIssues.failedToolCalls},recoveredFailed:${toolExecutionIssues.recoveredFailedToolCalls},denied:${toolExecutionIssues.deniedToolCalls},blocked:${toolExecutionIssues.blockedToolCalls},coordinationBlocked:${toolExecutionIssues.coordinationBlockedToolCalls},actionableBlocked:${toolExecutionIssues.actionableBlockedToolCalls}`,
 				`outputMode=${outputMode}`,
 				`promptPipelineTarget=${promptPipeline.target}`,
 				`promptPipelinePrecheck=${promptPipeline.precheck.status}:${promptPipeline.precheck.reason}`,
