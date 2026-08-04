@@ -1099,8 +1099,8 @@ function CanvasApp({
 
       {/* 移除左侧固定栏，改为悬浮灵动岛样式 */}
 
-      <AppShell.Main className={`app-shell-main${isProductSurface ? ' app-shell-main--product-host' : ''}`}>
-        <Box className={`app-shell-main-box${isProductSurface ? ' app-shell-main-box--product-host' : ''}`} onClick={(e)=>{
+      <AppShell.Main className="app-shell-main">
+        <Box className="app-shell-main-box" onClick={(e)=>{
           const el = e.target as HTMLElement
           if (
             !el.closest('[data-ux-floating]') &&
@@ -1214,7 +1214,7 @@ function CanvasApp({
         {!isProductSurface ? <FloatingNav className="app-floating-nav" /> : null}
         <AddNodePanel className="app-add-node-panel" />
         <ProjectPanel />
-        <AssetCenterPanel />
+        {!isProductSurface ? <AssetCenterPanel /> : null}
         <PendingUploadsBar />
         <ModelPanel />
         <HistoryPanel />
@@ -1235,7 +1235,7 @@ function CanvasApp({
             })}
           />
         ) : (
-          <AiChatDialog className="app-ai-chat-dialog" surface="native" />
+          <AiChatDialog className="app-ai-chat-dialog" />
         )}
       </BodyPortal>
       <ParamModal />

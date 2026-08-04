@@ -77,6 +77,23 @@ it('uses the terminal Jarvis result and duration after completion', () => {
   })
 })
 
+it('compresses direct Skill and media Tools into product-language tasks', () => {
+  const summary = resolveExecutionSummary(run({
+    status: 'succeeded',
+    finishedAt: 3_000,
+    toolCallsByTurn: {
+      'turn-1': [
+        agentCall({ toolCallId: 'skill-1', toolName: 'Skill', status: 'succeeded', input: { skill: 'watch-design-kernel' }, finishedAtMs: 1_500 }),
+        agentCall({ toolCallId: 'image-1', toolName: 'canvas_image_generate_to_canvas', status: 'succeeded', input: {}, finishedAtMs: 3_000 }),
+      ],
+    },
+  }), 4_000)
+
+  expect(summary).toMatchObject({ taskCount: 2, completedTaskCount: 2, phase: 'succeeded' })
+  expect(summary.tasks.map((task) => task.title)).toEqual(['设计能力', '生成视觉成果'])
+  expect(JSON.stringify(summary)).not.toContain('watch-design-kernel')
+})
+
 it('projects failure without inventing an Artifact result', () => {
   expect(resolveExecutionSummary(run({
     status: 'failed',

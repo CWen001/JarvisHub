@@ -1,6 +1,6 @@
 import React from 'react'
 import { ActionIcon, Badge, Button, Collapse, Group, Loader, Menu, Modal, Paper, ScrollArea, Stack, Text, Textarea, Tooltip, UnstyledButton } from '@mantine/core'
-import { IconArrowsMaximize, IconArrowsMinimize, IconBook2, IconChevronDown, IconChevronRight, IconChevronUp, IconDownload, IconMessageCircle, IconMessagePlus, IconPaperclip, IconPhoto, IconSend2, IconTrash, IconUpload, IconVideo, IconX } from '@tabler/icons-react'
+import { IconArrowsMaximize, IconArrowsMinimize, IconBook2, IconChevronDown, IconChevronRight, IconChevronUp, IconDownload, IconLayoutBoard, IconMessageCircle, IconMessagePlus, IconPaperclip, IconPhoto, IconSend2, IconTrash, IconUpload, IconVideo, IconX } from '@tabler/icons-react'
 import { $ } from '../../canvas/i18n'
 import { useIsAdmin } from '../../auth/isAdmin'
 import {
@@ -103,6 +103,7 @@ import {
   writeAiChatTabsState,
   type AiChatTabsState,
 } from './chatTabs'
+import { dispatchProductWorkspaceCommand } from '../../product-host/productWorkspace'
 import {
   NATIVE_CHAT_NAVIGATION_COMMAND,
   notifyNativeChatNavigationChanged,
@@ -2169,6 +2170,130 @@ function useVisibleAssistantAssets(
   }, [canvasNodes, message.assets, message.phase, message.role, message.toolCallSnapshot, projectArtifacts])
 }
 
+type ProductTimelineGroup = import('./mergeAskUserGroups').MergedMessageGroup
+
+type ProductExecutionItem = Readonly<{ key: string; label: string; failed: boolean }>
+
+function productExecutionLabel(toolName: string): string {
+  if (toolName === 'Skill') return '加载设计能力'
+  if (toolName === 'ask_user') return '确认设计决策'
+  if (toolName.includes('image_generate')) return '生成视觉成果'
+  if (toolName.includes('video_generate')) return '生成动态成果'
+  if (toolName === 'Agent') return '执行专业设计任务'
+  if (toolName === 'TodoWrite') return '整理任务进度'
+  return '执行设计任务'
+}
+
+function PersistedCompactExecution({ message }: { message: ChatMessage }): JSX.Element | null {
+  const [expanded, setExpanded] = React.useState(false)
+  const items = React.useMemo<ProductExecutionItem[]>(() => {
+    const snapshot = message.toolCallSnapshot?.record.toolCallsByTurn
+    if (!snapshot) return []
+    return Object.values(snapshot)
+      .flat()
+      .filter((call) => !call.parentToolCallId)
+      .map((call) => ({
+        key: call.toolCallId,
+        label: productExecutionLabel(call.toolName),
+        failed: call.status === 'failed' || call.status === 'blocked' || call.status === 'denied',
+      }))
+  }, [message.toolCallSnapshot])
+  if (items.length === 0) return null
+  const failed = items.filter((item) => item.failed).length
+
+  return (
+    <section className="compact-execution compact-execution--persisted" data-phase={failed ? 'failed' : 'succeeded'}>
+      <div className="compact-execution__row">
+        <UnstyledButton
+          className="compact-execution__toggle"
+          onClick={() => setExpanded((value) => !value)}
+          aria-expanded={expanded}
+          aria-label={expanded ? '折叠执行摘要' : '展开执行摘要'}
+        >
+          <span className="compact-execution__status" aria-hidden="true">{failed ? '!' : '✓'}</span>
+          <strong>{failed ? `${failed} 项设计任务需要处理` : `已完成 ${items.length} 项设计任务`}</strong>
+          <span>{items.length} 项</span>
+          <span>已记录</span>
+          {expanded ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}
+        </UnstyledButton>
+        <Tooltip label="在专业工作台查看完整运行详情">
+          <ActionIcon
+            variant="subtle"
+            size={40}
+            aria-label="在专业工作台查看完整运行详情"
+            onClick={() => dispatchProductWorkspaceCommand({ type: 'open-canvas' })}
+          >
+            <IconLayoutBoard size={18} />
+          </ActionIcon>
+        </Tooltip>
+      </div>
+      <Collapse in={expanded}>
+        <ul className="compact-execution__persisted-list">
+          {items.map((item) => <li key={item.key}>{item.label}<span>{item.failed ? '需要处理' : '已完成'}</span></li>)}
+        </ul>
+      </Collapse>
+    </section>
+  )
+}
+
+export function ProductTimelineEntry({
+  group,
+  onRetry,
+}: {
+  group: ProductTimelineGroup
+  onRetry?: (messageId: string) => void
+}): JSX.Element {
+  const message = group.kind === 'single' ? group.message : group.continuation
+  const visibleAssets = useVisibleAssistantAssets(message, true)
+  const { markdownText } = React.useMemo(
+    () => extractLatestTodoBlock(message.content),
+    [message.content],
+  )
+  const isUser = group.kind === 'single' && message.role === 'user'
+  const failed = message.kind === 'error' || message.turnVerdict?.status === 'failed'
+
+  return (
+    <article
+      className={`product-timeline-entry product-timeline-entry--${isUser ? 'user' : 'assistant'}`}
+      data-entry-kind={group.kind === 'ask-user-merged' ? 'decision' : message.kind || 'message'}
+    >
+      <header className="product-timeline-entry__meta">
+        <strong>{isUser ? '你' : '设计顾问'}</strong>
+        <time>{group.kind === 'ask-user-merged' ? group.askMessage.ts : message.ts}</time>
+      </header>
+      {group.kind === 'ask-user-merged' ? (
+        <section className="product-timeline-decision-history" aria-label="已完成的设计决策">
+          <span>设计决策</span>
+          <p>{group.askMessage.askUserPrompt?.question || '已确认设计方向'}</p>
+          <div><strong>你的选择</strong><span>{group.userReply.content}</span></div>
+        </section>
+      ) : null}
+      {message.role === 'assistant' ? <PersistedCompactExecution message={message} /> : null}
+      {String(markdownText || '').trim() ? (
+        <div className="product-timeline-entry__content">
+          <ChatMarkdownContent markdownText={markdownText} />
+        </div>
+      ) : null}
+      {message.turnVerdict?.status === 'partial' ? (
+        <div className="product-timeline-entry__notice is-partial">本轮部分完成，请查看结果与提示。</div>
+      ) : null}
+      {failed ? (
+        <div className="product-timeline-entry__notice is-failed">
+          <span>{message.turnVerdict?.reasons?.[0] || '本轮未能完成。'}</span>
+          {onRetry ? <Button size="compact-xs" variant="subtle" onClick={() => onRetry(message.id)}>重试</Button> : null}
+        </div>
+      ) : null}
+      {visibleAssets.length > 0 ? (
+        <div className="product-timeline-entry__artifacts">
+          {visibleAssets.map((asset, index) => (
+            <NativeArtifactCard key={`${message.id}:artifact:${asset.nodeId || index}`} asset={asset} />
+          ))}
+        </div>
+      ) : null}
+    </article>
+  )
+}
+
 type MergedAskUserBubbleProps = {
   group: Extract<import('./mergeAskUserGroups').MergedMessageGroup, { kind: 'ask-user-merged' }>
   activeRun?: LiveChatRunRecord | null
@@ -2613,9 +2738,9 @@ function RunTraceDisclosure({ children }: { children: React.ReactNode }) {
   )
 }
 
-export type AiChatSurface = 'native' | 'agent-workspace'
+type AiChatSurface = 'native' | 'agent-workspace'
 
-export default function AiChatDialog({
+function ChatRuntimeController({
   className,
   surface = 'native',
 }: {
@@ -5376,7 +5501,6 @@ export default function AiChatDialog({
     `tc-ai-chat--${mode}`,
     dockRight ? 'tc-ai-chat--dock-right' : '',
     isDragOver ? 'tc-ai-chat--drag-over' : '',
-    productMode ? 'tc-ai-chat--product-host' : '',
     className,
   ].filter(Boolean).join(' ')
 
@@ -5587,6 +5711,117 @@ export default function AiChatDialog({
     void onUploadReferenceFiles(files)
   }, [onUploadReferenceFiles])
 
+  if (productMode) {
+    return (
+      <div
+        className={['product-chat-surface', className || ''].filter(Boolean).join(' ')}
+        onKeyDownCapture={onRootKeyDownCapture}
+        onKeyDown={onRootKeyDown}
+        onDragEnter={handleRootDragEnter}
+        onDragOver={handleRootDragOver}
+        onDragLeave={handleRootDragLeave}
+        onDrop={handleRootDrop}
+      >
+        <input
+          ref={fileInputRef}
+          className="product-chat-surface__file-input"
+          type="file"
+          accept="image/*,.txt,.md,.markdown,.pdf,text/plain,text/markdown,application/pdf"
+          multiple
+          onChange={(event) => void onUploadReferenceFiles(event.currentTarget.files)}
+        />
+        <input
+          ref={targetFileInputRef}
+          className="product-chat-surface__file-input"
+          type="file"
+          accept="image/*"
+          onChange={(event) => void onUploadReplicateTargetFile(event.currentTarget.files)}
+        />
+        <Modal
+          opened={replicatePickerOpened}
+          onClose={() => setReplicatePickerOpened(false)}
+          centered
+          title="选择目标效果图"
+          size="lg"
+        >
+          <div className="product-replicate-picker">
+            {canvasImageCandidates.map((item) => (
+              <button
+                key={`${item.id}_${item.url}`}
+                type="button"
+                className={replicateTargetImage === item.url ? 'is-selected' : ''}
+                onClick={() => void chooseReplicateTargetFromCanvas(item.url)}
+              >
+                <img src={item.url} alt={item.label} />
+                <span>{item.label}</span>
+              </button>
+            ))}
+          </div>
+        </Modal>
+
+        <div className="product-chat-surface__scroll" ref={viewportRef}>
+          <div className="product-timeline" ref={messagesContentRef}>
+            {canShowHistory && historyLoadError ? (
+              <div className="product-timeline__state is-error">{historyLoadError}</div>
+            ) : null}
+            {isEmptyConversation ? (
+              <div className="product-timeline__empty">
+                <strong>从一句设计意图开始</strong>
+                <span>描述产品、场景、用户或希望探索的设计方向。</span>
+              </div>
+            ) : null}
+            {activeLiveRun?.status === 'running' ? <ExecutionSummary run={activeLiveRun} /> : null}
+            {mergedGroups.map((group) => (
+              <ProductTimelineEntry
+                key={group.kind === 'single' ? group.message.id : group.askMessage.id}
+                group={group}
+                onRetry={retryFailedAssistantMessage}
+              />
+            ))}
+            {activeLiveRun?.status !== 'running' ? <ExecutionSummary run={activeLiveRun} /> : null}
+          </div>
+        </div>
+
+        {pendingAskUserCard ? <div className="product-chat-surface__decision">{pendingAskUserCard}</div> : null}
+
+        <div className="product-composer-shell">
+          <ReferenceMediaStrip items={referenceMedia} onClear={clearReferenceImages} disabled={isActiveTabSending || refsLoading} />
+          <AttachedDocsStrip docs={attachedDocs} onRemove={removeAttachedDoc} disabled={isActiveTabSending || refsLoading} />
+          <div className="product-composer">
+            <div className="product-composer__tools">
+              {attachMenu}
+              {taskEntryMenuButton}
+            </div>
+            <div className="product-composer__input">
+              {renderInputSkillToken()}
+              <Textarea
+                ref={expandedInputRef}
+                autosize
+                minRows={1}
+                maxRows={6}
+                placeholder={composerPlaceholder}
+                value={draft}
+                onChange={(event) => setDraft(event.currentTarget.value)}
+              />
+            </div>
+            <ChatTooltip label={isActiveTabSending ? '中断' : sendActionLabel} withArrow>
+              <ActionIcon
+                className="product-composer__send"
+                variant="filled"
+                aria-label={isActiveTabSending ? '中断' : sendActionLabel}
+                onClick={isActiveTabSending ? interruptActiveChat : () => void send()}
+                disabled={isActiveTabSending ? false : !canSendMessage}
+              >
+                {isActiveTabSending ? <IconX size={20} /> : <IconSend2 size={20} />}
+              </ActionIcon>
+            </ChatTooltip>
+          </div>
+        </div>
+        {isDragOver ? <div className="product-chat-surface__dropzone">释放文件以添加参考素材</div> : null}
+      </div>
+    )
+  }
+
   return (
     <div
       className={rootClassName}
@@ -5637,7 +5872,7 @@ export default function AiChatDialog({
           })}
         </div>
       </Modal>
-      {isMaximized && !productMode && (
+      {isMaximized && (
         <div
           aria-hidden="true"
           className="tc-ai-chat__backdrop"
@@ -5825,11 +6060,7 @@ export default function AiChatDialog({
                   {historyLoadError}
                 </Text>
               ) : null}
-              {productMode ? (
-                activeLiveRun?.status === 'running' ? <ExecutionSummary run={activeLiveRun} /> : null
-              ) : (
-                <SubagentProgressStrip run={activeLiveRun} />
-              )}
+              <SubagentProgressStrip run={activeLiveRun} />
               {canShowHistory && !isEmptyConversation && (
                 useScrollableHistory ? (
                   <ScrollArea className="tc-ai-chat__messages-scroll" viewportRef={viewportRef} type="auto" scrollbarSize={8}>
@@ -5842,8 +6073,6 @@ export default function AiChatDialog({
                             activeRun={activeLiveRun}
                             sessionKey={effectiveChatSessionKey}
                             askUserAnswered={answeredAskUserMessageIds.has(group.message.id)}
-                            onRetry={productMode ? retryFailedAssistantMessage : undefined}
-                            projectArtifacts={productMode}
                           />
                         ) : (
                           <MergedAskUserBubble
@@ -5851,13 +6080,9 @@ export default function AiChatDialog({
                             group={group}
                             activeRun={activeLiveRun}
                             sessionKey={effectiveChatSessionKey}
-                            projectArtifacts={productMode}
                           />
                         ),
                       )}
-                      {productMode && activeLiveRun?.status !== 'running' ? (
-                        <ExecutionSummary run={activeLiveRun} />
-                      ) : null}
                     </Stack>
                   </ScrollArea>
                 ) : (
@@ -5870,8 +6095,6 @@ export default function AiChatDialog({
                           activeRun={activeLiveRun}
                           sessionKey={effectiveChatSessionKey}
                           askUserAnswered={answeredAskUserMessageIds.has(group.message.id)}
-                          onRetry={productMode ? retryFailedAssistantMessage : undefined}
-                          projectArtifacts={productMode}
                         />
                       ) : (
                         <MergedAskUserBubble
@@ -5879,13 +6102,9 @@ export default function AiChatDialog({
                           group={group}
                           activeRun={activeLiveRun}
                           sessionKey={effectiveChatSessionKey}
-                          projectArtifacts={productMode}
                         />
                       ),
                     )}
-                    {productMode && activeLiveRun?.status !== 'running' ? (
-                      <ExecutionSummary run={activeLiveRun} />
-                    ) : null}
                   </Stack>
                 )
               )}
@@ -5928,7 +6147,7 @@ export default function AiChatDialog({
                       ref={expandedInputRef}
                       className="tc-ai-chat__input"
                       autosize
-                      minRows={productMode ? 1 : 2}
+                      minRows={2}
                       maxRows={6}
                       placeholder={composerPlaceholder}
                       value={draft}
@@ -5952,14 +6171,12 @@ export default function AiChatDialog({
                   </div>
                 </Group>
 
-                {!productMode ? (
-                  <Group className="tc-ai-chat__hint" justify="space-between" align="center" gap={10} mt={8} wrap="nowrap">
-                    <Text className="tc-ai-chat__hint-text" size="xs" c="dimmed" lineClamp={1}>
-                      {composerHintText}
-                    </Text>
-                    {panelFooterActions}
-                  </Group>
-                ) : null}
+                <Group className="tc-ai-chat__hint" justify="space-between" align="center" gap={10} mt={8} wrap="nowrap">
+                  <Text className="tc-ai-chat__hint-text" size="xs" c="dimmed" lineClamp={1}>
+                    {composerHintText}
+                  </Text>
+                  {panelFooterActions}
+                </Group>
               </PanelCard>
             </div>
           </>
@@ -5969,11 +6186,15 @@ export default function AiChatDialog({
   )
 }
 
+/** Upstream-native Chat presentation retained by Professional Workspace. */
+export default function AiChatDialog({ className }: { className?: string }): JSX.Element | null {
+  return <ChatRuntimeController className={className} surface="native" />
+}
+
 /**
- * Product View Interface over the native Chat controller. Agent Workspace owns
- * all chrome and presentation; this module retains Jarvis command, streaming,
- * persistence, approval, retry, and recovery behaviour behind that Interface.
+ * Product-owned Timeline presentation over the shared native command,
+ * streaming, persistence, approval, retry, and recovery implementation.
  */
 export function ProductChatTimeline({ className }: { className?: string }): JSX.Element | null {
-  return <AiChatDialog className={className} surface="agent-workspace" />
+  return <ChatRuntimeController className={className} surface="agent-workspace" />
 }

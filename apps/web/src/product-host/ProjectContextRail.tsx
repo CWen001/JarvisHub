@@ -49,6 +49,7 @@ export function ProjectContextRail({
           <button
             type="button"
             className="project-context-rail__primary-button"
+            aria-label="新对话"
             disabled={!view.current?.projectId}
             onClick={() => view.current?.projectId && dispatch({ type: 'new-session', projectId: view.current.projectId })}
           >
@@ -170,12 +171,17 @@ export function ProjectContextRail({
         </section>
       </ScrollArea>
 
-      <button type="button" className="project-context-rail__assets" onClick={() => dispatch({ type: 'open-assets' })}>
+      <button
+        type="button"
+        className="project-context-rail__assets"
+        aria-label={`资产，${view.assets.count} 项`}
+        onClick={() => dispatch({ type: 'open-assets' })}
+      >
         <IconPhoto size={18} />
         <span>资产</span>
         <Badge size="xs" variant="light" color="dark">{view.assets.count}</Badge>
       </button>
-      <div className={`project-context-rail__status is-${view.run.status}`} role="status">
+      <div className={`project-context-rail__status is-${view.run.status}`} role="status" aria-label={view.run.label}>
         <i aria-hidden="true" />
         <span>{view.run.label}</span>
       </div>

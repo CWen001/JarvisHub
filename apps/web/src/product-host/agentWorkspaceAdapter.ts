@@ -1,19 +1,44 @@
 import React from 'react'
-import type { ProjectDto } from '../api/server'
+import { listServerAssets, type ProjectDto, type ServerAssetDto } from '../api/server'
 import { useRFStore } from '../canvas/store'
 import { collectCanvasAssets } from '../ui/canvasAssetModel'
 import { peekAiChatTabsState } from '../ui/chat/chatTabs'
 import { useLiveChatRunStore } from '../ui/chat/liveChatRunStore'
-import { NATIVE_CHAT_NAVIGATION_CHANGED } from './nativeChatNavigation'
+import { dispatchNativeArtifactChatCommand } from '../ui/chat/NativeArtifactCard'
+import {
+  dispatchNativeChatNavigation,
+  NATIVE_CHAT_NAVIGATION_CHANGED,
+} from './nativeChatNavigation'
 import {
   projectAgentWorkspace,
   type AgentWorkspaceAssetFact,
+  type AgentWorkspaceFacts,
   type AgentWorkspaceRunFact,
   type AgentWorkspaceViewModel,
+  type NativeAgentWorkspaceCommand,
 } from './agentWorkspaceProjection'
+import {
+  createAgentWorkspaceRuntime,
+  type AgentWorkspaceRuntime,
+  type AgentWorkspaceRuntimeAdapter,
+} from './agentWorkspaceRuntime'
 
 type CurrentProject = Readonly<{ id?: string | null; name: string }> | null
 type CurrentFlow = Readonly<{ id?: string | null; name?: string | null; updatedAt?: string | null }> | null
+
+type AuthoritativeInput = Readonly<{
+  projects: readonly ProjectDto[]
+  currentProject: CurrentProject
+  currentFlow: CurrentFlow
+}>
+
+export type ProductionAgentWorkspaceCommands = Readonly<{
+  onSelectProject: (project: ProjectDto) => void
+  onCreateProject: () => void
+  onCreateFlow: (projectId: string) => void | Promise<void>
+  onOpenAssets: () => void
+  onOpenProfessionalWorkspace: (nodeId?: string) => void
+}>
 
 function readNodeStatus(nodes: readonly unknown[], nodeId: string): AgentWorkspaceAssetFact['status'] {
   const node = nodes.find((candidate) => String((candidate as { id?: unknown } | null)?.id || '').trim() === nodeId) as {
@@ -35,6 +60,32 @@ function readNodeUpdatedAt(nodes: readonly unknown[], nodeId: string, fallback: 
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback
 }
 
+function projectServerAssetFact(asset: ServerAssetDto): AgentWorkspaceAssetFact | null {
+  const data = asset.data && typeof asset.data === 'object' ? asset.data as Record<string, unknown> : {}
+  const url = String(data.url || data.imageUrl || data.videoUrl || '').trim()
+  if (!url) return null
+  const rawKind = String(data.kind || data.type || '').toLowerCase()
+  const kind: 'image' | 'video' = rawKind.includes('video') || /\.(mp4|mov|webm)(\?|$)/i.test(url)
+    ? 'video'
+    : 'image'
+  const updatedAt = Date.parse(asset.updatedAt || asset.createdAt)
+  const thumbnailUrl = String(data.thumbnailUrl || '').trim()
+  const nodeId = String(data.nodeId || '').trim()
+  const assetRefId = String(data.assetRefId || '').trim()
+  return {
+    nodeId,
+    title: asset.name || (kind === 'video' ? '视频资产' : '图片资产'),
+    kind,
+    url,
+    ...(thumbnailUrl ? { thumbnailUrl } : {}),
+    assetId: String(data.assetId || asset.id),
+    ...(assetRefId ? { assetRefId } : {}),
+    status: 'success',
+    updatedAt: Number.isFinite(updatedAt) ? updatedAt : 0,
+    scope: 'all',
+  }
+}
+
 function projectRunFact(status: 'running' | 'succeeded' | 'failed' | undefined): AgentWorkspaceRunFact {
   if (status === 'running') return { status, label: '设计任务正在进行' }
   if (status === 'failed') return { status, label: '本轮设计需要处理' }
@@ -42,14 +93,32 @@ function projectRunFact(status: 'running' | 'succeeded' | 'failed' | undefined):
   return { status: 'idle', label: '等待你的设计意图' }
 }
 
-export function useAuthoritativeAgentWorkspaceViewModel(input: Readonly<{
-  projects: readonly ProjectDto[]
-  currentProject: CurrentProject
-  currentFlow: CurrentFlow
-}>): AgentWorkspaceViewModel {
+function useAuthoritativeAgentWorkspaceFacts(input: AuthoritativeInput): AgentWorkspaceFacts {
   const nodes = useRFStore((state) => state.nodes)
   const runsBySessionKey = useLiveChatRunStore((state) => state.runsBySessionKey)
+  const [serverAssets, setServerAssets] = React.useState<ServerAssetDto[]>([])
+  const [serverAssetState, setServerAssetState] = React.useState<Readonly<{
+    status: 'loading' | 'ready' | 'error'
+    message: string
+  }>>({ status: 'loading', message: '' })
   const [, refreshNavigation] = React.useReducer((value) => value + 1, 0)
+
+  React.useEffect(() => {
+    let cancelled = false
+    setServerAssetState({ status: 'loading', message: '' })
+    void listServerAssets({ limit: 80 })
+      .then((result) => {
+        if (cancelled) return
+        setServerAssets(result.items)
+        setServerAssetState({ status: 'ready', message: '' })
+      })
+      .catch(() => {
+        if (cancelled) return
+        setServerAssets([])
+        setServerAssetState({ status: 'error', message: '无法读取项目资产，请稍后重试。' })
+      })
+    return () => { cancelled = true }
+  }, [input.currentProject?.id])
 
   React.useEffect(() => {
     const refresh = () => refreshNavigation()
@@ -79,7 +148,7 @@ export function useAuthoritativeAgentWorkspaceViewModel(input: Readonly<{
       }
     }
 
-    const assets: AgentWorkspaceAssetFact[] = collectCanvasAssets(nodes as unknown[])
+    const canvasAssets: AgentWorkspaceAssetFact[] = collectCanvasAssets(nodes as unknown[])
       .filter((asset) => asset.kind === 'image' || asset.kind === 'video')
       .map((asset, index) => ({
         nodeId: asset.nodeId,
@@ -91,7 +160,16 @@ export function useAuthoritativeAgentWorkspaceViewModel(input: Readonly<{
         ...(asset.assetRefId ? { assetRefId: asset.assetRefId } : {}),
         status: readNodeStatus(nodes, asset.nodeId),
         updatedAt: readNodeUpdatedAt(nodes, asset.nodeId, index + 1),
+        scope: 'canvas' as const,
       }))
+    const serverAssetFacts = serverAssets
+      .map(projectServerAssetFact)
+      .filter((asset): asset is AgentWorkspaceAssetFact => asset !== null)
+    const canvasAssetIds = new Set(canvasAssets.flatMap((asset) => [asset.assetId, asset.assetRefId].filter(Boolean)))
+    const assets = [
+      ...canvasAssets,
+      ...serverAssetFacts.filter((asset) => !canvasAssetIds.has(asset.assetId) && !canvasAssetIds.has(asset.assetRefId)),
+    ]
 
     const currentFlowId = String(input.currentFlow?.id || '').trim()
     const currentRun = Object.values(runsBySessionKey)
@@ -102,14 +180,95 @@ export function useAuthoritativeAgentWorkspaceViewModel(input: Readonly<{
       ))
       .sort((left, right) => right.updatedAt - left.updatedAt)[0]
 
-    return projectAgentWorkspace({
+    return {
       projects: input.projects,
       currentProjectId,
       currentFlow: input.currentFlow,
       sessionsByProject,
       currentSessionId,
       assets,
+      assetsState: serverAssetState.status,
+      assetsErrorMessage: serverAssetState.message,
       run: projectRunFact(currentRun?.status),
-    })
-  }, [input.currentFlow, input.currentProject?.id, input.projects, nodes, runsBySessionKey])
+    }
+  }, [input.currentFlow, input.currentProject?.id, input.projects, nodes, runsBySessionKey, serverAssets, serverAssetState])
+}
+
+export function useAuthoritativeAgentWorkspaceViewModel(input: AuthoritativeInput): AgentWorkspaceViewModel {
+  return projectAgentWorkspace(useAuthoritativeAgentWorkspaceFacts(input))
+}
+
+export function useAuthoritativeAgentWorkspaceRuntime(
+  input: AuthoritativeInput & ProductionAgentWorkspaceCommands,
+): AgentWorkspaceRuntime {
+  const facts = useAuthoritativeAgentWorkspaceFacts(input)
+  const factsRef = React.useRef<AgentWorkspaceFacts>(facts)
+  const commandRef = React.useRef(input)
+  factsRef.current = facts
+  commandRef.current = input
+
+  const listenersRef = React.useRef(new Set<() => void>())
+  const runtimeRef = React.useRef<AgentWorkspaceRuntime | null>(null)
+  if (!runtimeRef.current) {
+    const adapter: AgentWorkspaceRuntimeAdapter = {
+      readFacts: () => factsRef.current,
+      subscribe: (listener) => {
+        listenersRef.current.add(listener)
+        return () => listenersRef.current.delete(listener)
+      },
+      execute: async (command: NativeAgentWorkspaceCommand) => {
+        const current = commandRef.current
+        if (command.type === 'project.select') {
+          const project = current.projects.find((candidate) => candidate.id === command.projectId)
+          if (!project) throw new Error('项目不存在')
+          current.onSelectProject(project)
+          return
+        }
+        if (command.type === 'chat.navigate') {
+          const project = current.projects.find((candidate) => candidate.id === command.command.projectId)
+          if (project && project.id !== String(current.currentProject?.id || '')) current.onSelectProject(project)
+          dispatchNativeChatNavigation(command.command)
+          return
+        }
+        if (command.type === 'flow.create') {
+          await current.onCreateFlow(command.projectId)
+          return
+        }
+        if (command.type === 'project.create') {
+          current.onCreateProject()
+          return
+        }
+        if (command.type === 'assets.open') {
+          current.onOpenAssets()
+          return
+        }
+        if (command.type === 'asset.add-to-canvas') {
+          const asset = command.asset
+          if (asset.kind === 'video') {
+            useRFStore.getState().addNode('taskNode', asset.title, {
+              kind: 'video',
+              videoUrl: asset.url,
+              videoThumbnailUrl: asset.thumbnailUrl || null,
+              videoResults: [{ url: asset.url, thumbnailUrl: asset.thumbnailUrl || null }],
+            })
+          } else {
+            useRFStore.getState().addNode('taskNode', asset.title, { kind: 'image', imageUrl: asset.url })
+          }
+          return
+        }
+        if (command.type === 'asset.reference') {
+          dispatchNativeArtifactChatCommand({ type: 'reference', asset: command.asset })
+          return
+        }
+        current.onOpenProfessionalWorkspace(command.nodeId)
+      },
+    }
+    runtimeRef.current = createAgentWorkspaceRuntime(adapter)
+  }
+
+  React.useEffect(() => {
+    for (const listener of listenersRef.current) listener()
+  }, [facts])
+
+  return runtimeRef.current
 }

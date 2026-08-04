@@ -9,13 +9,10 @@ import {
 } from '@tabler/icons-react'
 import type { ProjectDto } from '../api/server'
 import { ProductChatTimeline } from '../ui/chat/AiChatDialog'
-import { dispatchNativeChatNavigation } from './nativeChatNavigation'
-import { useAuthoritativeAgentWorkspaceViewModel } from './agentWorkspaceAdapter'
-import {
-  resolveAgentWorkspaceIntent,
-  type AgentWorkspaceIntent,
-} from './agentWorkspaceProjection'
+import { useAuthoritativeAgentWorkspaceRuntime } from './agentWorkspaceAdapter'
+import type { AgentWorkspaceIntent } from './agentWorkspaceProjection'
 import { ProjectContextRail } from './ProjectContextRail'
+import { ProductAssetPanel } from './ProductAssetPanel'
 import type { VerticalBrand } from './productHost'
 import './agentWorkspace.css'
 
@@ -45,35 +42,21 @@ export function AgentWorkspace({
   const [railCollapsed, setRailCollapsed] = React.useState(false)
   const [mobileRailOpened, setMobileRailOpened] = React.useState(false)
   const narrow = useMediaQuery('(max-width: 760px)') ?? false
-  const view = useAuthoritativeAgentWorkspaceViewModel({ projects, currentProject, currentFlow })
+  const runtime = useAuthoritativeAgentWorkspaceRuntime({
+    projects,
+    currentProject,
+    currentFlow,
+    onSelectProject,
+    onCreateProject,
+    onCreateFlow,
+    onOpenAssets,
+    onOpenProfessionalWorkspace,
+  })
+  const view = React.useSyncExternalStore(runtime.subscribe, runtime.getSnapshot, runtime.getSnapshot)
 
   const onIntent = React.useCallback((intent: AgentWorkspaceIntent) => {
-    const command = resolveAgentWorkspaceIntent(intent)
-    if (command.type === 'project.select') {
-      const project = projects.find((candidate) => candidate.id === command.projectId)
-      if (project) onSelectProject(project)
-      return
-    }
-    if (command.type === 'chat.navigate') {
-      const project = projects.find((candidate) => candidate.id === command.command.projectId)
-      if (project && project.id !== view.current?.projectId) onSelectProject(project)
-      dispatchNativeChatNavigation(command.command)
-      return
-    }
-    if (command.type === 'flow.create') {
-      void onCreateFlow(command.projectId)
-      return
-    }
-    if (command.type === 'project.create') {
-      onCreateProject()
-      return
-    }
-    if (command.type === 'assets.open') {
-      onOpenAssets()
-      return
-    }
-    onOpenProfessionalWorkspace(command.nodeId)
-  }, [onCreateFlow, onCreateProject, onOpenAssets, onOpenProfessionalWorkspace, onSelectProject, projects, view.current?.projectId])
+    void runtime.dispatch(intent)
+  }, [runtime])
 
   const toggleRail = () => {
     if (narrow) setMobileRailOpened((opened) => !opened)
@@ -85,25 +68,26 @@ export function AgentWorkspace({
     <div
       className="agent-workspace"
       data-rail-collapsed={railCollapsed}
-      style={{ '--product-brand-accent': brand.accentColor } as React.CSSProperties}
     >
       <header className="product-host-header">
         <ActionIcon
           className="product-host-rail-toggle"
           variant="subtle"
           size={40}
-          aria-label={narrow ? (mobileRailOpened ? '关闭项目栏' : '打开项目栏') : (railCollapsed ? '展开项目栏' : '收起项目栏')}
+          aria-label={narrow ? '打开项目栏' : (railCollapsed ? '展开项目栏' : '收起项目栏')}
+          aria-hidden={narrow && mobileRailOpened ? true : undefined}
+          tabIndex={narrow && mobileRailOpened ? -1 : undefined}
           onClick={toggleRail}
         >
           {narrow && mobileRailOpened ? <IconX size={20} /> : <IconMenu2 size={20} />}
         </ActionIcon>
-        <div className="product-host-academy-lockup">
-          <img src="/product-host/hust-design-logo.png" alt="设计学院 d.school HUST" />
+        <div className="product-host-institution-lockup">
+          <picture>
+            <source media="(max-width: 760px)" srcSet="/product-host/hust-design-logo-compact.png" />
+            <img src="/product-host/hust-design-logo-full.png" alt="华中科技大学设计学院" />
+          </picture>
           <span aria-hidden="true" />
-          <div className="product-host-brand-copy">
-            <strong>{brand.name}</strong>
-            <small>专业智能手表设计工作台</small>
-          </div>
+          <small>{brand.name}</small>
         </div>
         <div className="product-host-current-project">
           <span>当前项目</span>
@@ -144,13 +128,27 @@ export function AgentWorkspace({
         overlayProps={{ backgroundOpacity: 0.18, blur: 1 }}
       >
         {mobileRailOpened ? (
-          <ProjectContextRail view={view} onIntent={onIntent} onNavigate={() => setMobileRailOpened(false)} />
+          <div className="agent-workspace-rail-drawer__content">
+            <div className="agent-workspace-rail-drawer__header">
+              <strong>项目导航</strong>
+              <ActionIcon
+                variant="subtle"
+                size={44}
+                aria-label="关闭项目栏"
+                onClick={() => setMobileRailOpened(false)}
+              >
+                <IconX size={20} />
+              </ActionIcon>
+            </div>
+            <ProjectContextRail view={view} onIntent={onIntent} onNavigate={() => setMobileRailOpened(false)} />
+          </div>
         ) : null}
       </Drawer>
 
       <main className="agent-workspace__timeline" aria-label="设计时间线">
         <ProductChatTimeline className="app-ai-chat-dialog" />
       </main>
+      <ProductAssetPanel runtime={runtime} />
     </div>
   )
 }

@@ -68,6 +68,8 @@ describe('Agent Workspace Projection', () => {
         { id: 'project-2', name: '历史项目', current: false, sessions: [] },
       ],
       assets: {
+        state: 'ready',
+        errorMessage: '',
         count: 1,
         current: {
           nodeId: 'node-1',
@@ -75,7 +77,16 @@ describe('Agent Workspace Projection', () => {
           kind: 'image',
           url: 'https://cdn.example/runner.png',
           assetId: 'asset-1',
+          scope: 'canvas',
         },
+        items: [{
+          nodeId: 'node-1',
+          title: 'GT Runner 概念图',
+          kind: 'image',
+          url: 'https://cdn.example/runner.png',
+          assetId: 'asset-1',
+          scope: 'canvas',
+        }],
       },
       run: { status: 'running', label: '正在生成视觉成果' },
     })
@@ -92,7 +103,7 @@ describe('Agent Workspace Projection', () => {
         status: 'success',
         updatedAt: 50,
       }],
-    }).assets).toEqual({ count: 0, current: null })
+    }).assets).toEqual({ state: 'ready', errorMessage: '', count: 0, current: null, items: [] })
   })
 
   it('returns a recursively immutable Product View Model', () => {

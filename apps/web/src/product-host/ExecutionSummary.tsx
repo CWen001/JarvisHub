@@ -1,35 +1,22 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Badge, Drawer, Group, Progress, Stack, Text, ThemeIcon, UnstyledButton } from '@mantine/core'
-import { IconCheck, IconClock, IconPlayerPlay, IconProgress, IconX } from '@tabler/icons-react'
+import { ActionIcon, Collapse, Group, Progress, Text, Tooltip, UnstyledButton } from '@mantine/core'
+import { IconCheck, IconChevronDown, IconChevronUp, IconClock, IconLayoutBoard, IconProgress } from '@tabler/icons-react'
 import type { LiveChatRunRecord } from '../ui/chat/liveChatRunStore'
-import {
-  resolveExecutionSummary,
-  type ExecutionTaskStatus,
-} from '../ui/chat/executionSummaryModel'
+import { resolveExecutionSummary } from '../ui/chat/executionSummaryModel'
+import { dispatchProductWorkspaceCommand } from './productWorkspace'
 
-function statusLabel(status: ExecutionTaskStatus): string {
-  if (status === 'succeeded') return '已完成'
-  if (status === 'failed') return '失败'
-  if (status === 'blocked') return '受阻'
-  return '执行中'
-}
-
-function statusColor(status: ExecutionTaskStatus): string {
-  if (status === 'succeeded') return 'green'
-  if (status === 'failed') return 'red'
-  if (status === 'blocked') return 'orange'
-  return 'blue'
+function readableTaskTitle(title: string): string {
+  if (title.includes('background')) return '后台设计任务'
+  if (title.includes('agent')) return '专业设计能力'
+  return title || '设计任务'
 }
 
 export function ExecutionSummary({ run }: { run: LiveChatRunRecord | null }): JSX.Element | null {
   const [now, setNow] = useState(() => Date.now())
-  const [traceOpened, setTraceOpened] = useState(false)
+  const [expanded, setExpanded] = useState(false)
   const summary = useMemo(() => run ? resolveExecutionSummary(run, now) : null, [now, run])
 
-  useEffect(() => {
-    setTraceOpened(false)
-  }, [run?.runId])
-
+  useEffect(() => setExpanded(false), [run?.runId])
   useEffect(() => {
     if (summary?.phase !== 'running') return
     const timer = window.setInterval(() => setNow(Date.now()), 1_000)
@@ -41,66 +28,48 @@ export function ExecutionSummary({ run }: { run: LiveChatRunRecord | null }): JS
   const progress = Math.round((summary.completedTaskCount / summary.taskCount) * 100)
 
   return (
-    <>
-      <UnstyledButton
-        className="product-execution-summary"
-        data-phase={summary.phase}
-        onClick={() => setTraceOpened(true)}
-        aria-label="查看运行过程"
-      >
-        <Group justify="space-between" wrap="nowrap" gap="sm">
-          <Group wrap="nowrap" gap={8} className="product-execution-summary__main">
-            <ThemeIcon variant="light" color={failed ? 'orange' : summary.phase === 'running' ? 'blue' : 'green'} size={24} radius="md">
-              {summary.phase === 'running' ? <IconProgress size={14} /> : failed ? <IconClock size={14} /> : <IconCheck size={14} />}
-            </ThemeIcon>
-            <Text size="sm" fw={650} lineClamp={1}>{summary.headline}</Text>
-          </Group>
-          <Text className="product-execution-summary__meta" size="xs" c="dimmed">
-            {summary.taskCount} 个任务 · {summary.elapsedLabel}
-          </Text>
-        </Group>
-      </UnstyledButton>
-
-      <Drawer
-        className="product-execution-trace-drawer"
-        opened={traceOpened}
-        onClose={() => setTraceOpened(false)}
-        position="right"
-        size={420}
-        zIndex={800}
-        title="运行过程"
-      >
-        <Stack gap="md">
-          <div>
-            <Text fw={700}>{summary.headline}</Text>
-            <Text size="xs" c="dimmed">
-              已完成 {summary.completedTaskCount}/{summary.taskCount} · {summary.elapsedLabel}
-            </Text>
-            {summary.errorMessage ? <Text size="sm" c="red" mt="xs">{summary.errorMessage}</Text> : null}
-          </div>
-          <Progress value={progress} size={5} radius="xl" color={failed ? 'orange' : 'blue'} />
-          <Stack gap={6}>
+    <section className="compact-execution" data-phase={summary.phase}>
+      <div className="compact-execution__row">
+        <UnstyledButton
+          className="compact-execution__toggle"
+          onClick={() => setExpanded((value) => !value)}
+          aria-expanded={expanded}
+          aria-label={expanded ? '折叠执行摘要' : '展开执行摘要'}
+        >
+          <span className="compact-execution__status" aria-hidden="true">
+            {summary.phase === 'running' ? <IconProgress size={16} /> : failed ? <IconClock size={16} /> : <IconCheck size={16} />}
+          </span>
+          <strong>{summary.headline}</strong>
+          <span>{summary.completedTaskCount}/{summary.taskCount}</span>
+          <span>{summary.elapsedLabel}</span>
+          {expanded ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}
+        </UnstyledButton>
+        <Tooltip label="在专业工作台查看完整运行详情">
+          <ActionIcon
+            variant="subtle"
+            size={40}
+            aria-label="在专业工作台查看完整运行详情"
+            onClick={() => dispatchProductWorkspaceCommand({ type: 'open-canvas' })}
+          >
+            <IconLayoutBoard size={18} />
+          </ActionIcon>
+        </Tooltip>
+      </div>
+      <Collapse in={expanded}>
+        <div className="compact-execution__summary">
+          <Progress value={progress} size={4} color={failed ? 'red' : 'dark'} />
+          {summary.activeTaskLabel ? <Text size="sm">{summary.activeTaskLabel}</Text> : null}
+          {summary.errorMessage ? <Text size="sm" c="red">{summary.errorMessage}</Text> : null}
+          <ul>
             {summary.tasks.map((task) => (
-              <Group key={task.key} className="product-execution-trace__task" justify="space-between" wrap="nowrap" gap="sm">
-                <Group wrap="nowrap" gap={8} className="product-execution-trace__task-main">
-                  <ThemeIcon variant="light" color={statusColor(task.status)} size={22} radius="xl">
-                    {task.status === 'running'
-                      ? <IconPlayerPlay size={12} />
-                      : task.status === 'succeeded'
-                        ? <IconCheck size={12} />
-                        : <IconX size={12} />}
-                  </ThemeIcon>
-                  <div className="product-execution-trace__task-copy">
-                    <Text size="sm" fw={650} lineClamp={1}>{task.title}</Text>
-                    <Text size="xs" c="dimmed" lineClamp={2}>{task.subtitle}</Text>
-                  </div>
-                </Group>
-                <Badge size="xs" variant="light" color={statusColor(task.status)}>{statusLabel(task.status)}</Badge>
-              </Group>
+              <li key={task.key}>
+                <span>{readableTaskTitle(task.title)}</span>
+                <small>{task.subtitle}</small>
+              </li>
             ))}
-          </Stack>
-        </Stack>
-      </Drawer>
-    </>
+          </ul>
+        </div>
+      </Collapse>
+    </section>
   )
 }

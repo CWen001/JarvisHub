@@ -59,6 +59,15 @@ function truncate(text: string): string {
   return normalized.length <= 72 ? normalized : `${normalized.slice(0, 72).trimEnd()}...`
 }
 
+function productToolTitle(toolName: string): string {
+  if (toolName === 'Skill') return '设计能力'
+  if (toolName === 'ask_user') return '设计决策'
+  if (toolName.includes('image_generate')) return '生成视觉成果'
+  if (toolName.includes('video_generate')) return '生成动态成果'
+  if (toolName === 'TodoWrite') return '整理任务进度'
+  return '执行设计任务'
+}
+
 function formatElapsed(milliseconds: number): string {
   const seconds = Math.max(0, Math.floor(milliseconds / 1_000))
   const minutes = Math.floor(seconds / 60)
@@ -77,12 +86,25 @@ export function resolveExecutionSummary(run: LiveChatRunRecord, now = Date.now()
   }
 
   const tasks = calls
-    .filter((call) => call.toolName === 'Agent' && !call.parentToolCallId)
+    .filter((call) => !call.parentToolCallId)
     .map((call): ExecutionSummaryTask => {
-      const parsed = parseAgentInput(call.input)
       const children = childrenByParent.get(call.toolCallId) ?? []
-      const backgroundTaskId = readBackgroundTaskId(call)
       const resolved = resolveToolExecutionStatus(call, childrenByParent)
+      if (call.toolName !== 'Agent') {
+        return {
+          key: call.toolCallId,
+          title: productToolTitle(call.toolName),
+          subtitle: getLiveToolCallEffectiveStatus(call) === 'running' ? '正在处理' : '处理完成',
+          status: taskStatus(resolved.runStatus),
+          childToolCount: children.length,
+          completedChildToolCount: children.filter(
+            (child) => getLiveToolCallEffectiveStatus(child) !== 'running',
+          ).length,
+        }
+      }
+
+      const parsed = parseAgentInput(call.input)
+      const backgroundTaskId = readBackgroundTaskId(call)
       const status = backgroundTaskId && run.status === 'running'
         ? 'running'
         : taskStatus(resolved.runStatus)

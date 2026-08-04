@@ -5400,10 +5400,16 @@ body.tc-ai-chat-resizing * {
 }
 
 .tc-ai-chat__pending-decision {
-  flex: 0 0 auto;
+  flex: 0 1 auto;
   width: 100%;
   min-width: 0;
+  min-height: 0;
+  max-height: 70%;
   margin: 0 0 8px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 
 .tc-ai-chat__compact-row .tc-ai-chat__composer-shell {
@@ -14916,286 +14922,21 @@ body[data-webcut-modal-open="true"] .tc-ai-chat {
   border-color: rgba(96, 165, 250, 0.34);
 }
 
-/* Vertical Product Host: Agent Workspace and Professional Workspace are
-   separate surfaces. Native Project/Flow state stays authoritative without
-   rendering the Professional Canvas behind Agent Workspace. */
-.app-shell-main--product-host {
-  min-height: 100vh;
-  background:
-    radial-gradient(circle at 70% 10%, rgba(65, 109, 255, 0.10), transparent 32%),
-    var(--mantine-color-body);
-}
-
-.product-host-header {
-  position: fixed;
-  inset: 0 0 auto 0;
-  z-index: 420;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 0 22px;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
-  background: var(--mantine-color-body);
-  backdrop-filter: none;
-}
-
-.product-host-brand-mark {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  color: white;
-  font-weight: 800;
-  background: linear-gradient(145deg, var(--product-brand-accent, #3157d5), color-mix(in srgb, var(--product-brand-accent, #3157d5) 64%, white));
-  box-shadow: 0 8px 24px color-mix(in srgb, var(--product-brand-accent, #3157d5) 32%, transparent);
-}
-
-.product-host-brand-copy {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.25;
-}
-
-.product-host-project-trigger {
-  appearance: none;
-  min-width: 0;
-  padding: 0;
-  border: 0;
-  color: inherit;
-  background: transparent;
-  cursor: pointer;
-  text-align: left;
-}
-
-.product-host-project-trigger:hover span {
-  color: var(--mantine-color-text);
-}
-
-.product-host-brand-copy span {
-  color: var(--mantine-color-dimmed);
-  font-size: 12px;
-}
-
-.app-shell-main-box--product-host {
-  min-height: 100vh;
-  background: var(--mantine-color-body);
-}
-
-.tc-ai-chat--product-host.tc-ai-chat--maximized {
-  left: 24px;
-  top: 80px;
-  right: 24px;
-  bottom: 20px;
-  width: auto;
-  height: auto;
-  max-width: none;
-  transform: none;
-  z-index: 390;
-}
-
-.tc-ai-chat--product-host .tc-ai-chat__card {
-  border-radius: 20px !important;
-  background: var(--mantine-color-body) !important;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  box-shadow: 0 22px 70px rgba(15, 23, 42, 0.10);
-}
-
-.tc-ai-chat--product-host .tc-ai-chat__aura,
-.tc-ai-chat--product-host .tc-ai-chat__handle {
-  display: none;
-}
-
-@media (max-width: 720px) {
-  .tc-ai-chat--product-host.tc-ai-chat--maximized {
-    left: 8px;
-    right: 8px;
-    bottom: 8px;
-  }
-}
-
-
-.product-history-nav {
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background: var(--mantine-color-body);
-}
-
-.product-history-nav__heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 14px 12px;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
-}
-
-.product-history-nav__scroll {
-  flex: 1;
-  min-height: 0;
-}
-
-.product-history-nav__projects {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  padding: 10px;
-}
-
-.product-history-nav__project-row {
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  border-radius: 10px;
-}
-
-.product-history-nav__project-row.is-current {
-  background: rgba(70, 105, 220, 0.10);
-}
-
-.product-history-nav__project-button {
-  flex: 1;
-  min-width: 0;
-  justify-content: flex-start;
-  padding-inline: 5px;
-  color: inherit;
-}
-
-.product-history-nav__project-button .mantine-Button-label {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.product-history-nav__sessions {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  padding: 4px 0 7px 27px;
-}
-
-.product-history-nav__session {
-  appearance: none;
-  width: 100%;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 7px 9px;
-  border: 0;
-  border-radius: 8px;
-  color: var(--mantine-color-dimmed);
-  background: transparent;
-  cursor: pointer;
-  text-align: left;
-}
-
-.product-history-nav__session span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.product-history-nav__session:hover,
-.product-history-nav__session.is-current {
-  color: var(--mantine-color-text);
-  background: rgba(148, 163, 184, 0.11);
-}
-
-.product-history-nav__session--new {
-  color: var(--mantine-color-blue-6);
-}
-
-.tc-ai-chat--product-host.tc-ai-chat--maximized {
-  left: 24px;
-}
-
-@media (max-width: 860px) {
-  .tc-ai-chat--product-host.tc-ai-chat--maximized {
-    left: 8px;
-  }
-}
-
-
-.product-host-header__actions {
-  margin-left: auto;
-}
-
+/* Product-specific presentation integration in Professional Workspace is
+   intentionally limited to this reciprocal return action. */
 .product-workspace-return {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
   white-space: nowrap;
 }
 
-.agent-workspace-history-drawer,
-.product-execution-trace-drawer {
-  --drawer-offset: 0px;
-  z-index: 800;
-}
-
-.product-execution-summary {
-  flex: 0 0 auto;
-  width: calc(100% - 12px);
-  margin: 0 6px 2px;
-  padding: 8px 10px;
-  border: 1px solid rgba(51, 156, 255, 0.16);
-  border-radius: 12px;
-  background: var(--mantine-color-body);
-}
-
-.product-execution-summary[data-phase="failed"] {
-  border-color: rgba(245, 158, 11, 0.28);
-}
-
-.product-execution-summary__main {
-  min-width: 0;
-}
-
-.product-execution-summary__meta {
-  flex: 0 0 auto;
-  white-space: nowrap;
-}
-
-.product-execution-trace__task {
-  min-width: 0;
-  padding: 8px;
-  border-radius: 10px;
-  background: rgba(148, 163, 184, 0.08);
-}
-
-.product-execution-trace__task-main,
-.product-execution-trace__task-copy {
-  min-width: 0;
-}
-
-.tc-ai-chat--product-host .tc-ai-chat__composer-shell {
-  gap: 6px;
-}
-
-.tc-ai-chat--product-host .tc-ai-chat__composer {
-  padding: 10px !important;
-  border-radius: 16px !important;
-}
-
-.tc-ai-chat--product-host.tc-ai-chat--maximized .tc-ai-chat__composer-row {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  grid-template-areas: "tools input actions";
-  gap: 8px;
-  align-items: end;
-}
-
-.tc-ai-chat--product-host.tc-ai-chat--maximized .tc-ai-chat__input-slot {
-  grid-area: input;
-  padding-bottom: 0;
-  border-bottom: 0;
-}
-
-.tc-ai-chat--product-host .tc-ai-chat__input .mantine-Textarea-input {
-  min-height: 34px;
-  padding-block: 7px;
+/* Keep the single Product integration action clear of the native collapsed
+   Chat affordance on narrow Professional Workspace layouts. */
+@media (max-width: 760px) {
+  .product-workspace-return {
+    margin-right: 64px;
+  }
 }
 
 .tc-todo-progress[data-compact="true"],

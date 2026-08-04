@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { MantineProvider } from '@mantine/core'
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 
 const viewModel = {
@@ -28,6 +28,13 @@ const viewModel = {
       url: 'https://cdn.example/runner.png',
       assetId: 'asset-1',
     },
+    items: [{
+      nodeId: 'node-1',
+      title: 'GT Runner 概念图',
+      kind: 'image' as const,
+      url: 'https://cdn.example/runner.png',
+      assetId: 'asset-1',
+    }],
   },
   run: { status: 'running' as const, label: '正在生成视觉成果' },
 }
@@ -36,12 +43,20 @@ vi.mock('../ui/chat/AiChatDialog', () => ({
   ProductChatTimeline: () => <div data-testid="product-timeline">Product timeline</div>,
 }))
 
+const runtimeSnapshot = { ...viewModel, revision: 0 }
+
 vi.mock('./agentWorkspaceAdapter', () => ({
-  useAuthoritativeAgentWorkspaceViewModel: () => viewModel,
+  useAuthoritativeAgentWorkspaceRuntime: () => ({
+    getSnapshot: () => runtimeSnapshot,
+    subscribe: () => () => {},
+    dispatch: vi.fn().mockResolvedValue({ accepted: true, command: { type: 'assets.open' } }),
+  }),
 }))
 
+let narrowViewport = false
+
 vi.mock('@mantine/hooks', () => ({
-  useMediaQuery: () => false,
+  useMediaQuery: () => narrowViewport,
 }))
 
 import { AgentWorkspace } from './AgentWorkspace'
@@ -71,7 +86,10 @@ beforeAll(() => {
   })
 })
 
-afterEach(() => cleanup())
+afterEach(() => {
+  narrowViewport = false
+  cleanup()
+})
 
 describe('Agent Workspace Product View', () => {
   it('renders academy chrome and authoritative Project context around the timeline', () => {
@@ -93,9 +111,9 @@ describe('Agent Workspace Product View', () => {
       </MantineProvider>,
     )
 
-    expect(screen.getByRole('img', { name: '设计学院 d.school HUST' })).toBeTruthy()
+    expect(screen.getByRole('img', { name: '华中科技大学设计学院' })).toBeTruthy()
     expect(screen.getByText('Watch Design Studio')).toBeTruthy()
-    expect(screen.getByText('专业智能手表设计工作台')).toBeTruthy()
+    expect(screen.queryByText('专业智能手表设计工作台')).toBeNull()
     expect(screen.getByText('设计方向')).toBeTruthy()
     expect(screen.getByText('GT Runner')).toBeTruthy()
     expect(screen.getByText('对话')).toBeTruthy()
@@ -130,6 +148,33 @@ describe('Agent Workspace Product View', () => {
     const workspace = document.querySelector('.agent-workspace')
     fireEvent.click(screen.getByRole('button', { name: '收起项目栏' }))
     expect(workspace?.getAttribute('data-rail-collapsed')).toBe('true')
+    expect(screen.getByRole('button', { name: '新对话' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: '资产，1 项' })).toBeTruthy()
+    expect(screen.getByRole('status', { name: '正在生成视觉成果' })).toBeTruthy()
     expect(screen.getByText('Watch Design Studio')).toBeTruthy()
+  })
+
+  it('provides an operable close action inside the narrow Project Drawer', async () => {
+    narrowViewport = true
+    render(
+      <MantineProvider>
+        <AgentWorkspace
+          brand={{ name: 'Watch Design Studio', mark: 'W', accentColor: '#29463f' }}
+          projects={[]}
+          currentProject={{ id: 'project-1', name: '手表' }}
+          currentFlow={{ id: 'flow-1', name: 'GT Runner' }}
+          onSelectProject={vi.fn()}
+          onCreateProject={vi.fn()}
+          onCreateFlow={vi.fn()}
+          onOpenAssets={vi.fn()}
+          onOpenProfessionalWorkspace={vi.fn()}
+        />
+      </MantineProvider>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: '打开项目栏' }))
+    const closeButton = await screen.findByRole('button', { name: '关闭项目栏' })
+    fireEvent.click(closeButton)
+    await waitFor(() => expect(screen.queryByRole('button', { name: '关闭项目栏' })).toBeNull())
   })
 })

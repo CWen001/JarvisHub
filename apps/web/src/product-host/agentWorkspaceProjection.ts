@@ -20,12 +20,15 @@ export type AgentWorkspaceAssetFact = Readonly<{
   assetRefId?: string
   status: 'queued' | 'running' | 'success' | 'failed'
   updatedAt: number
+  scope?: 'canvas' | 'all'
 }>
 
 export type AgentWorkspaceRunFact = Readonly<{
   status: 'idle' | 'running' | 'succeeded' | 'failed' | 'partial'
   label: string
 }>
+
+export type AgentWorkspaceAssetState = 'loading' | 'ready' | 'error'
 
 export type AgentWorkspaceFacts = Readonly<{
   projects: readonly AgentWorkspaceProjectFact[]
@@ -34,18 +37,23 @@ export type AgentWorkspaceFacts = Readonly<{
   sessionsByProject: Readonly<Record<string, readonly AgentWorkspaceSessionFact[]>>
   currentSessionId?: string | null
   assets?: readonly AgentWorkspaceAssetFact[]
+  assetsState?: AgentWorkspaceAssetState
+  assetsErrorMessage?: string
   run?: AgentWorkspaceRunFact | null
 }>
 
-export type AgentWorkspaceArtifactView = Readonly<{
-  nodeId: string
+export type AgentWorkspaceAssetView = Readonly<{
+  nodeId?: string
   title: string
   kind: 'image' | 'video'
   url: string
   thumbnailUrl?: string
   assetId?: string
   assetRefId?: string
+  scope: 'canvas' | 'all'
 }>
+
+export type AgentWorkspaceArtifactView = AgentWorkspaceAssetView & Readonly<{ nodeId: string }>
 
 export type AgentWorkspaceViewModel = Readonly<{
   current: Readonly<{
@@ -68,8 +76,11 @@ export type AgentWorkspaceViewModel = Readonly<{
     }>[]
   }>[]
   assets: Readonly<{
+    state: AgentWorkspaceAssetState
+    errorMessage: string
     count: number
     current: AgentWorkspaceArtifactView | null
+    items: readonly AgentWorkspaceAssetView[]
   }>
   run: AgentWorkspaceRunFact
 }>
@@ -81,6 +92,8 @@ export type AgentWorkspaceIntent =
   | Readonly<{ type: 'new-flow'; projectId: string }>
   | Readonly<{ type: 'new-project' }>
   | Readonly<{ type: 'open-assets' }>
+  | Readonly<{ type: 'asset.add-to-canvas'; asset: AgentWorkspaceAssetView }>
+  | Readonly<{ type: 'asset.reference'; asset: AgentWorkspaceAssetView }>
   | Readonly<{ type: 'open-professional-workspace'; nodeId?: string }>
 
 export type NativeAgentWorkspaceCommand =
@@ -94,6 +107,8 @@ export type NativeAgentWorkspaceCommand =
   | Readonly<{ type: 'flow.create'; projectId: string }>
   | Readonly<{ type: 'project.create' }>
   | Readonly<{ type: 'assets.open' }>
+  | Readonly<{ type: 'asset.add-to-canvas'; asset: AgentWorkspaceAssetView }>
+  | Readonly<{ type: 'asset.reference'; asset: AgentWorkspaceAssetView }>
   | Readonly<{ type: 'workspace.open-professional'; nodeId?: string }>
 
 function text(value: unknown): string {
@@ -109,15 +124,16 @@ function stableSuccessfulArtifact(asset: AgentWorkspaceAssetFact): boolean {
   )
 }
 
-function projectArtifact(asset: AgentWorkspaceAssetFact): AgentWorkspaceArtifactView {
+function projectAsset(asset: AgentWorkspaceAssetFact): AgentWorkspaceAssetView {
   return Object.freeze({
-    nodeId: text(asset.nodeId),
+    ...(text(asset.nodeId) ? { nodeId: text(asset.nodeId) } : {}),
     title: text(asset.title) || (asset.kind === 'video' ? '生成视频' : '生成图片'),
     kind: asset.kind,
     url: text(asset.url),
     ...(text(asset.thumbnailUrl) ? { thumbnailUrl: text(asset.thumbnailUrl) } : {}),
     ...(text(asset.assetId) ? { assetId: text(asset.assetId) } : {}),
     ...(text(asset.assetRefId) ? { assetRefId: text(asset.assetRefId) } : {}),
+    scope: asset.scope === 'all' ? 'all' : 'canvas',
   })
 }
 
@@ -141,10 +157,18 @@ export function projectAgentWorkspace(facts: AgentWorkspaceFacts): AgentWorkspac
   })
   const currentProject = projects.find((project) => project.current) ?? null
   const currentSession = currentProject?.sessions.find((session) => session.current) ?? null
-  const successfulAssets = [...(facts.assets ?? [])]
-    .filter(stableSuccessfulArtifact)
+  const usableAssets = [...(facts.assets ?? [])]
+    .filter((asset) => (
+      asset.status === 'success'
+      && Boolean(text(asset.url))
+      && Boolean(text(asset.assetId) || text(asset.assetRefId))
+    ))
     .sort((left, right) => right.updatedAt - left.updatedAt)
-  const currentArtifact = successfulAssets[0] ? projectArtifact(successfulAssets[0]) : null
+  const projectedAssets = Object.freeze(usableAssets.map(projectAsset))
+  const currentArtifactFact = usableAssets.find(stableSuccessfulArtifact)
+  const currentArtifact = currentArtifactFact
+    ? Object.freeze({ ...projectAsset(currentArtifactFact), nodeId: text(currentArtifactFact.nodeId) })
+    : null
   const flowId = text(facts.currentFlow?.id)
   const flowName = text(facts.currentFlow?.name)
 
@@ -161,8 +185,11 @@ export function projectAgentWorkspace(facts: AgentWorkspaceFacts): AgentWorkspac
       : null,
     projects: Object.freeze(projects),
     assets: Object.freeze({
-      count: successfulAssets.length,
+      state: facts.assetsState ?? 'ready',
+      errorMessage: text(facts.assetsErrorMessage),
+      count: projectedAssets.length,
       current: currentArtifact,
+      items: projectedAssets,
     }),
     run: Object.freeze(facts.run ?? { status: 'idle', label: '等待你的设计意图' }),
   })
@@ -193,6 +220,9 @@ export function resolveAgentWorkspaceIntent(intent: AgentWorkspaceIntent): Nativ
   }
   if (intent.type === 'new-project') return Object.freeze({ type: 'project.create' })
   if (intent.type === 'open-assets') return Object.freeze({ type: 'assets.open' })
+  if (intent.type === 'asset.add-to-canvas' || intent.type === 'asset.reference') {
+    return Object.freeze({ type: intent.type, asset: intent.asset })
+  }
   return Object.freeze({
     type: 'workspace.open-professional',
     ...(text(intent.nodeId) ? { nodeId: text(intent.nodeId) } : {}),
