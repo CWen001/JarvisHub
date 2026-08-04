@@ -1,5 +1,7 @@
 # Agent Workspace Product View
 
+> Superseded by ADR-0013 and GitHub issue #16 where this document retains a wrapped native Chat presentation or the former warm academy visual system. The authority, identity, and Professional Workspace preservation rules remain applicable.
+
 ## Goal
 
 Reproduce the interaction quality and academy visual language of the local Watch OpenAI frontend while keeping JarvisHub as the only authority for execution, persistence, Projects, Flows, Sessions, Chat, Tools, nodes, assets, approvals, and runs. Professional Workspace remains the complete native JarvisHub workspace.
