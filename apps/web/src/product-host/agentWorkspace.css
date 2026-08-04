@@ -18,14 +18,14 @@
   --pds-font: Inter, "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
-.agent-workspace,
-.agent-workspace button,
-.agent-workspace input,
-.agent-workspace textarea {
+.agent-workspace-surface,
+.agent-workspace-surface button,
+.agent-workspace-surface input,
+.agent-workspace-surface textarea {
   font-family: var(--pds-font);
 }
 
-.agent-workspace {
+.agent-workspace-surface {
   position: fixed;
   inset: 0;
   z-index: 380;
@@ -36,7 +36,15 @@
   --agent-rail-width: 280px;
 }
 
-.agent-workspace[data-rail-collapsed='true'] { --agent-rail-width: 64px; }
+.agent-workspace-surface[data-rail-collapsed='true'] { --agent-rail-width: 64px; }
+
+.agent-workspace {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  color: var(--pds-primary);
+  background: var(--pds-canvas);
+}
 
 .product-host-header {
   position: fixed;
@@ -68,9 +76,9 @@
 .product-host-rail-toggle:focus-visible,
 .product-host-header__actions .mantine-ActionIcon-root:focus-visible,
 .product-workspace-return:focus-visible,
-.agent-workspace button:focus-visible,
-.agent-workspace a:focus-visible,
-.agent-workspace textarea:focus-visible {
+.agent-workspace-surface button:focus-visible,
+.agent-workspace-surface a:focus-visible,
+.agent-workspace-surface textarea:focus-visible {
   outline: 2px solid var(--pds-focus);
   outline-offset: 2px;
 }
@@ -222,7 +230,7 @@
 .project-context-rail__status.is-failed i,
 .project-context-rail__status.is-partial i { background: var(--pds-error); }
 
-.agent-workspace__timeline { position: absolute; inset: var(--agent-header-height) 0 0 var(--agent-rail-width); min-width: 0; transition: left 180ms ease; }
+.agent-workspace__timeline { position: absolute; z-index: 390; inset: var(--agent-header-height) 0 0 var(--agent-rail-width); min-width: 0; transition: left 180ms ease; }
 .product-chat-surface { position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden; background: var(--pds-canvas); color: var(--pds-primary); }
 .product-chat-surface__file-input { display: none; }
 .product-chat-surface__scroll { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; }
@@ -289,14 +297,14 @@
 .product-replicate-picker button.is-selected { border: 2px solid var(--pds-primary); }
 .product-replicate-picker img { width: 100%; aspect-ratio: 1; object-fit: contain; }
 
-.agent-workspace .native-artifact-card { width: min(760px, 100%); overflow: hidden; border: 1px solid var(--pds-border-strong); border-radius: 6px; background: var(--pds-canvas); }
-.agent-workspace .native-artifact-card__preview { position: relative; width: 100%; min-height: 300px; padding: 0; display: grid; place-items: center; border: 0; background: var(--pds-surface); cursor: zoom-in; }
-.agent-workspace .native-artifact-card__preview img,
-.agent-workspace .native-artifact-card__preview video { width: 100%; height: auto; max-height: 68vh; object-fit: contain; }
-.agent-workspace .native-artifact-card__preview > span { position: absolute; right: 12px; bottom: 12px; padding: 6px 8px; border-radius: 2px; background: var(--pds-primary); color: var(--pds-canvas); font-size: 11px; opacity: 0; }
-.agent-workspace .native-artifact-card__preview:hover > span,
-.agent-workspace .native-artifact-card__preview:focus-visible > span { opacity: 1; }
-.agent-workspace .native-artifact-card__body { padding: 14px 16px; }
+.agent-workspace-surface .native-artifact-card { width: min(760px, 100%); overflow: hidden; border: 1px solid var(--pds-border-strong); border-radius: 6px; background: var(--pds-canvas); }
+.agent-workspace-surface .native-artifact-card__preview { position: relative; width: 100%; min-height: 300px; padding: 0; display: grid; place-items: center; border: 0; background: var(--pds-surface); cursor: zoom-in; }
+.agent-workspace-surface .native-artifact-card__preview img,
+.agent-workspace-surface .native-artifact-card__preview video { width: 100%; height: auto; max-height: 68vh; object-fit: contain; }
+.agent-workspace-surface .native-artifact-card__preview > span { position: absolute; right: 12px; bottom: 12px; padding: 6px 8px; border-radius: 2px; background: var(--pds-primary); color: var(--pds-canvas); font-size: 11px; opacity: 0; }
+.agent-workspace-surface .native-artifact-card__preview:hover > span,
+.agent-workspace-surface .native-artifact-card__preview:focus-visible > span { opacity: 1; }
+.agent-workspace-surface .native-artifact-card__body { padding: 14px 16px; }
 .artifact-preview .mantine-Modal-body,
 .native-artifact-lightbox .mantine-Modal-body,
 .product-asset-preview .mantine-Modal-body { display: grid; place-items: center; padding: 0 16px 16px; }
@@ -341,7 +349,7 @@
 }
 
 @media (max-width: 760px) {
-  .agent-workspace { --agent-header-height: 64px; --agent-rail-width: 0px; }
+  .agent-workspace-surface { --agent-header-height: 64px; --agent-rail-width: 0px; }
   .agent-workspace__desktop-rail { display: none; }
   .product-host-header { gap: 6px; padding: 0 8px; }
   .product-host-institution-lockup { gap: 8px; }
@@ -360,13 +368,13 @@
   .compact-execution { width: 100%; }
   .compact-execution__toggle { grid-template-columns: 20px minmax(0, 1fr) auto 16px; }
   .compact-execution__toggle > span:nth-of-type(2) { display: none; }
-  .agent-workspace .native-artifact-card__preview { min-height: 200px; }
+  .agent-workspace-surface .native-artifact-card__preview { min-height: 200px; }
   .product-asset-panel__filters { flex-direction: column; }
   .product-asset-panel__grid { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .agent-workspace *,
-  .agent-workspace *::before,
-  .agent-workspace *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+  .agent-workspace-surface *,
+  .agent-workspace-surface *::before,
+  .agent-workspace-surface *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
 }

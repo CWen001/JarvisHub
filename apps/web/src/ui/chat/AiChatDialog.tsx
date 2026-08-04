@@ -2705,6 +2705,19 @@ function ChatRuntimeController({
   const [mode, setMode] = React.useState<'compact' | 'expanded' | 'maximized'>(
     productMode ? 'maximized' : initialLayoutPreference.mode,
   )
+  const previousSurfaceRef = React.useRef<AiChatSurface>(surface)
+  const nativeModeRef = React.useRef<'compact' | 'expanded' | 'maximized'>(initialLayoutPreference.mode)
+  React.useLayoutEffect(() => {
+    const previousSurface = previousSurfaceRef.current
+    if (previousSurface === surface) return
+    if (surface === 'agent-workspace') {
+      nativeModeRef.current = mode
+      setMode('maximized')
+    } else {
+      setMode(nativeModeRef.current)
+    }
+    previousSurfaceRef.current = surface
+  }, [surface])
   const [expandedWidthPx, setExpandedWidthPx] = React.useState<number>(
     () => clampPanelWidth(initialLayoutPreference.expandedWidthPx),
   )
@@ -2715,16 +2728,6 @@ function ChatRuntimeController({
   const [bubbleVisualState, setBubbleVisualState] = React.useState<'bubble' | 'panel'>(() => resolveInitialBubbleVisualState(initialLayoutPreference))
   const modeBeforeMaximizeRef = React.useRef<'compact' | 'expanded'>(initialLayoutPreference.mode)
   const previousModeRef = React.useRef<'compact' | 'expanded' | 'maximized'>(initialLayoutPreference.mode)
-  const previousProductModeRef = React.useRef(productMode)
-  React.useEffect(() => {
-    const wasProductMode = previousProductModeRef.current
-    previousProductModeRef.current = productMode
-    if (productMode) {
-      setMode('maximized')
-    } else if (wasProductMode) {
-      setMode('expanded')
-    }
-  }, [productMode])
   const bubbleTransitionTimerRef = React.useRef<number | null>(null)
   const dockRight = true
   const [autoReferenceImages, setAutoReferenceImages] = React.useState<string[]>(() => [])
@@ -6134,15 +6137,13 @@ function ChatRuntimeController({
   )
 }
 
-/** Upstream-native Chat presentation retained by Professional Workspace. */
-export default function AiChatDialog({ className }: { className?: string }): JSX.Element | null {
-  return <ChatRuntimeController className={className} surface="native" />
-}
-
-/**
- * Product-owned Timeline presentation over the shared native command,
- * streaming, persistence, approval, retry, and recovery implementation.
- */
-export function ProductChatTimeline({ className }: { className?: string }): JSX.Element | null {
-  return <ChatRuntimeController className={className} surface="agent-workspace" />
+/** One persistent Jarvis Chat engine with Workspace-specific presentation. */
+export default function AiChatDialog({
+  className,
+  surface = 'native',
+}: {
+  className?: string
+  surface?: AiChatSurface
+}): JSX.Element | null {
+  return <ChatRuntimeController className={className} surface={surface} />
 }

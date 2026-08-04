@@ -5,6 +5,8 @@ const design = fs.readFileSync(new URL('./DESIGN.md', import.meta.url), 'utf8')
 const css = fs.readFileSync(new URL('./agentWorkspace.css', import.meta.url), 'utf8')
 const nativeCss = fs.readFileSync(new URL('../styles.css', import.meta.url), 'utf8')
 const chatSource = fs.readFileSync(new URL('../ui/chat/AiChatDialog.tsx', import.meta.url), 'utf8')
+const agentWorkspaceSource = fs.readFileSync(new URL('./AgentWorkspace.tsx', import.meta.url), 'utf8')
+const appSource = fs.readFileSync(new URL('../App.tsx', import.meta.url), 'utf8')
 
 describe('Agent Workspace Design System', () => {
   it('uses one PDS light visual authority and excludes legacy visual directions', () => {
@@ -50,5 +52,19 @@ describe('Agent Workspace Design System', () => {
     expect(chatSource).toMatch(/activeLiveRun\?\.status !== 'running'[\s\S]*product-chat-surface__decision[\s\S]*<\/div>\s*<\/div>\s*\{showJumpToLatest/)
     expect(chatSource).toContain('className="product-chat-surface__jump-latest"')
     expect(chatSource).toContain('回到最新')
+  })
+
+  it('mounts one persistent Jarvis Chat controller outside Agent Workspace chrome', () => {
+    expect(agentWorkspaceSource).not.toContain('AiChatDialog')
+    expect(agentWorkspaceSource).not.toContain('ProductChatTimeline')
+    expect(appSource.match(/<AiChatDialog/g)).toHaveLength(1)
+    expect(appSource).toContain("surface={isProductSurface ? 'agent-workspace' : 'native'}")
+  })
+
+  it('keeps Product timeline typography, focus, artifacts, and responsive geometry on the shared surface', () => {
+    expect(css).toContain('.agent-workspace-surface button:focus-visible')
+    expect(css).toContain('.agent-workspace-surface .native-artifact-card__preview img')
+    expect(css).toMatch(/\.agent-workspace-surface \.native-artifact-card__preview img,[\s\S]*object-fit:\s*contain/)
+    expect(css).toMatch(/@media \(max-width: 760px\)[\s\S]*\.agent-workspace-surface\s*\{\s*--agent-header-height:\s*64px;\s*--agent-rail-width:\s*0px;/)
   })
 })

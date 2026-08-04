@@ -7,10 +7,7 @@ import {
   IconPhoto,
   IconX,
 } from '@tabler/icons-react'
-import type { ProjectDto } from '../api/server'
-import { ProductChatTimeline } from '../ui/chat/AiChatDialog'
-import { useAuthoritativeAgentWorkspaceRuntime } from './agentWorkspaceAdapter'
-import { AgentWorkspaceRuntimeProvider } from './agentWorkspaceRuntimeContext'
+import type { AgentWorkspaceRuntime } from './agentWorkspaceRuntime'
 import type { AgentWorkspaceIntent } from './agentWorkspaceProjection'
 import { ProjectContextRail } from './ProjectContextRail'
 import { ProductAssetPanel } from './ProductAssetPanel'
@@ -19,40 +16,19 @@ import './agentWorkspace.css'
 
 export type AgentWorkspaceProps = Readonly<{
   brand: VerticalBrand
-  projects: readonly ProjectDto[]
-  currentProject: Readonly<{ id?: string | null; name: string }> | null
-  currentFlow: Readonly<{ id?: string | null; name?: string | null; updatedAt?: string | null }> | null
-  onSelectProject: (project: ProjectDto) => void
-  onCreateProject: () => void
-  onCreateFlow: (projectId: string) => void | Promise<void>
-  onOpenAssets: () => void
-  onOpenProfessionalWorkspace: (nodeId?: string) => void
+  runtime: AgentWorkspaceRuntime
+  railCollapsed: boolean
+  onRailCollapsedChange: (collapsed: boolean) => void
 }>
 
 export function AgentWorkspace({
   brand,
-  projects,
-  currentProject,
-  currentFlow,
-  onSelectProject,
-  onCreateProject,
-  onCreateFlow,
-  onOpenAssets,
-  onOpenProfessionalWorkspace,
+  runtime,
+  railCollapsed,
+  onRailCollapsedChange,
 }: AgentWorkspaceProps): JSX.Element {
-  const [railCollapsed, setRailCollapsed] = React.useState(false)
   const [mobileRailOpened, setMobileRailOpened] = React.useState(false)
   const narrow = useMediaQuery('(max-width: 760px)') ?? false
-  const runtime = useAuthoritativeAgentWorkspaceRuntime({
-    projects,
-    currentProject,
-    currentFlow,
-    onSelectProject,
-    onCreateProject,
-    onCreateFlow,
-    onOpenAssets,
-    onOpenProfessionalWorkspace,
-  })
   const view = React.useSyncExternalStore(runtime.subscribe, runtime.getSnapshot, runtime.getSnapshot)
 
   const onIntent = React.useCallback((intent: AgentWorkspaceIntent) => {
@@ -61,14 +37,13 @@ export function AgentWorkspace({
 
   const toggleRail = () => {
     if (narrow) setMobileRailOpened((opened) => !opened)
-    else setRailCollapsed((collapsed) => !collapsed)
+    else onRailCollapsedChange(!railCollapsed)
   }
   return (
-    <AgentWorkspaceRuntimeProvider runtime={runtime}>
-      <div
-        className="agent-workspace"
-        data-rail-collapsed={railCollapsed}
-      >
+    <div
+      className="agent-workspace"
+      data-rail-collapsed={railCollapsed}
+    >
       <header className="product-host-header">
         <ActionIcon
           className="product-host-rail-toggle"
@@ -145,11 +120,7 @@ export function AgentWorkspace({
         ) : null}
       </Drawer>
 
-      <main className="agent-workspace__timeline" aria-label="设计时间线">
-        <ProductChatTimeline className="app-ai-chat-dialog" />
-      </main>
-        <ProductAssetPanel runtime={runtime} />
-      </div>
-    </AgentWorkspaceRuntimeProvider>
+      <ProductAssetPanel runtime={runtime} />
+    </div>
   )
 }

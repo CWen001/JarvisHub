@@ -14931,11 +14931,15 @@ body[data-webcut-modal-open="true"] .tc-ai-chat {
   white-space: nowrap;
 }
 
+.app-header-overlay--product-host {
+  padding-right: calc(var(--tc-ai-chat-reserved-width) + 28px);
+}
+
 /* Keep the single Product integration action clear of the native collapsed
    Chat affordance on narrow Professional Workspace layouts. */
 @media (max-width: 760px) {
-  .product-workspace-return {
-    margin-right: 64px;
+  .app-header-overlay--product-host {
+    padding-right: calc(var(--tc-ai-chat-reserved-width) + 64px);
   }
 }
 

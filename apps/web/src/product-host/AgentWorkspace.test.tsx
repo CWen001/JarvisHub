@@ -2,7 +2,9 @@
 
 import { MantineProvider } from '@mantine/core'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { useState } from 'react'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
+import type { AgentWorkspaceRuntime } from './agentWorkspaceRuntime'
 
 const viewModel = {
   current: {
@@ -20,6 +22,8 @@ const viewModel = {
     sessions: [{ id: 'session-1', title: '跑步腕表方向', updatedAt: 10, current: true }],
   }],
   assets: {
+    state: 'ready' as const,
+    errorMessage: '',
     count: 1,
     current: {
       nodeId: 'node-1',
@@ -27,6 +31,7 @@ const viewModel = {
       kind: 'image' as const,
       url: 'https://cdn.example/runner.png',
       assetId: 'asset-1',
+      scope: 'canvas' as const,
     },
     items: [{
       nodeId: 'node-1',
@@ -34,27 +39,22 @@ const viewModel = {
       kind: 'image' as const,
       url: 'https://cdn.example/runner.png',
       assetId: 'asset-1',
+      scope: 'canvas' as const,
     }],
   },
   run: { status: 'running' as const, label: '正在生成视觉成果' },
 }
-
-vi.mock('../ui/chat/AiChatDialog', () => ({
-  ProductChatTimeline: () => <div data-testid="product-timeline">Product timeline</div>,
-}))
 
 const runtimeSnapshot = { ...viewModel, revision: 0 }
 const { runtimeDispatch } = vi.hoisted(() => ({
   runtimeDispatch: vi.fn().mockResolvedValue({ accepted: true, command: { type: 'assets.open' } }),
 }))
 
-vi.mock('./agentWorkspaceAdapter', () => ({
-  useAuthoritativeAgentWorkspaceRuntime: () => ({
-    getSnapshot: () => runtimeSnapshot,
-    subscribe: () => () => {},
-    dispatch: runtimeDispatch,
-  }),
-}))
+const runtime = {
+  getSnapshot: () => runtimeSnapshot,
+  subscribe: () => () => {},
+  dispatch: runtimeDispatch,
+} as AgentWorkspaceRuntime
 
 let narrowViewport = false
 
@@ -96,22 +96,22 @@ afterEach(() => {
 })
 
 describe('Agent Workspace Product View', () => {
+  function ControlledAgentWorkspace(): JSX.Element {
+    const [railCollapsed, setRailCollapsed] = useState(false)
+    return (
+      <AgentWorkspace
+        brand={{ name: 'Watch Design Studio', mark: 'W', accentColor: '#29463f' }}
+        runtime={runtime}
+        railCollapsed={railCollapsed}
+        onRailCollapsedChange={setRailCollapsed}
+      />
+    )
+  }
+
   it('renders academy chrome and authoritative Project context around the timeline', async () => {
-    const onOpenAssets = vi.fn()
-    const onOpenProfessionalWorkspace = vi.fn()
     render(
       <MantineProvider>
-        <AgentWorkspace
-          brand={{ name: 'Watch Design Studio', mark: 'W', accentColor: '#29463f' }}
-          projects={[]}
-          currentProject={{ id: 'project-1', name: '手表' }}
-          currentFlow={{ id: 'flow-1', name: 'GT Runner' }}
-          onSelectProject={vi.fn()}
-          onCreateProject={vi.fn()}
-          onCreateFlow={vi.fn()}
-          onOpenAssets={onOpenAssets}
-          onOpenProfessionalWorkspace={onOpenProfessionalWorkspace}
-        />
+        <ControlledAgentWorkspace />
       </MantineProvider>,
     )
 
@@ -124,12 +124,9 @@ describe('Agent Workspace Product View', () => {
     expect(screen.getAllByText('跑步腕表方向').length).toBeGreaterThan(0)
     expect(screen.getByText('GT Runner 概念图')).toBeTruthy()
     expect(screen.getByText('正在生成视觉成果')).toBeTruthy()
-    expect(screen.getByTestId('product-timeline')).toBeTruthy()
 
     fireEvent.click(screen.getByRole('button', { name: '打开资产' }))
     fireEvent.click(screen.getByRole('button', { name: '进入专业工作台' }))
-    expect(onOpenAssets).not.toHaveBeenCalled()
-    expect(onOpenProfessionalWorkspace).not.toHaveBeenCalled()
     expect(runtimeDispatch).toHaveBeenNthCalledWith(1, { type: 'open-assets' })
     expect(runtimeDispatch).toHaveBeenNthCalledWith(2, { type: 'open-professional-workspace' })
 
@@ -142,17 +139,7 @@ describe('Agent Workspace Product View', () => {
   it('collapses the desktop Project Context Rail without hiding the permanent top bar', () => {
     render(
       <MantineProvider>
-        <AgentWorkspace
-          brand={{ name: 'Watch Design Studio', mark: 'W', accentColor: '#29463f' }}
-          projects={[]}
-          currentProject={{ id: 'project-1', name: '手表' }}
-          currentFlow={{ id: 'flow-1', name: 'GT Runner' }}
-          onSelectProject={vi.fn()}
-          onCreateProject={vi.fn()}
-          onCreateFlow={vi.fn()}
-          onOpenAssets={vi.fn()}
-          onOpenProfessionalWorkspace={vi.fn()}
-        />
+        <ControlledAgentWorkspace />
       </MantineProvider>,
     )
 
@@ -169,17 +156,7 @@ describe('Agent Workspace Product View', () => {
     narrowViewport = true
     render(
       <MantineProvider>
-        <AgentWorkspace
-          brand={{ name: 'Watch Design Studio', mark: 'W', accentColor: '#29463f' }}
-          projects={[]}
-          currentProject={{ id: 'project-1', name: '手表' }}
-          currentFlow={{ id: 'flow-1', name: 'GT Runner' }}
-          onSelectProject={vi.fn()}
-          onCreateProject={vi.fn()}
-          onCreateFlow={vi.fn()}
-          onOpenAssets={vi.fn()}
-          onOpenProfessionalWorkspace={vi.fn()}
-        />
+        <ControlledAgentWorkspace />
       </MantineProvider>,
     )
 

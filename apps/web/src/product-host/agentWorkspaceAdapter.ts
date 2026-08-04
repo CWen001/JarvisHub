@@ -27,6 +27,7 @@ type CurrentProject = Readonly<{ id?: string | null; name: string }> | null
 type CurrentFlow = Readonly<{ id?: string | null; name?: string | null; updatedAt?: string | null }> | null
 
 type AuthoritativeInput = Readonly<{
+  enabled?: boolean
   projects: readonly ProjectDto[]
   currentProject: CurrentProject
   currentFlow: CurrentFlow
@@ -104,6 +105,11 @@ function useAuthoritativeAgentWorkspaceFacts(input: AuthoritativeInput): AgentWo
   const [, refreshNavigation] = React.useReducer((value) => value + 1, 0)
 
   React.useEffect(() => {
+    if (input.enabled === false) {
+      setServerAssets([])
+      setServerAssetState({ status: 'ready', message: '' })
+      return
+    }
     let cancelled = false
     setServerAssetState({ status: 'loading', message: '' })
     void listServerAssets({ limit: 80 })
@@ -118,7 +124,7 @@ function useAuthoritativeAgentWorkspaceFacts(input: AuthoritativeInput): AgentWo
         setServerAssetState({ status: 'error', message: '无法读取项目资产，请稍后重试。' })
       })
     return () => { cancelled = true }
-  }, [input.currentProject?.id])
+  }, [input.currentProject?.id, input.enabled])
 
   React.useEffect(() => {
     const refresh = () => refreshNavigation()

@@ -67,7 +67,7 @@ Replace the Agent Workspace Product Chat presentation path rather than layering 
 
 ## Completion Gate
 
-This convergence is not complete while Agent Workspace directly mounts `ProductChatTimeline` backed by native `ChatRuntimeController` store reads. Completion requires Timeline, Decision, Compact Execution Row, Artifact, and Composer projections plus their Product intents to cross the `AgentWorkspaceRuntime` Interface; re-exporting the native controller through a thin facade does not satisfy this gate.
+Keeping one persistent Jarvis Chat controller across Workspace switches is required for continuity, but it does not by itself complete convergence. Completion requires Timeline, Decision, Compact Execution Row, Artifact, and Composer projections plus their Product intents to cross the `AgentWorkspaceRuntime` Interface; a Product render branch that still reads native stores inside `ChatRuntimeController` does not satisfy this gate.
 
 ## Verification Seams
 

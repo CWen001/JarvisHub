@@ -43,6 +43,8 @@ import ParamModal from './ui/ParamModal'
 import PreviewModal from './ui/PreviewModal'
 import AiChatDialog from './ui/chat/AiChatDialog'
 import { AgentWorkspace } from './product-host/AgentWorkspace'
+import { useAuthoritativeAgentWorkspaceRuntime } from './product-host/agentWorkspaceAdapter'
+import { AgentWorkspaceRuntimeProvider } from './product-host/agentWorkspaceRuntimeContext'
 import { runNodeRemote } from './runner/remoteRunner'
 import { Background } from '@xyflow/react'
 import { FeatureTour, type FeatureTourStep } from './ui/tour/FeatureTour'
@@ -1060,6 +1062,22 @@ function CanvasApp({
     }
   }, [projects, restoreCreationSession, setCurrentFlow, setCurrentProject, setDirty])
 
+  const agentWorkspaceRuntime = useAuthoritativeAgentWorkspaceRuntime({
+    enabled: isProductHost,
+    projects,
+    currentProject,
+    currentFlow,
+    onSelectProject: selectProductProject,
+    onCreateProject: () => spaReplace('/projects'),
+    onCreateFlow: createProductFlow,
+    onOpenAssets: () => setActivePanel('gallery'),
+    onOpenProfessionalWorkspace: (nodeId) => dispatchProductWorkspaceCommand({
+      type: 'open-canvas',
+      ...(nodeId ? { nodeId } : {}),
+    }),
+  })
+  const [agentWorkspaceRailCollapsed, setAgentWorkspaceRailCollapsed] = React.useState(false)
+
   React.useEffect(() => {
     if (typeof document === 'undefined') return
     if (isProductSurface) document.documentElement.dataset.productHost = 'true'
@@ -1138,7 +1156,7 @@ function CanvasApp({
       <FeatureTour className="app-feature-tour" opened={featureTourOpen} steps={featureTourSteps} onClose={closeFeatureTour} />
       <BodyPortal>
         {!isProductSurface ? (
-          <div className="app-header-overlay">
+          <div className={isProductHost ? 'app-header-overlay app-header-overlay--product-host' : 'app-header-overlay'}>
           <Group className="app-header" p="sm" wrap="nowrap" gap="md">
             <ProjectIdentityCell
               projectName={currentProject?.name || ''}
@@ -1219,24 +1237,30 @@ function CanvasApp({
         <ModelPanel />
         <HistoryPanel />
         <MemoryPanel />
-        {isProductSurface ? (
-          <AgentWorkspace
-            brand={productBrand}
-            projects={projects}
-            currentProject={currentProject}
-            currentFlow={currentFlow}
-            onSelectProject={selectProductProject}
-            onCreateProject={() => spaReplace('/projects')}
-            onCreateFlow={createProductFlow}
-            onOpenAssets={() => setActivePanel('gallery')}
-            onOpenProfessionalWorkspace={(nodeId) => dispatchProductWorkspaceCommand({
-              type: 'open-canvas',
-              ...(nodeId ? { nodeId } : {}),
-            })}
-          />
-        ) : (
-          <AiChatDialog className="app-ai-chat-dialog" />
-        )}
+        <AgentWorkspaceRuntimeProvider runtime={agentWorkspaceRuntime}>
+          <div
+            className={isProductSurface ? 'agent-workspace-surface' : undefined}
+            data-rail-collapsed={isProductSurface ? agentWorkspaceRailCollapsed : undefined}
+          >
+            {isProductSurface ? (
+              <AgentWorkspace
+                brand={productBrand}
+                runtime={agentWorkspaceRuntime}
+                railCollapsed={agentWorkspaceRailCollapsed}
+                onRailCollapsedChange={setAgentWorkspaceRailCollapsed}
+              />
+            ) : null}
+            <div
+              className={isProductSurface ? 'agent-workspace__timeline' : 'app-chat-engine-host'}
+              aria-label={isProductSurface ? '设计时间线' : undefined}
+            >
+              <AiChatDialog
+                className="app-ai-chat-dialog"
+                surface={isProductSurface ? 'agent-workspace' : 'native'}
+              />
+            </div>
+          </div>
+        </AgentWorkspaceRuntimeProvider>
       </BodyPortal>
       <ParamModal />
       <PreviewModal />
