@@ -18,6 +18,7 @@ import {
 	findPublicChatSessionByKey,
 	listPublicChatMessages,
 	normalizePublicChatAskUserPrompt,
+	restoreTruncatedPublicChatAskUserQuestion,
 	type PublicChatAskUserPrompt,
 	type PublicChatMessageRow,
 } from "../apiKey/public-chat-session.repo";
@@ -98,8 +99,11 @@ export async function loadUserSessionRecentConversation(
 		content: row.content,
 		assets: parseJson<unknown[]>(row.assets_json, []),
 		skillMention: row.skill_mention ?? null,
-		askUserPrompt: normalizePublicChatAskUserPrompt(
-			parseJson<Record<string, unknown> | null>(row.ask_user_prompt_json, null),
+		askUserPrompt: restoreTruncatedPublicChatAskUserQuestion(
+			normalizePublicChatAskUserPrompt(
+				parseJson<Record<string, unknown> | null>(row.ask_user_prompt_json, null),
+			),
+			row.content,
 		),
 		uiSnapshot: normalizePublicChatUiSnapshot(
 			parseJson<Record<string, unknown> | null>(row.ui_snapshot_json, null),

@@ -9,6 +9,8 @@ import {
 } from "./apiKey.schemas";
 import {
 	appendPublicChatTurnRun,
+	normalizePublicChatAskUserPrompt,
+	restoreTruncatedPublicChatAskUserQuestion,
 	type PublicChatRunOutcome,
 } from "./public-chat-session.repo";
 import { buildPublicChatUiSnapshotFromResponse } from "./public-chat-ui-snapshot";
@@ -280,6 +282,10 @@ export async function persistAgentsChatConversationTurn(input: {
 		preferredSnapshot: input.assistantUiSnapshot,
 	});
 	const userAssets = derivePersistedUserAssets(input.requestInput);
+	const assistantAskUserPrompt = restoreTruncatedPublicChatAskUserQuestion(
+		normalizePublicChatAskUserPrompt(rawMeta?.askUserPrompt),
+		input.response.text,
+	) ?? rawMeta?.askUserPrompt;
 	const persisted = await persistUserConversationTurn(input.c, {
 		userId: input.userId,
 		sessionKey,
@@ -287,7 +293,7 @@ export async function persistAgentsChatConversationTurn(input: {
 		assistantText: input.response.text,
 		userAssets: userAssets.length ? userAssets : undefined,
 		assistantAssets: input.response.assets ?? [],
-		assistantAskUserPrompt: rawMeta?.askUserPrompt,
+		assistantAskUserPrompt,
 		assistantUiSnapshot,
 		userMessageId: input.requestInput.userMessageId.trim(),
 		assistantMessageId: input.requestInput.assistantMessageId.trim(),

@@ -994,7 +994,9 @@ function projectRuntimeEventToStreamInner(
   if (event.type === "tool.completed") {
     const sanitizedOutput = sanitizeToolOutputPreview(event.toolCall.output);
     const outputJson = event.toolCall.outputJson
-      ? sanitizeTraceValue(event.toolCall.outputJson)
+      ? event.toolCall.name === "ask_user"
+        ? event.toolCall.outputJson
+        : sanitizeTraceValue(event.toolCall.outputJson)
       : null;
     context.emitStreamEvent({
       event: "item.updated",

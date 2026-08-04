@@ -497,6 +497,27 @@ export function normalizePublicChatAskUserPrompt(value: unknown): PublicChatAskU
 	};
 }
 
+const TRUNCATED_ASK_USER_QUESTION_SUFFIX = /…\(truncated,len=\d+\)$/;
+
+export function restoreTruncatedPublicChatAskUserQuestion(
+	prompt: PublicChatAskUserPrompt | null,
+	assistantContent: unknown,
+): PublicChatAskUserPrompt | null {
+	if (!prompt) return null;
+	const content = normalizeOptionalString(assistantContent);
+	if (
+		!content ||
+		content.length <= prompt.question.length ||
+		!TRUNCATED_ASK_USER_QUESTION_SUFFIX.test(prompt.question)
+	) {
+		return prompt;
+	}
+	return {
+		...prompt,
+		question: content,
+	};
+}
+
 export function normalizePublicChatSessionKey(value: unknown): string {
 	const raw = typeof value === "string" ? value.trim().toLowerCase() : "";
 	if (!raw) return "";
