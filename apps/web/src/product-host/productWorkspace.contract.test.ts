@@ -1,5 +1,13 @@
 import { expect, it } from 'vitest'
-import { transitionProductWorkspace } from './productWorkspace'
+import {
+  resolveInitialProductWorkspaceSurface,
+  transitionProductWorkspace,
+} from './productWorkspace'
+
+it('opens the installed product on Agent Workspace while preserving native Canvas entry', () => {
+  expect(resolveInitialProductWorkspaceSurface(true)).toBe('product')
+  expect(resolveInitialProductWorkspaceSurface(false)).toBe('canvas')
+})
 
 const context = {
   projectId: 'project-1',

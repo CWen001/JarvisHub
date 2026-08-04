@@ -68,6 +68,7 @@ import type { VerticalBrand, VerticalExtensionDescriptor } from './product-host/
 import {
   dispatchProductWorkspaceCommand,
   PRODUCT_WORKSPACE_COMMAND,
+  resolveInitialProductWorkspaceSurface,
   type ProductWorkspaceCommand,
 } from './product-host/productWorkspace'
 
@@ -1152,17 +1153,6 @@ function CanvasApp({
             <div id="tc-canvas-visibility-slot" className="app-header-visibility-slot" />
             <div className="app-header-divider" aria-hidden="true" />
             <Group className="app-header-actions" gap="xs" wrap="nowrap">
-              {isProductHost ? (
-                <Button
-                  className="product-workspace-return"
-                  size="xs"
-                  variant="light"
-                  leftSection={<IconMessageCircle size={16} />}
-                  onClick={() => dispatchProductWorkspaceCommand({ type: 'return-to-chat' })}
-                >
-                  Agent Workspace
-                </Button>
-              ) : null}
               <Button className="app-save-button" size="xs" onClick={doSave} disabled={!isDirty} loading={saving} data-tour="save-button">Save</Button>
               <Tooltip className="app-refresh-flow-tooltip" label="Refresh canvas from server">
                 <ActionIcon
@@ -1198,9 +1188,22 @@ function CanvasApp({
               >
                 <IconHelpCircle className="app-help-toggle-icon" size={18} />
               </ActionIcon>
-              <ActionIcon className="app-github-link" component="a" href="https://github.com/anymouschina/JarvisHub" target="_blank" rel="noopener noreferrer" variant="subtle" aria-label="GitHub">
-                <IconBrandGithub className="app-github-icon" size={18} />
-              </ActionIcon>
+              {isProductHost ? (
+                <Tooltip label="返回 Agent Workspace">
+                  <ActionIcon
+                    className="product-workspace-return"
+                    variant="subtle"
+                    aria-label="返回 Agent Workspace"
+                    onClick={() => dispatchProductWorkspaceCommand({ type: 'return-to-chat' })}
+                  >
+                    <IconMessageCircle size={18} />
+                  </ActionIcon>
+                </Tooltip>
+              ) : (
+                <ActionIcon className="app-github-link" component="a" href="https://github.com/anymouschina/JarvisHub" target="_blank" rel="noopener noreferrer" variant="subtle" aria-label="GitHub">
+                  <IconBrandGithub className="app-github-icon" size={18} />
+                </ActionIcon>
+              )}
             </Group>
           </Group>
           <div className="app-header-secondary-row">
@@ -1322,7 +1325,7 @@ function RootEntryPage({
   return (
     <CanvasApp
       routeKey={routeKey}
-      initialSurface={extension ? 'product' : 'canvas'}
+      initialSurface={resolveInitialProductWorkspaceSurface(Boolean(extension))}
       productBrand={extension?.brand}
     />
   )
@@ -1366,7 +1369,13 @@ export default function App({
     return <CanvasApp routeKey={routeKey} />
   }
   if (isStudioRoute()) {
-    return <CanvasApp routeKey={routeKey} />
+    return (
+      <CanvasApp
+        routeKey={routeKey}
+        initialSurface={resolveInitialProductWorkspaceSurface(Boolean(extension))}
+        productBrand={extension?.brand}
+      />
+    )
   }
   return <RootEntryPage routeKey={routeKey} extension={extension} />
 }

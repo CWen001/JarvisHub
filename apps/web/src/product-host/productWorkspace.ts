@@ -10,6 +10,12 @@ export type ProductWorkspaceState = Readonly<{
   context: ProductWorkspaceContext
 }>
 
+export function resolveInitialProductWorkspaceSurface(
+  productExtensionInstalled: boolean,
+): 'product' | 'canvas' {
+  return productExtensionInstalled ? 'product' : 'canvas'
+}
+
 export function transitionProductWorkspace(
   state: ProductWorkspaceState,
   command: 'open-canvas' | 'return-to-chat',
