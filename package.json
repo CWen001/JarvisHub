@@ -2,6 +2,9 @@
   "name": "jarvishub-workspace",
   "private": true,
   "packageManager": "pnpm@10.8.1",
+  "bin": {
+    "jvs-watch": "bin/jvs-watch.mjs"
+  },
   "scripts": {
     "dev": "./scripts/dev.sh local",
     "dev:web": "pnpm --filter @jarvishub/web dev",

@@ -123,6 +123,22 @@ On the first run, the launcher automatically:
 
 The launcher stays in the foreground and aggregates service logs. Press `Ctrl+C` to stop the processes started by that run.
 
+### Global shortcut
+
+Run this once from the JarvisHub repository root on each computer:
+
+```bash
+npm link
+```
+
+You can then invoke the existing `run.sh` launcher from any directory:
+
+```bash
+jvs-watch start
+```
+
+`jvs-watch restart`, `jvs-watch stop`, and `jvs-watch help` are forwarded unchanged to `run.sh`. Running `jvs-watch` without a subcommand does not start services. On Windows CMD/PowerShell, install Git for Windows; the command uses its Git Bash to execute the same `run.sh`.
+
 ### Docker Compose startup
 
 ```bash

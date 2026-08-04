@@ -115,6 +115,22 @@ JarvisHub 由三个核心层组成：
 
 脚本以前台方式运行并汇总服务日志，按 `Ctrl+C` 可以停止本次启动的全部服务。
 
+### 全局快捷命令
+
+在每台电脑的 JarvisHub 仓库根目录执行一次：
+
+```bash
+npm link
+```
+
+之后可以在任意文件夹通过原有 `run.sh` 启动逻辑运行服务：
+
+```bash
+jvs-watch start
+```
+
+`jvs-watch restart`、`jvs-watch stop` 和 `jvs-watch help` 同样原样转发给 `run.sh`。单独输入 `jvs-watch` 不会启动服务。Windows CMD/PowerShell 需要安装 Git for Windows，命令会使用其 Git Bash 执行同一份 `run.sh`。
+
 ### Docker Compose 一键启动
 
 ```bash
