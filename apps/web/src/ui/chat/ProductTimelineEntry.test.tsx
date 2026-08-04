@@ -89,4 +89,39 @@ describe('Product Timeline entry', () => {
     expect(screen.getByText('实体按键')).toBeTruthy()
     expect(screen.getByText('已按该方向继续。')).toBeTruthy()
   })
+
+  it('renders persisted execution facts without a Professional Workspace shortcut', () => {
+    render(
+      <MantineProvider>
+        <ProductTimelineEntry
+          group={{
+            kind: 'single',
+            message: message({
+              toolCallSnapshot: {
+                turnIds: ['turn-1'],
+                record: {
+                  toolCallsByTurn: {
+                    'turn-1': [{
+                      toolCallId: 'image-1',
+                      toolName: 'canvas_image_generate_to_canvas',
+                      status: 'succeeded',
+                      outputPreview: '',
+                      errorMessage: '',
+                      startedAtMs: 1,
+                      finishedAtMs: 2,
+                      durationMs: 1,
+                      turnId: 'turn-1',
+                    }],
+                  },
+                },
+              },
+            }),
+          }}
+        />
+      </MantineProvider>,
+    )
+
+    expect(screen.getByText('已完成 1 项设计任务')).toBeTruthy()
+    expect(screen.queryByRole('button', { name: /专业工作台/ })).toBeNull()
+  })
 })

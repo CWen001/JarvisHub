@@ -24,6 +24,8 @@ export type NativeArtifactProjection =
       status: 'queued' | 'running' | 'success' | 'failed'
     }>
 
+export type NativeArtifactCardProjection = Extract<NativeArtifactProjection, { kind: 'artifact-card' }>
+
 function text(value: unknown): string {
   return typeof value === 'string' ? value.trim() : ''
 }

@@ -189,10 +189,11 @@
   display: block;
   margin-bottom: 8px;
   color: var(--pds-secondary);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.04em;
 }
+.project-context-rail__history .project-context-rail__eyebrow { font-size: 12px; }
 .project-context-rail__current > strong { display: block; margin-bottom: 12px; font-size: 20px; font-weight: 600; }
 .project-context-rail__context-line { display: flex; align-items: center; gap: 8px; margin-top: 8px; color: var(--pds-secondary); font-size: 12px; }
 .project-context-rail__context-line span { min-width: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -205,9 +206,9 @@
 .project-context-rail__section-heading { display: flex; align-items: center; justify-content: space-between; }
 .project-context-rail__project-row { min-width: 0; display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: center; margin: 2px 0; border-left: 2px solid transparent; }
 .project-context-rail__project-row.is-current { border-left-color: var(--pds-primary); background: var(--pds-surface-hover); }
-.project-context-rail__project-row > button { min-width: 0; padding: 9px 6px; overflow: hidden; color: var(--pds-primary); background: transparent; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
+.project-context-rail__project-row > button { min-width: 0; min-height: 44px; padding: 9px 6px; overflow: hidden; color: var(--pds-primary); background: transparent; font-size: 14px; font-weight: 600; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
 .project-context-rail__sessions { display: grid; gap: 2px; padding: 4px 0 8px 34px; }
-.project-context-rail__sessions button { min-width: 0; min-height: 36px; display: flex; align-items: center; gap: 8px; padding: 7px 8px; color: var(--pds-secondary); background: transparent; text-align: left; }
+.project-context-rail__sessions button { min-width: 0; min-height: 36px; display: flex; align-items: center; gap: 8px; padding: 7px 8px; color: var(--pds-secondary); background: transparent; font-size: 12px; font-weight: 400; text-align: left; }
 .project-context-rail__sessions button.is-current,
 .project-context-rail__sessions button:hover { color: var(--pds-primary); background: var(--pds-surface-hover); }
 .project-context-rail__sessions span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -265,7 +266,9 @@
 .compact-execution__persisted-list li { display: flex; justify-content: space-between; gap: 12px; color: var(--pds-secondary); font-size: 12px; }
 .compact-execution__persisted-list li span { color: var(--pds-muted); }
 
-.product-chat-surface__decision { width: min(960px, calc(100% - 48px)); margin: 0 auto 8px; }
+.product-chat-surface__decision { width: 100%; margin: 0; }
+.product-chat-surface__jump-latest { position: absolute; z-index: 24; right: 24px; bottom: 112px; min-height: 36px; padding: 0 14px; border: 1px solid var(--pds-border-strong); border-radius: 18px; background: var(--pds-canvas); color: var(--pds-primary); box-shadow: var(--pds-shadow-overlay); font-size: 12px; font-weight: 600; }
+.product-chat-surface__jump-latest:hover { background: var(--pds-surface-hover); }
 .product-chat-surface .tc-ai-chat-ask-user-pending { border: 1px solid var(--pds-border-strong); border-left: 2px solid var(--pds-primary); border-radius: 6px; background: var(--pds-canvas); box-shadow: none; }
 .product-chat-surface .tc-ai-chat-ask-user-pending__option { min-height: 44px; border-color: var(--pds-border); border-radius: 4px; background: var(--pds-surface); }
 .product-chat-surface .tc-ai-chat-ask-user-pending__option--selected { border-color: var(--pds-primary); background: var(--pds-surface-hover); }
@@ -294,8 +297,13 @@
 .agent-workspace .native-artifact-card__preview:hover > span,
 .agent-workspace .native-artifact-card__preview:focus-visible > span { opacity: 1; }
 .agent-workspace .native-artifact-card__body { padding: 14px 16px; }
+.artifact-preview .mantine-Modal-body,
 .native-artifact-lightbox .mantine-Modal-body,
 .product-asset-preview .mantine-Modal-body { display: grid; place-items: center; padding: 0 16px 16px; }
+.artifact-preview__content { width: 100%; min-width: 0; display: grid; gap: 8px; }
+.artifact-preview__actions { min-height: 48px; justify-content: flex-end; border-top: 1px solid var(--pds-border); }
+.artifact-preview img,
+.artifact-preview video,
 .native-artifact-lightbox img,
 .native-artifact-lightbox video,
 .product-asset-preview img,

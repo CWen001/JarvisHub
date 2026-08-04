@@ -3,8 +3,10 @@ import { ActionIcon, Badge, Group, Modal, Text, Tooltip } from '@mantine/core'
 import { IconDownload, IconLayoutBoard, IconPaperclip, IconPencil } from '@tabler/icons-react'
 import { useRFStore } from '../../canvas/store'
 import { dispatchProductWorkspaceCommand } from '../../product-host/productWorkspace'
+import { ArtifactPreview, type ArtifactPreviewAction } from '../shared/ArtifactPreview'
 import {
   resolveNativeArtifactProjection,
+  type NativeArtifactCardProjection,
   type NativeArtifactSource,
 } from './nativeArtifactProjection'
 
@@ -19,7 +21,13 @@ export function dispatchNativeArtifactChatCommand(command: NativeArtifactChatCom
   window.dispatchEvent(new CustomEvent(NATIVE_ARTIFACT_CHAT_COMMAND, { detail: command }))
 }
 
-export function NativeArtifactCard({ asset }: { asset: NativeArtifactSource }): JSX.Element {
+export function NativeArtifactCard({
+  asset,
+  onProductAction,
+}: {
+  asset: NativeArtifactSource
+  onProductAction?: (action: ArtifactPreviewAction, artifact: NativeArtifactCardProjection) => void
+}): JSX.Element {
   const [previewOpened, setPreviewOpened] = React.useState(false)
   const nodes = useRFStore((state) => state.nodes)
   const projection = React.useMemo(
@@ -53,6 +61,16 @@ export function NativeArtifactCard({ asset }: { asset: NativeArtifactSource }): 
       ? 'green'
       : 'blue'
 
+  const dispatchArtifactAction = (action: ArtifactPreviewAction) => {
+    if (onProductAction) {
+      onProductAction(action, projection)
+      return
+    }
+    if (action === 'modify') dispatchNativeArtifactChatCommand({ type: 'modify', asset })
+    if (action === 'reference') dispatchNativeArtifactChatCommand({ type: 'reference', asset })
+    if (action === 'open-node') dispatchProductWorkspaceCommand({ type: 'open-canvas', nodeId: projection.nodeId })
+  }
+
   return (
     <article className="native-artifact-card">
       <button
@@ -82,7 +100,7 @@ export function NativeArtifactCard({ asset }: { asset: NativeArtifactSource }): 
             <ActionIcon
               variant="subtle"
               aria-label="继续修改"
-              onClick={() => dispatchNativeArtifactChatCommand({ type: 'modify', asset })}
+              onClick={() => dispatchArtifactAction('modify')}
             >
               <IconPencil size={15} />
             </ActionIcon>
@@ -91,7 +109,7 @@ export function NativeArtifactCard({ asset }: { asset: NativeArtifactSource }): 
             <ActionIcon
               variant="subtle"
               aria-label="作为参考"
-              onClick={() => dispatchNativeArtifactChatCommand({ type: 'reference', asset })}
+              onClick={() => dispatchArtifactAction('reference')}
             >
               <IconPaperclip size={15} />
             </ActionIcon>
@@ -100,10 +118,7 @@ export function NativeArtifactCard({ asset }: { asset: NativeArtifactSource }): 
             <ActionIcon
               variant="subtle"
               aria-label="进入专业工作台"
-              onClick={() => dispatchProductWorkspaceCommand({
-                type: 'open-canvas',
-                nodeId: projection.nodeId,
-              })}
+              onClick={() => dispatchArtifactAction('open-node')}
             >
               <IconLayoutBoard size={15} />
             </ActionIcon>
@@ -123,21 +138,37 @@ export function NativeArtifactCard({ asset }: { asset: NativeArtifactSource }): 
           </Tooltip>
         </Group>
       </div>
-      <Modal
-        className="native-artifact-lightbox"
-        opened={previewOpened}
-        onClose={() => setPreviewOpened(false)}
-        title={projection.title}
-        centered
-        size="min(94vw, 1120px)"
-        zIndex={1000}
-      >
-        {projection.mediaType === 'video' ? (
-          <video src={projection.url} poster={projection.previewUrl} controls autoPlay playsInline />
-        ) : (
-          <img src={projection.url} alt={projection.title} referrerPolicy="no-referrer" />
-        )}
-      </Modal>
+      {onProductAction ? (
+        <ArtifactPreview
+          item={{
+            title: projection.title,
+            kind: projection.mediaType,
+            url: projection.url,
+            thumbnailUrl: projection.previewUrl,
+            nodeId: projection.nodeId,
+          }}
+          opened={previewOpened}
+          actions={['modify', 'reference', 'open-node']}
+          onClose={() => setPreviewOpened(false)}
+          onAction={(action) => dispatchArtifactAction(action)}
+        />
+      ) : (
+        <Modal
+          className="native-artifact-lightbox"
+          opened={previewOpened}
+          onClose={() => setPreviewOpened(false)}
+          title={projection.title}
+          centered
+          size="min(94vw, 1120px)"
+          zIndex={1000}
+        >
+          {projection.mediaType === 'video' ? (
+            <video src={projection.url} poster={projection.previewUrl} controls autoPlay playsInline />
+          ) : (
+            <img src={projection.url} alt={projection.title} referrerPolicy="no-referrer" />
+          )}
+        </Modal>
+      )}
     </article>
   )
 }

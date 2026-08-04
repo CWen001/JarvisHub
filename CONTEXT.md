@@ -20,6 +20,10 @@ _Avoid_: Multi-category launcher, fixed multi-column dashboard, embedded full as
 The user-facing institutionally branded Product View over Jarvis-owned conversations, tasks, Knowledge Evidence, Artifacts, assets, approvals, and execution state. It has its own permanent top bar, collapsible Project Context Rail, Product Timeline, and compact composer, all supplied by the Agent Workspace Runtime; native capabilities retain their Jarvis data, behavior, command paths, and persistence. Agent Workspace and Professional Workspace are reciprocal, visually isolated surfaces, and the native Canvas and header are never rendered behind Agent Workspace.
 _Avoid_: Native Chat skin, frontend backend, shadow task state, product-owned asset ledger, duplicate workflow, Canvas ghosting behind Agent Workspace
 
+**Reciprocal Workspace Switch**:
+The global top-bar navigation between Agent Workspace and Professional Workspace. It preserves the Current Project Context without choosing or focusing an Artifact; precise Artifact navigation belongs to an explicit Artifact Preview action.
+_Avoid_: Latest-Artifact shortcut, object deep link, one-way Workspace entry, context-resetting navigation
+
 **Agent Workspace Design System**:
 The project-owned `DESIGN.md` visual authority for Agent Workspace, derived from Porsche Design System v4 light-theme principles without importing Porsche components, trademarks, or proprietary fonts. It governs Product View tokens, typography, spacing, shape, icon treatment, states, and responsive behavior, while Professional Workspace retains its native light presentation.
 _Avoid_: Ad-hoc CSS theme, Porsche component dependency, marketing-site imitation, Professional Workspace reskin, logo-derived UI palette
@@ -37,16 +41,20 @@ The collapsible navigation and orientation surface beside the Product Chat Shell
 _Avoid_: Studio-owned project registry, Design State sidebar, embedded asset gallery, latest-Canvas inference, backend product name in user copy
 
 **Compact Execution Row**:
-The single-line, collapsed-by-default Product Timeline projection of an authoritative Jarvis run. It may expand only into a curated user-readable summary of capabilities used, completed work, progress, duration, and failure reasons; raw Skill text, Tool input/output, payloads, Agent traces, and complete native execution detail remain available only through Professional Workspace.
-_Avoid_: Raw Skill dump, native Trace clone, always-expanded execution, permanently pinned completed run, hidden failure, replacement execution state
+The single-line, collapsed-by-default Product Timeline projection of an authoritative Jarvis run. While work is active, its current activity advances in place from authoritative run events alongside stable progress and duration; completion condenses to a result summary and failure remains visible. It may expand only into a curated user-readable summary of capabilities used, completed work, progress, duration, and failure reasons; raw Skill text, Tool input/output, payloads, Agent traces, complete native execution detail, and Workspace navigation remain outside the row.
+_Avoid_: Timed carousel, marquee, raw Skill dump, native Trace clone, always-expanded execution, permanently pinned completed run, hidden failure, replacement execution state, Professional Workspace shortcut
 
 **Product Chat Composer**:
-The compact, auto-growing request input in Agent Workspace, with bounded height and one consolidated action row for attachments, Skills, and sending. It is a Product Chat Shell presentation and does not replace or restyle the native Chat retained in Professional Workspace.
-_Avoid_: Fixed tall input region, unbounded composer, Professional Workspace composer customization
+The compact, auto-growing request input in Agent Workspace, with bounded height and one consolidated action row for attachments, Skills, and sending. Its unsent text, selected Skill, and stable pending reference attachments follow the current Chat Session across the Reciprocal Workspace Switch, while focus, menus, sizing, scroll, and other presentation state remain local to each Workspace. It is a Product Chat Shell presentation and does not replace or restyle the native Chat retained in Professional Workspace.
+_Avoid_: Fixed tall input region, unbounded composer, second Chat runtime, duplicated draft store, shared presentation DOM, Professional Workspace composer customization
 
 **Artifact Card**:
 The lightweight inline rendering of a successfully persisted, usable Artifact produced by a Native Artifact Projection inside the Agent Workspace Chat timeline. It appears only after generation succeeds and only from stable same-turn Jarvis message, Tool, node, and asset references, with a larger preview, asset title, and direct continuation, reference, Professional Workspace, and download actions; pending or failed generation never creates a placeholder card, and Professional Workspace retains native rendering.
 _Avoid_: New Chat message type, pending placeholder, failed result card, latest-Canvas-result inference, duplicated design summary, embedded review dashboard, frontend-owned result, Mini Canvas, Professional Workspace customization
+
+**Artifact Preview**:
+The shared Agent Workspace inspection surface opened by an Artifact thumbnail in the Product Timeline, Project Context Rail, or Product Asset Panel. The thumbnail opens the enlarged Artifact rather than changing Workspace; continuation, reference, Professional Workspace node navigation, and download remain explicit adjacent actions.
+_Avoid_: Thumbnail-as-navigation, automatic Workspace switch, separate preview behavior per Product surface, Mini Canvas
 
 **Native Artifact Projection**:
 A Product View projection derived from an existing Jarvis Chat message, Tool snapshot, and stable Flow, node, and asset references. It may present preview, native execution status, Kernel-owned Design State facts when available, and navigation to the native Canvas; it creates no Artifact record, lifecycle state, or duplicate persistence. When reliable native references are unavailable, it falls back to Jarvis's original asset rendering.

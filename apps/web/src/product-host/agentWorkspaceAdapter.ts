@@ -256,8 +256,11 @@ export function useAuthoritativeAgentWorkspaceRuntime(
           }
           return
         }
-        if (command.type === 'asset.reference') {
-          dispatchNativeArtifactChatCommand({ type: 'reference', asset: command.asset })
+        if (command.type === 'asset.modify' || command.type === 'asset.reference') {
+          dispatchNativeArtifactChatCommand({
+            type: command.type === 'asset.modify' ? 'modify' : 'reference',
+            asset: command.asset,
+          })
           return
         }
         current.onOpenProfessionalWorkspace(command.nodeId)

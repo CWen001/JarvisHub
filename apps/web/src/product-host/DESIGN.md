@@ -63,6 +63,7 @@ The full HUST and d.school lockup is the only multicolor brand asset. Its colors
 - Base glyph: 20px with consistent stroke weight.
 - Top-bar actions use the same 44px container, hover, active, and focus treatment.
 - Agent → Professional uses a Layout/Canvas glyph. Professional → Agent uses a Message glyph in the same host action slot.
+- The top-bar action is a global reciprocal Workspace switch and never selects the latest Artifact. Artifact-specific node navigation appears only as an explicit preview action.
 - Every icon action has Chinese Tooltip and accessible name.
 
 ## Product surfaces
@@ -79,24 +80,30 @@ The full HUST and d.school lockup is the only multicolor brand asset. Its colors
 - Project is primary; design direction and conversation are subordinate.
 - Selected state uses tonal Surface plus a precise Primary edge.
 - Collapsed state preserves only essential icon actions.
+- The history section label is 12px/600, Project names are 14px/600 in 44px rows, and subordinate Session names are 12px/400 in 36px rows. Selection changes surface, edge, and weight rather than font size.
+- Clicking the current Artifact thumbnail opens the shared Artifact Preview; it never switches Workspace directly.
 
 ### Product Timeline
 
 - Conversation, Decision, Compact Execution Row, Artifact, and Notice are distinct but share one grid and type system.
 - User entries use a subtle Surface treatment; assistant entries stay white with a fine border.
 - Raw Skill text, Tool payload, and complete native Trace never render here.
+- The Timeline is the only vertical scroll owner in the main surface. Conversation, long Decision content, execution state, Artifacts, and Notices all scroll inside it; only the Composer remains fixed.
+- Live updates follow the viewport only while the user is near the bottom. Manual upward scrolling preserves position and exposes one restrained “回到最新” action; sending, changing Session, or using that action resumes following.
 
 ### Compact Execution Row
 
-- One line by default: status, product-language activity, progress, duration.
-- Expanded state is a curated readable summary only.
-- Full native detail opens Professional Workspace.
+- One line by default: authoritative status, current product-language activity, progress, and duration. Activity advances in place rather than using a timed carousel or marquee.
+- Completion condenses to a result summary; failure remains visible rather than rotating away.
+- Expanded state is a curated readable list of product-language tasks, statuses, and failure reasons only.
+- The row contains no Professional Workspace action. Full native detail remains available through the global reciprocal Workspace switch.
 
 ### Artifact Card
 
 - Preview dominates, uses `object-fit: contain`, and never crops product identity.
 - Actions are compact, literal, and adjacent to the result.
 - Pending or failed generation never masquerades as a successful Artifact.
+- Artifact thumbnails in Timeline, Rail, and Product Asset Panel share one preview shell. A stable Artifact offers continuation, reference, exact Professional Workspace node navigation, and download; an Asset without a stable node offers add-to-Workspace, reference, and download without inventing or disabling a node action.
 
 ### Product Asset Panel
 
@@ -107,6 +114,7 @@ The full HUST and d.school lockup is the only multicolor brand asset. Its colors
 
 - Compact and auto-growing with one action row.
 - Input, references, attachments, Skills, send, and interruption share one coherent focus order.
+- Only unsent text, selected Skill identity, and stable pending attachment/reference identities follow the current Session across Workspace switches. Focus, menus, dimensions, and scroll remain local presentation state.
 
 ## Motion
 

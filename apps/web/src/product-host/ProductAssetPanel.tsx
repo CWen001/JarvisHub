@@ -4,7 +4,6 @@ import {
   Drawer,
   Group,
   Loader,
-  Modal,
   SegmentedControl,
   Text,
   Tooltip,
@@ -14,6 +13,7 @@ import {
   IconAlertTriangle,
   IconLayoutBoard,
   IconPaperclip,
+  IconPencil,
   IconPhoto,
   IconPlus,
   IconVideo,
@@ -23,6 +23,7 @@ import { toast } from '../ui/toast'
 import { useUIStore } from '../ui/uiStore'
 import type { AgentWorkspaceAssetView } from './agentWorkspaceProjection'
 import type { AgentWorkspaceRuntime } from './agentWorkspaceRuntime'
+import { ArtifactPreview, type ArtifactPreviewAction } from '../ui/shared/ArtifactPreview'
 
 type AssetKind = 'all' | 'image' | 'video'
 type Scope = 'canvas' | 'all'
@@ -55,7 +56,7 @@ export function ProductAssetPanel({
     .map(productAssetItem), [kind, scope, snapshot.assets.items])
 
   const dispatchAssetIntent = async (
-    type: 'asset.add-to-canvas' | 'asset.reference',
+    type: 'asset.modify' | 'asset.add-to-canvas' | 'asset.reference',
     item: ProductAssetItem,
   ) => {
     const outcome = await runtime.dispatch({ type, asset: item })
@@ -63,7 +64,14 @@ export function ProductAssetPanel({
       toast(outcome.message, 'error')
       return
     }
-    toast(type === 'asset.reference' ? '已添加到当前对话' : '已添加到专业工作台', 'success')
+    toast(
+      type === 'asset.reference'
+        ? '已添加到当前对话'
+        : type === 'asset.modify'
+          ? '已添加为继续修改目标'
+          : '已添加到专业工作台',
+      'success',
+    )
   }
 
   const openProfessional = async (item: ProductAssetItem) => {
@@ -72,6 +80,13 @@ export function ProductAssetPanel({
       ...(item.nodeId ? { nodeId: item.nodeId } : {}),
     })
     if (!outcome.accepted) toast(outcome.message, 'error')
+  }
+
+  const onPreviewAction = (action: ArtifactPreviewAction, item: ProductAssetItem) => {
+    if (action === 'add-to-workspace') void dispatchAssetIntent('asset.add-to-canvas', item)
+    if (action === 'modify') void dispatchAssetIntent('asset.modify', item)
+    if (action === 'reference') void dispatchAssetIntent('asset.reference', item)
+    if (action === 'open-node') void openProfessional(item)
   }
 
   return (
@@ -136,9 +151,15 @@ export function ProductAssetPanel({
                 </button>
                 <Text className="product-asset-card__title" size="sm" fw={600} lineClamp={1}>{item.title}</Text>
                 <Group className="product-asset-card__actions" gap={2} wrap="nowrap">
-                  <Tooltip label="添加到专业工作台"><ActionIcon variant="subtle" aria-label="添加到专业工作台" onClick={() => void dispatchAssetIntent('asset.add-to-canvas', item)}><IconPlus size={18} /></ActionIcon></Tooltip>
+                  {item.nodeId ? (
+                    <Tooltip label="继续修改"><ActionIcon variant="subtle" aria-label="继续修改" onClick={() => void dispatchAssetIntent('asset.modify', item)}><IconPencil size={18} /></ActionIcon></Tooltip>
+                  ) : (
+                    <Tooltip label="添加到专业工作台"><ActionIcon variant="subtle" aria-label="添加到专业工作台" onClick={() => void dispatchAssetIntent('asset.add-to-canvas', item)}><IconPlus size={18} /></ActionIcon></Tooltip>
+                  )}
                   <Tooltip label="作为对话参考"><ActionIcon variant="subtle" aria-label="作为对话参考" onClick={() => void dispatchAssetIntent('asset.reference', item)}><IconPaperclip size={18} /></ActionIcon></Tooltip>
-                  <Tooltip label="在专业工作台打开"><ActionIcon variant="subtle" aria-label="在专业工作台打开" onClick={() => void openProfessional(item)}><IconLayoutBoard size={18} /></ActionIcon></Tooltip>
+                  {item.nodeId ? (
+                    <Tooltip label="在专业工作台打开"><ActionIcon variant="subtle" aria-label="在专业工作台打开" onClick={() => void openProfessional(item)}><IconLayoutBoard size={18} /></ActionIcon></Tooltip>
+                  ) : null}
                   <Tooltip label="下载"><ActionIcon component="a" href={item.url} download target="_blank" rel="noreferrer" variant="subtle" aria-label="下载"><IconDownload size={18} /></ActionIcon></Tooltip>
                 </Group>
               </article>
@@ -146,21 +167,15 @@ export function ProductAssetPanel({
           </div>
         )}
       </Drawer>
-      <Modal
-        className="product-asset-preview"
+      <ArtifactPreview
+        item={preview}
         opened={Boolean(preview)}
+        actions={preview?.nodeId
+          ? ['modify', 'reference', 'open-node']
+          : ['add-to-workspace', 'reference']}
         onClose={() => setPreview(null)}
-        title={preview?.title || '资产预览'}
-        centered
-        size="min(94vw, 1120px)"
-        zIndex={1000}
-      >
-        {preview?.kind === 'video' ? (
-          <video src={preview.url} poster={preview.thumbnailUrl} controls autoPlay playsInline />
-        ) : preview ? (
-          <img src={preview.url} alt={preview.title} />
-        ) : null}
-      </Modal>
+        onAction={(action) => preview && onPreviewAction(action, preview)}
+      />
     </>
   )
 }

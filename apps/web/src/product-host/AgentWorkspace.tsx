@@ -10,6 +10,7 @@ import {
 import type { ProjectDto } from '../api/server'
 import { ProductChatTimeline } from '../ui/chat/AiChatDialog'
 import { useAuthoritativeAgentWorkspaceRuntime } from './agentWorkspaceAdapter'
+import { AgentWorkspaceRuntimeProvider } from './agentWorkspaceRuntimeContext'
 import type { AgentWorkspaceIntent } from './agentWorkspaceProjection'
 import { ProjectContextRail } from './ProjectContextRail'
 import { ProductAssetPanel } from './ProductAssetPanel'
@@ -62,13 +63,12 @@ export function AgentWorkspace({
     if (narrow) setMobileRailOpened((opened) => !opened)
     else setRailCollapsed((collapsed) => !collapsed)
   }
-  const currentArtifactNodeId = view.assets.current?.nodeId
-
   return (
-    <div
-      className="agent-workspace"
-      data-rail-collapsed={railCollapsed}
-    >
+    <AgentWorkspaceRuntimeProvider runtime={runtime}>
+      <div
+        className="agent-workspace"
+        data-rail-collapsed={railCollapsed}
+      >
       <header className="product-host-header">
         <ActionIcon
           className="product-host-rail-toggle"
@@ -95,7 +95,7 @@ export function AgentWorkspace({
         </div>
         <div className="product-host-header__actions">
           <Tooltip label="打开资产">
-            <ActionIcon variant="subtle" size={40} aria-label="打开资产" onClick={onOpenAssets}>
+            <ActionIcon variant="subtle" size={40} aria-label="打开资产" onClick={() => onIntent({ type: 'open-assets' })}>
               <IconPhoto size={19} />
             </ActionIcon>
           </Tooltip>
@@ -105,7 +105,7 @@ export function AgentWorkspace({
               variant="light"
               size={40}
               aria-label="进入专业工作台"
-              onClick={() => onOpenProfessionalWorkspace(currentArtifactNodeId)}
+              onClick={() => onIntent({ type: 'open-professional-workspace' })}
             >
               <IconLayoutBoard size={19} />
             </ActionIcon>
@@ -148,7 +148,8 @@ export function AgentWorkspace({
       <main className="agent-workspace__timeline" aria-label="设计时间线">
         <ProductChatTimeline className="app-ai-chat-dialog" />
       </main>
-      <ProductAssetPanel runtime={runtime} />
-    </div>
+        <ProductAssetPanel runtime={runtime} />
+      </div>
+    </AgentWorkspaceRuntimeProvider>
   )
 }

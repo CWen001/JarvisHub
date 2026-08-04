@@ -15,6 +15,7 @@ import type {
   AgentWorkspaceIntent,
   AgentWorkspaceViewModel,
 } from './agentWorkspaceProjection'
+import { ArtifactPreview, type ArtifactPreviewAction } from '../ui/shared/ArtifactPreview'
 
 export function ProjectContextRail({
   view,
@@ -30,6 +31,7 @@ export function ProjectContextRail({
   const [expanded, setExpanded] = React.useState<Set<string>>(
     () => new Set(view.current?.projectId ? [view.current.projectId] : []),
   )
+  const [previewOpened, setPreviewOpened] = React.useState(false)
 
   React.useEffect(() => {
     const projectId = view.current?.projectId
@@ -40,6 +42,14 @@ export function ProjectContextRail({
   const dispatch = (intent: AgentWorkspaceIntent) => {
     onIntent(intent)
     onNavigate?.()
+  }
+
+  const onPreviewAction = (action: ArtifactPreviewAction) => {
+    const artifact = view.assets.current
+    if (!artifact) return
+    if (action === 'modify') dispatch({ type: 'asset.modify', asset: artifact })
+    if (action === 'reference') dispatch({ type: 'asset.reference', asset: artifact })
+    if (action === 'open-node') dispatch({ type: 'open-professional-workspace', nodeId: artifact.nodeId })
   }
 
   return (
@@ -109,7 +119,8 @@ export function ProjectContextRail({
             <button
               type="button"
               className="project-context-rail__artifact-button"
-              onClick={() => dispatch({ type: 'open-professional-workspace', nodeId: view.assets.current?.nodeId })}
+              aria-label={`预览${view.assets.current.title}`}
+              onClick={() => setPreviewOpened(true)}
             >
               {view.assets.current.kind === 'image' ? (
                 <img src={view.assets.current.thumbnailUrl || view.assets.current.url} alt="" />
@@ -185,6 +196,13 @@ export function ProjectContextRail({
         <i aria-hidden="true" />
         <span>{view.run.label}</span>
       </div>
+      <ArtifactPreview
+        item={view.assets.current}
+        opened={previewOpened}
+        actions={['modify', 'reference', 'open-node']}
+        onClose={() => setPreviewOpened(false)}
+        onAction={onPreviewAction}
+      />
     </aside>
   )
 }

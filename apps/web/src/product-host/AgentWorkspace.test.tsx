@@ -44,12 +44,15 @@ vi.mock('../ui/chat/AiChatDialog', () => ({
 }))
 
 const runtimeSnapshot = { ...viewModel, revision: 0 }
+const { runtimeDispatch } = vi.hoisted(() => ({
+  runtimeDispatch: vi.fn().mockResolvedValue({ accepted: true, command: { type: 'assets.open' } }),
+}))
 
 vi.mock('./agentWorkspaceAdapter', () => ({
   useAuthoritativeAgentWorkspaceRuntime: () => ({
     getSnapshot: () => runtimeSnapshot,
     subscribe: () => () => {},
-    dispatch: vi.fn().mockResolvedValue({ accepted: true, command: { type: 'assets.open' } }),
+    dispatch: runtimeDispatch,
   }),
 }))
 
@@ -88,11 +91,12 @@ beforeAll(() => {
 
 afterEach(() => {
   narrowViewport = false
+  runtimeDispatch.mockClear()
   cleanup()
 })
 
 describe('Agent Workspace Product View', () => {
-  it('renders academy chrome and authoritative Project context around the timeline', () => {
+  it('renders academy chrome and authoritative Project context around the timeline', async () => {
     const onOpenAssets = vi.fn()
     const onOpenProfessionalWorkspace = vi.fn()
     render(
@@ -124,8 +128,15 @@ describe('Agent Workspace Product View', () => {
 
     fireEvent.click(screen.getByRole('button', { name: '打开资产' }))
     fireEvent.click(screen.getByRole('button', { name: '进入专业工作台' }))
-    expect(onOpenAssets).toHaveBeenCalledOnce()
-    expect(onOpenProfessionalWorkspace).toHaveBeenCalledWith('node-1')
+    expect(onOpenAssets).not.toHaveBeenCalled()
+    expect(onOpenProfessionalWorkspace).not.toHaveBeenCalled()
+    expect(runtimeDispatch).toHaveBeenNthCalledWith(1, { type: 'open-assets' })
+    expect(runtimeDispatch).toHaveBeenNthCalledWith(2, { type: 'open-professional-workspace' })
+
+    fireEvent.click(screen.getByRole('button', { name: '预览GT Runner 概念图' }))
+    expect(await screen.findByRole('dialog', { name: 'GT Runner 概念图' })).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: '在专业工作台打开此节点' }))
+    expect(runtimeDispatch).toHaveBeenLastCalledWith({ type: 'open-professional-workspace', nodeId: 'node-1' })
   })
 
   it('collapses the desktop Project Context Rail without hiding the permanent top bar', () => {

@@ -45,6 +45,15 @@ const facts = {
 }
 
 describe('Agent Workspace Projection', () => {
+  const projectedAsset = {
+    nodeId: 'node-1',
+    title: 'GT Runner 概念图',
+    kind: 'image' as const,
+    url: 'https://cdn.example/runner.png',
+    assetId: 'asset-1',
+    scope: 'canvas' as const,
+  }
+
   it('projects authoritative Project context without inventing missing design facts', () => {
     expect(projectAgentWorkspace(facts)).toEqual({
       current: {
@@ -127,6 +136,9 @@ describe('Agent Workspace Projection', () => {
     [{ type: 'new-flow', projectId: 'project-1' }, { type: 'flow.create', projectId: 'project-1' }],
     [{ type: 'new-project' }, { type: 'project.create' }],
     [{ type: 'open-assets' }, { type: 'assets.open' }],
+    [{ type: 'asset.modify', asset: projectedAsset }, { type: 'asset.modify', asset: projectedAsset }],
+    [{ type: 'asset.reference', asset: projectedAsset }, { type: 'asset.reference', asset: projectedAsset }],
+    [{ type: 'open-professional-workspace' }, { type: 'workspace.open-professional' }],
     [{ type: 'open-professional-workspace', nodeId: 'node-1' }, { type: 'workspace.open-professional', nodeId: 'node-1' }],
   ] as const)('maps Product View intent %o to one native command', (intent, command) => {
     expect(resolveAgentWorkspaceIntent(intent)).toEqual(command)

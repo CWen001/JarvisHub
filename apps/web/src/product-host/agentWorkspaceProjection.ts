@@ -92,6 +92,7 @@ export type AgentWorkspaceIntent =
   | Readonly<{ type: 'new-flow'; projectId: string }>
   | Readonly<{ type: 'new-project' }>
   | Readonly<{ type: 'open-assets' }>
+  | Readonly<{ type: 'asset.modify'; asset: AgentWorkspaceAssetView }>
   | Readonly<{ type: 'asset.add-to-canvas'; asset: AgentWorkspaceAssetView }>
   | Readonly<{ type: 'asset.reference'; asset: AgentWorkspaceAssetView }>
   | Readonly<{ type: 'open-professional-workspace'; nodeId?: string }>
@@ -107,6 +108,7 @@ export type NativeAgentWorkspaceCommand =
   | Readonly<{ type: 'flow.create'; projectId: string }>
   | Readonly<{ type: 'project.create' }>
   | Readonly<{ type: 'assets.open' }>
+  | Readonly<{ type: 'asset.modify'; asset: AgentWorkspaceAssetView }>
   | Readonly<{ type: 'asset.add-to-canvas'; asset: AgentWorkspaceAssetView }>
   | Readonly<{ type: 'asset.reference'; asset: AgentWorkspaceAssetView }>
   | Readonly<{ type: 'workspace.open-professional'; nodeId?: string }>
@@ -220,7 +222,7 @@ export function resolveAgentWorkspaceIntent(intent: AgentWorkspaceIntent): Nativ
   }
   if (intent.type === 'new-project') return Object.freeze({ type: 'project.create' })
   if (intent.type === 'open-assets') return Object.freeze({ type: 'assets.open' })
-  if (intent.type === 'asset.add-to-canvas' || intent.type === 'asset.reference') {
+  if (intent.type === 'asset.modify' || intent.type === 'asset.add-to-canvas' || intent.type === 'asset.reference') {
     return Object.freeze({ type: intent.type, asset: intent.asset })
   }
   return Object.freeze({

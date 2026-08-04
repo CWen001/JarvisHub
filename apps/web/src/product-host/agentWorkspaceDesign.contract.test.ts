@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 const design = fs.readFileSync(new URL('./DESIGN.md', import.meta.url), 'utf8')
 const css = fs.readFileSync(new URL('./agentWorkspace.css', import.meta.url), 'utf8')
 const nativeCss = fs.readFileSync(new URL('../styles.css', import.meta.url), 'utf8')
+const chatSource = fs.readFileSync(new URL('../ui/chat/AiChatDialog.tsx', import.meta.url), 'utf8')
 
 describe('Agent Workspace Design System', () => {
   it('uses one PDS light visual authority and excludes legacy visual directions', () => {
@@ -34,5 +35,20 @@ describe('Agent Workspace Design System', () => {
     expect(nativeCss).not.toContain('.product-history-nav')
     expect(nativeCss).not.toContain('.product-execution-trace-drawer')
     expect(nativeCss).toContain('.product-workspace-return')
+  })
+
+  it('pins the Project Context Rail history hierarchy to the approved type scale', () => {
+    expect(css).toMatch(/\.project-context-rail__history\s+\.project-context-rail__eyebrow\s*\{[^}]*font-size:\s*12px/)
+    expect(css).toMatch(/\.project-context-rail__project-row\s*>\s*button\s*\{[^}]*min-height:\s*44px[^}]*font-size:\s*14px[^}]*font-weight:\s*600/)
+    expect(css).toMatch(/\.project-context-rail__sessions\s+button\s*\{[^}]*min-height:\s*36px[^}]*font-size:\s*12px[^}]*font-weight:\s*400/)
+  })
+
+  it('keeps decisions inside the sole timeline scroll root and exposes explicit resume-follow', () => {
+    expect(css).toMatch(/\.product-chat-surface__scroll\s*\{[^}]*overflow:\s*auto/)
+    expect(css).toMatch(/\.product-composer-shell\s*\{[^}]*position:\s*absolute/)
+    expect(chatSource.match(/className="product-chat-surface__decision"/g)).toHaveLength(1)
+    expect(chatSource).toMatch(/activeLiveRun\?\.status !== 'running'[\s\S]*product-chat-surface__decision[\s\S]*<\/div>\s*<\/div>\s*\{showJumpToLatest/)
+    expect(chatSource).toContain('className="product-chat-surface__jump-latest"')
+    expect(chatSource).toContain('回到最新')
   })
 })

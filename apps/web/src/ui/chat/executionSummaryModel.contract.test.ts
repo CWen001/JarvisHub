@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest'
 import type { LiveChatRunRecord, LiveToolCallRecord } from './liveChatRunStore'
-import { resolveExecutionSummary } from './executionSummaryModel'
+import { resolveExecutionSummary, resolvePersistedExecutionSummary } from './executionSummaryModel'
 
 function agentCall(overrides: Partial<LiveToolCallRecord> = {}): LiveToolCallRecord {
   return {
@@ -95,17 +95,65 @@ it('compresses direct Skill and media Tools into product-language tasks', () => 
 })
 
 it('projects failure without inventing an Artifact result', () => {
-  expect(resolveExecutionSummary(run({
+  const summary = resolveExecutionSummary(run({
     status: 'failed',
     finishedAt: 4_000,
     errorMessage: 'Provider failed',
     toolCallsByTurn: {
-      'turn-1': [agentCall({ status: 'failed', finishedAtMs: 4_000, errorMessage: 'Provider failed' })],
+      'turn-1': [agentCall({
+        status: 'failed',
+        input: { description: 'internal prompt detail', prompt: 'secret provider instruction' },
+        finishedAtMs: 4_000,
+        errorMessage: 'Provider failed',
+      })],
     },
-  }), 9_000)).toMatchObject({
+  }), 9_000)
+
+  expect(summary).toMatchObject({
     phase: 'failed',
     headline: '1 个子任务需要处理',
     failedTaskCount: 1,
-    errorMessage: 'Provider failed',
+    errorMessage: '本轮设计执行未完成，请重试或调整设计要求。',
   })
+  expect(JSON.stringify(summary)).not.toContain('Provider failed')
+  expect(JSON.stringify(summary)).not.toContain('internal prompt detail')
+  expect(JSON.stringify(summary)).not.toContain('secret provider instruction')
+})
+
+it('preserves non-terminal persisted status instead of inventing completion', () => {
+  const summary = resolvePersistedExecutionSummary({
+    'turn-1': [agentCall({ status: 'running' })],
+  })
+
+  expect(summary).toMatchObject({
+    phase: 'running',
+    headline: '1 项设计任务执行中',
+    completedTaskCount: 0,
+    activeTaskLabel: '执行设计任务',
+  })
+  expect(summary.tasks[0]).toMatchObject({ status: 'running', subtitle: '正在处理' })
+})
+
+it('derives persisted parent failure from child facts and retains safe duration', () => {
+  const summary = resolvePersistedExecutionSummary({
+    'turn-1': [
+      agentCall({ status: 'succeeded', finishedAtMs: 5_000, durationMs: 4_000 }),
+      agentCall({
+        toolCallId: 'child-1',
+        toolName: 'canvas_image_generate_to_canvas',
+        status: 'failed',
+        parentToolCallId: 'agent-1',
+        startedAtMs: 2_000,
+        finishedAtMs: 4_000,
+        durationMs: 2_000,
+      }),
+    ],
+  })
+
+  expect(summary).toMatchObject({
+    phase: 'failed',
+    failedTaskCount: 1,
+    elapsedLabel: '4秒',
+  })
+  expect(summary.tasks[0]).toMatchObject({ status: 'failed', childToolCount: 1 })
 })
