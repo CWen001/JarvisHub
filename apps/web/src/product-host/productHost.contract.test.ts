@@ -44,7 +44,7 @@ describe('Vertical Product Host contract', () => {
 
     expect(installation).toEqual({
       extensionId: 'watch-design',
-      brand: { name: 'Watch Design Studio', mark: 'W', accentColor: '#4967dc' },
+      brand: { name: 'Watch Design Studio', mark: 'W', accentColor: '#29463f' },
       skill: { key: 'watch-design-kernel', name: 'watch-design-kernel' },
     })
   })

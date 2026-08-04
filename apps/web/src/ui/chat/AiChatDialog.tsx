@@ -2145,14 +2145,40 @@ function ChatBubbleAttachmentStrip({
   )
 }
 
+const EMPTY_CHAT_CANVAS_NODES: Node[] = []
+
+function useVisibleAssistantAssets(
+  message: ChatMessage,
+  projectArtifacts: boolean,
+): AssistantAsset[] {
+  const canvasNodes = useRFStore(React.useCallback(
+    (state) => projectArtifacts ? state.nodes : EMPTY_CHAT_CANVAS_NODES,
+    [projectArtifacts],
+  ))
+  return React.useMemo(() => {
+    const explicit = normalizeAssistantAssets(message.assets)
+    const toolCallSnapshot = message.role === 'assistant' && message.phase !== 'thinking'
+      ? message.toolCallSnapshot
+      : null
+    if (!projectArtifacts || !toolCallSnapshot) return explicit
+    const projected = resolveSuccessfulToolSnapshotArtifacts({
+      toolCallsByTurn: toolCallSnapshot.record.toolCallsByTurn,
+      nodes: canvasNodes,
+    })
+    return mergeAssistantAssetRecords(explicit, projected as AssistantAsset[])
+  }, [canvasNodes, message.assets, message.phase, message.role, message.toolCallSnapshot, projectArtifacts])
+}
+
 type MergedAskUserBubbleProps = {
   group: Extract<import('./mergeAskUserGroups').MergedMessageGroup, { kind: 'ask-user-merged' }>
   activeRun?: LiveChatRunRecord | null
   sessionKey?: string
+  projectArtifacts?: boolean
 }
 
-export function MergedAskUserBubble({ group, activeRun = null, sessionKey = '' }: MergedAskUserBubbleProps): JSX.Element {
+export function MergedAskUserBubble({ group, activeRun = null, sessionKey = '', projectArtifacts = false }: MergedAskUserBubbleProps): JSX.Element {
   const { askMessage, userReply, continuation } = group
+  const visibleContinuationAssets = useVisibleAssistantAssets(continuation, projectArtifacts)
 
   const activeRunForContinuation = React.useMemo(() => {
     const normalizedSessionKey = String(sessionKey || '').trim()
@@ -2238,7 +2264,7 @@ export function MergedAskUserBubble({ group, activeRun = null, sessionKey = '' }
         <Group className="tc-ai-chat-bubble__meta" justify="space-between" align="center" gap={10} mb={6} wrap="nowrap">
           <Group className="tc-ai-chat-bubble__meta-left" gap={6} align="center" wrap="nowrap">
             <Badge className="tc-ai-chat-bubble__role" size="xs" radius="sm" variant="light" color="blue">
-              JarvisHub
+              {projectArtifacts ? '设计顾问' : 'JarvisHub'}
             </Badge>
             {shouldShowContLoader ? (
               <Loader className="tc-ai-chat-bubble__run-loader" size="xs" />
@@ -2282,9 +2308,9 @@ export function MergedAskUserBubble({ group, activeRun = null, sessionKey = '' }
           </RunTraceDisclosure>
         ) : null}
 
-        {!isContinuationThinking && Array.isArray(continuation.assets) && continuation.assets.length > 0 ? (
+        {!isContinuationThinking && visibleContinuationAssets.length > 0 ? (
           <Group className="tc-ai-chat-bubble__assets" gap={8} mt={8} align="flex-start" wrap="wrap">
-            {continuation.assets.map((asset, idx) => {
+            {visibleContinuationAssets.map((asset, idx) => {
               const url = String(asset?.url || '').trim()
               if (!url) return null
               return <NativeArtifactCard key={`${continuation.id}_asset_${idx}`} asset={asset} />
@@ -2295,8 +2321,6 @@ export function MergedAskUserBubble({ group, activeRun = null, sessionKey = '' }
     </Group>
   )
 }
-
-const EMPTY_CHAT_CANVAS_NODES: Node[] = []
 
 type ChatBubbleProps = {
   message: ChatMessage
@@ -2327,10 +2351,7 @@ export function ChatBubble({
   projectArtifacts = false,
 }: ChatBubbleProps): JSX.Element | null {
   const isUser = message.role === 'user'
-  const canvasNodes = useRFStore(React.useCallback(
-    (state) => projectArtifacts ? state.nodes : EMPTY_CHAT_CANVAS_NODES,
-    [projectArtifacts],
-  ))
+  const visibleAssistantAssets = useVisibleAssistantAssets(message, projectArtifacts)
   const isThinkingMessage = !isUser && message.phase === 'thinking'
   const activeRunForMessage = React.useMemo(() => {
     const normalizedSessionKey = String(sessionKey || '').trim()
@@ -2377,15 +2398,6 @@ export function ChatBubble({
       : null,
     [isUser, message.phase, message.toolCallSnapshot],
   )
-  const visibleAssistantAssets = React.useMemo(() => {
-    const explicit = normalizeAssistantAssets(message.assets)
-    if (!projectArtifacts || !toolCallSnapshot) return explicit
-    const projected = resolveSuccessfulToolSnapshotArtifacts({
-      toolCallsByTurn: toolCallSnapshot.record.toolCallsByTurn,
-      nodes: canvasNodes,
-    })
-    return mergeAssistantAssetRecords(explicit, projected as AssistantAsset[])
-  }, [canvasNodes, message.assets, projectArtifacts, toolCallSnapshot])
   const shouldRenderMarkdown = Boolean(String(markdownText || '').trim()) && !askUserPrompt
   const agentTraceItems = React.useMemo(
     () => (!isUser && message.phase === 'thinking')
@@ -2468,7 +2480,7 @@ export function ChatBubble({
         <Group className="tc-ai-chat-bubble__meta" justify="space-between" align="center" gap={10} mb={6} wrap="nowrap">
           <Group className="tc-ai-chat-bubble__meta-left" gap={6} align="center" wrap="nowrap">
             <Badge className="tc-ai-chat-bubble__role" size="xs" radius="sm" variant="light" color={isUser ? 'gray' : 'blue'}>
-              {isUser ? 'user' : 'JarvisHub'}
+              {isUser ? '你' : projectArtifacts ? '设计顾问' : 'JarvisHub'}
             </Badge>
             {shouldShowRunLoader ? (
               <Loader className="tc-ai-chat-bubble__run-loader" size="xs" />
@@ -5839,6 +5851,7 @@ export default function AiChatDialog({
                             group={group}
                             activeRun={activeLiveRun}
                             sessionKey={effectiveChatSessionKey}
+                            projectArtifacts={productMode}
                           />
                         ),
                       )}
@@ -5866,6 +5879,7 @@ export default function AiChatDialog({
                           group={group}
                           activeRun={activeLiveRun}
                           sessionKey={effectiveChatSessionKey}
+                          projectArtifacts={productMode}
                         />
                       ),
                     )}
@@ -5953,4 +5967,13 @@ export default function AiChatDialog({
       </Paper>
     </div>
   )
+}
+
+/**
+ * Product View Interface over the native Chat controller. Agent Workspace owns
+ * all chrome and presentation; this module retains Jarvis command, streaming,
+ * persistence, approval, retry, and recovery behaviour behind that Interface.
+ */
+export function ProductChatTimeline({ className }: { className?: string }): JSX.Element | null {
+  return <AiChatDialog className={className} surface="agent-workspace" />
 }

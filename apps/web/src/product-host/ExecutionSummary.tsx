@@ -46,7 +46,7 @@ export function ExecutionSummary({ run }: { run: LiveChatRunRecord | null }): JS
         className="product-execution-summary"
         data-phase={summary.phase}
         onClick={() => setTraceOpened(true)}
-        aria-label="Open execution trace"
+        aria-label="查看运行过程"
       >
         <Group justify="space-between" wrap="nowrap" gap="sm">
           <Group wrap="nowrap" gap={8} className="product-execution-summary__main">
@@ -68,13 +68,13 @@ export function ExecutionSummary({ run }: { run: LiveChatRunRecord | null }): JS
         position="right"
         size={420}
         zIndex={800}
-        title="Execution trace"
+        title="运行过程"
       >
         <Stack gap="md">
           <div>
             <Text fw={700}>{summary.headline}</Text>
             <Text size="xs" c="dimmed">
-              {summary.completedTaskCount}/{summary.taskCount} completed · {summary.elapsedLabel}
+              已完成 {summary.completedTaskCount}/{summary.taskCount} · {summary.elapsedLabel}
             </Text>
             {summary.errorMessage ? <Text size="sm" c="red" mt="xs">{summary.errorMessage}</Text> : null}
           </div>

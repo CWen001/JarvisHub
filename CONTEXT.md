@@ -13,12 +13,20 @@ The exclusive authority over how work is planned, delegated, executed, retried, 
 _Avoid_: Design authority, second orchestration runtime, kernel-owned Agent loop
 
 **Product Chat Shell**:
-The primary enterprise- and category-specific Product View centered on one dominant Chat timeline. Native supporting capabilities such as assets, history, and Memory open as temporary panels, while the Canvas remains hidden until the user enters the Professional Workspace. The Shell projects Jarvis-owned professional facts and issues commands through Jarvis interfaces while owning only ephemeral presentation state.
-_Avoid_: Multi-category launcher, fixed multi-column dashboard, always-visible asset rail, Canvas-only UI, frontend workflow engine
+The primary enterprise- and category-specific Product View centered on one dominant Chat timeline. A permanent branded top bar and collapsible Project Context Rail provide orientation and entry points, while full assets, Memory, and execution detail open as temporary panels and the Canvas remains hidden until the user enters the Professional Workspace. The Shell projects Jarvis-owned professional facts and issues commands through Jarvis interfaces while owning only ephemeral presentation state.
+_Avoid_: Multi-category launcher, fixed multi-column dashboard, embedded full asset gallery, Canvas-only UI, frontend workflow engine
 
 **Agent Workspace (Product View)**:
-The user-facing Agent Workspace and enterprise-specific projection of Jarvis-owned conversations, tasks, Knowledge Evidence, Artifacts, assets, approvals, and execution state. Native capabilities retain their Jarvis data, behavior, and execution paths while the Product View may change their layout, styling, and entry points. It may own ephemeral presentation choices such as active panels or workspace visibility, but no durable professional design fact. Agent Workspace and Professional Workspace are reciprocal, visually isolated surfaces: the native Canvas and its header are not rendered behind Agent Workspace, even translucently.
-_Avoid_: Pixel-copy requirement, second frontend backend, shadow task state, product-owned asset ledger, duplicate workflow, Canvas ghosting behind Agent Workspace
+The user-facing academy-branded Product View over Jarvis-owned conversations, tasks, Knowledge Evidence, Artifacts, assets, approvals, and execution state. It has its own permanent top bar, collapsible Project Context Rail, Product Timeline, and compact composer, all supplied by the Agent Workspace Projection; native capabilities retain their Jarvis data, behavior, command paths, and persistence. Agent Workspace and Professional Workspace are reciprocal, visually isolated surfaces, and the native Canvas and header are never rendered behind Agent Workspace.
+_Avoid_: Native Chat skin, frontend backend, shadow task state, product-owned asset ledger, duplicate workflow, Canvas ghosting behind Agent Workspace
+
+**Agent Workspace Projection**:
+The read-only deep Module that transforms Jarvis-owned Project, Flow, Session, Chat, Tool, node, asset, approval, and execution facts into the presentation-specific View Model consumed by the Agent Workspace. It may reorganize, merge, label, and progressively disclose those facts to reproduce the enterprise Product View experience, while every user action returns through a native Jarvis command Interface. It owns no durable professional fact, lifecycle, session registry, or inferred completion state; absent authoritative facts remain absent rather than being invented by the Product View.
+_Avoid_: Harness Adapter, frontend backend, copied Jarvis state, shadow Design State, synchronization ledger, latest-Canvas inference, direct DTO rendering
+
+**Project Context Rail**:
+The collapsible navigation and orientation surface beside the Product Chat Shell. Project is its primary authoritative object; the current Flow appears as the design direction and native Chat Sessions appear as subordinate conversations. It may show stable current Artifact references, timeline anchors, asset entry/count, history, and run status through the Agent Workspace Projection, but full asset browsing opens in a temporary panel. Its user-facing labels are Chinese and never expose the underlying Harness brand; on narrow screens it collapses into the permanent branded top bar.
+_Avoid_: Studio-owned project registry, Design State sidebar, embedded asset gallery, latest-Canvas inference, backend product name in user copy
 
 **Execution Summary**:
 The compact, collapsed-by-default projection of a Jarvis run in Agent Workspace. It remains pinned as one status line only while execution is active, then becomes an ordinary scrollable Chat timeline record when completed or failed; detailed Task, Skill, Sub-agent, and Tool traces open temporarily on demand, and Professional Workspace remains native.
@@ -41,8 +49,8 @@ Jarvis's existing asset-library capability presented inside the Product View wit
 _Avoid_: Product-owned asset database, copied gallery, separate upload pipeline, frontend reference ledger
 
 **Current Project Context**:
-The Jarvis-owned Project and current Flow context shared by the Product Chat Shell, Native Asset Center, history, and Professional Workspace. Product launch resumes the most recent Jarvis Project; when none exists, the Product View guides creation through Jarvis's native project path. A temporary history drawer treats Projects as the primary history unit, with multiple Jarvis-native Chat Sessions subordinate to their owning Project; the drawer is closed by default, selecting a Project resumes its most recent Session, and native new-conversation behavior preserves the current Flow. Project identity, membership, lifecycle, conversation identity, and persistence never belong to the Product View.
-_Avoid_: Global unscoped Chat, fixed history rail, one forced lifetime conversation, conversation-first cross-project history, frontend project or session registry, copied metadata
+The Jarvis-owned Project and current Flow context shared by the Product Chat Shell, Native Asset Center, history, and Professional Workspace. Product launch resumes the most recent Jarvis Project; when none exists, the Product View guides creation through Jarvis's native project path. The collapsible Project Context Rail treats Projects as the primary history unit, with Flows as design directions and multiple Jarvis-native Chat Sessions subordinate to their owning Project; selecting a Project resumes its most recent Session, and native new-conversation behavior preserves the current Flow. Project identity, membership, lifecycle, conversation identity, and persistence never belong to the Product View.
+_Avoid_: Global unscoped Chat, one forced lifetime conversation, conversation-first cross-project history, frontend project or session registry, copied metadata
 
 **Vertical Product Fork**:
 An independently branded and deployed product for one enterprise and one professional design category. It tracks Jarvis Core upstream while owning exactly one Product Chat Shell, one Design Kernel, and their integration adapters.
@@ -57,8 +65,8 @@ The small Interface presented by a Vertical Design Extension to Jarvis: one stab
 _Avoid_: Plugin SDK, lifecycle hooks, vertical workflow configuration, speculative optional callbacks
 
 **Vertical Product Host**:
-The category-neutral Jarvis Product View host that consumes one Extension Descriptor and exposes the shared product experience: dominant native Chat, Project and Session navigation, Native Asset Center, Native Artifact Projection, and transition to the complete Professional Workspace. It changes presentation without becoming another Harness or source of durable facts.
-_Avoid_: Watch shell, multi-extension runtime, duplicated Jarvis frontend, extension-owned orchestration
+The category-neutral Product View host that consumes one Extension Descriptor and exposes the shared product experience: a projected Product Timeline, Project/Flow/Session navigation, Native Asset Center entry, Native Artifact Projection, and transition to the complete Professional Workspace. It changes presentation through the Agent Workspace Projection without becoming another Harness or source of durable facts.
+_Avoid_: Watch-only workflow, multi-extension runtime, copied Jarvis state, extension-owned orchestration
 
 **Fixture Extension**:
 A non-production test Adapter satisfying the same three-field Extension Descriptor as the Watch Extension. It proves that the Vertical Product Host and its tests depend only on the Extension Interface and contain no hidden Watch assumptions; it is never exposed as a selectable category or deployed product.

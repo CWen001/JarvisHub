@@ -1,7 +1,7 @@
 import React from 'react'
-import { AppShell, ActionIcon, Group, Box, Button, TextInput, Badge, Text, useMantineColorScheme, Tooltip, Modal, Stack } from '@mantine/core'
+import { AppShell, ActionIcon, Group, Box, Button, TextInput, Badge, Text, Tooltip, Modal, Stack } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
-import { IconBrandGithub, IconMoonStars, IconSun, IconHelpCircle, IconRefresh, IconCamera, IconMessageCircle } from '@tabler/icons-react'
+import { IconBrandGithub, IconHelpCircle, IconRefresh, IconCamera, IconMessageCircle } from '@tabler/icons-react'
 import Canvas from './canvas/Canvas'
 import { sanitizeGraphForCanvas, useRFStore } from './canvas/store'
 import { SnapshotProgressDialog, useSnapshotExport } from './canvas/snapshot/SnapshotProgressDialog'
@@ -150,7 +150,6 @@ function CanvasApp({
   initialSurface?: 'product' | 'canvas'
   productBrand?: VerticalBrand
 }): JSX.Element {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme()
   const addNode = useRFStore((s) => s.addNode)
   const subflowNodeId = useUIStore(s => s.subflowNodeId)
   const closeSubflow = useUIStore(s => s.closeSubflow)
@@ -1018,6 +1017,48 @@ function CanvasApp({
     window.dispatchEvent(new PopStateEvent('popstate'))
   }, [setCurrentProject])
 
+  const createProductFlow = React.useCallback(async (projectId: string) => {
+    const project = projects.find((candidate) => candidate.id === projectId)
+    if (!project) return
+    try {
+      const existing = await listProjectFlows(projectId)
+      const created = await saveProjectFlow({
+        projectId,
+        name: `${project.name} 设计方向 ${existing.length + 1}`,
+        nodes: [],
+        edges: [],
+        allowEmptyGraphOverwrite: true,
+      })
+      const flowId = String(created.id || '').trim()
+      if (!flowId) throw new Error('服务端未返回设计方向 ID')
+      markSkipNextProjectFlowLoad(projectId)
+      useRFStore.setState({ nodes: [], edges: [], nextId: 1, nextGroupId: 1 })
+      useUIStore.getState().setPendingInitialView(null)
+      restoreCreationSession(null)
+      setCurrentProject({ id: projectId, name: project.name })
+      setCurrentFlow({
+        id: flowId,
+        name: created.name,
+        source: 'server',
+        ownerType: normalizeProjectCanvasOwnerType(created.ownerType) || 'project',
+        ownerId: created.ownerId || projectId,
+        updatedAt: created.updatedAt,
+      })
+      setDirty(false)
+      const url = new URL(window.location.href)
+      url.searchParams.set('projectId', projectId)
+      url.searchParams.set('flowId', flowId)
+      window.history.pushState(null, '', url.toString())
+      notifications.show({ title: '已创建新设计方向', message: created.name, color: 'green' })
+    } catch (error: unknown) {
+      notifications.show({
+        title: '创建设计方向失败',
+        message: resolveErrorMessage(error, '请稍后重试。'),
+        color: 'red',
+      })
+    }
+  }, [projects, restoreCreationSession, setCurrentFlow, setCurrentProject, setDirty])
+
   React.useEffect(() => {
     if (typeof document === 'undefined') return
     if (isProductSurface) document.documentElement.dataset.productHost = 'true'
@@ -1149,14 +1190,6 @@ function CanvasApp({
                 </ActionIcon>
               </Tooltip>
               <ActionIcon
-                className="app-theme-toggle"
-                variant="subtle"
-                aria-label={colorScheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-                onClick={() => toggleColorScheme()}
-              >
-                {colorScheme === 'dark' ? <IconSun className="app-theme-toggle-icon" size={18} /> : <IconMoonStars className="app-theme-toggle-icon" size={18} />}
-              </ActionIcon>
-              <ActionIcon
                 className="app-help-toggle"
                 variant="subtle"
                 aria-label={$('帮助')}
@@ -1188,9 +1221,15 @@ function CanvasApp({
             brand={productBrand}
             projects={projects}
             currentProject={currentProject}
+            currentFlow={currentFlow}
             onSelectProject={selectProductProject}
+            onCreateProject={() => spaReplace('/projects')}
+            onCreateFlow={createProductFlow}
             onOpenAssets={() => setActivePanel('gallery')}
-            onOpenProfessionalWorkspace={() => dispatchProductWorkspaceCommand({ type: 'open-canvas' })}
+            onOpenProfessionalWorkspace={(nodeId) => dispatchProductWorkspaceCommand({
+              type: 'open-canvas',
+              ...(nodeId ? { nodeId } : {}),
+            })}
           />
         ) : (
           <AiChatDialog className="app-ai-chat-dialog" surface="native" />
