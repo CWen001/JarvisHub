@@ -595,6 +595,13 @@ export async function persistHostedTaskAssets(options: {
 		const originalUrl = (value.url || "").trim();
 		if (!originalUrl) continue;
 
+		const persistedAssetId =
+			typeof value.assetId === "string" ? value.assetId.trim() : "";
+		if (persistedAssetId && isHostedUrl(originalUrl)) {
+			hosted.push(value);
+			continue;
+		}
+
 		const inlineData = parseBase64DataUrl(originalUrl);
 		const inlineBytes = inlineData ? decodeBase64ToBytes(inlineData.base64) : null;
 		const inlineMimeType =

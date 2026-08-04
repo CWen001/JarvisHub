@@ -70,9 +70,9 @@ The full HUST and d.school lockup is the only multicolor brand asset. Its colors
 
 ### Top bar
 
-- Full institutional lockup on desktop.
+- Use the Design School / d.school HUST lockup without the separate circular university crest; the crest becomes illegible at product-header size.
 - Watch Design Studio appears once as a compact subtitle.
-- Narrow screens use the compact lockup derived from the same source.
+- Narrow screens use a compact version of the same crest-free Design School lockup.
 - Current Project is quiet metadata, not a competing title.
 
 ### Project Context Rail

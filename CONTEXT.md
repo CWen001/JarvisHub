@@ -32,6 +32,10 @@ _Avoid_: Ad-hoc CSS theme, Porsche component dependency, marketing-site imitatio
 The single deep Module through which Agent Workspace receives immutable Product View snapshots, subscribes to authoritative changes, and dispatches Product intents to native commands. Production and in-memory Adapters hide Jarvis Project, Flow, Session, Chat, Tool, node, asset, approval, recovery, and execution differences behind the same Interface; the Runtime owns no durable professional fact or lifecycle state.
 _Avoid_: Harness Adapter, frontend backend, public Chat Adapter, public Asset Adapter, copied Jarvis state, shadow Design State, synchronization ledger, direct Store or DTO access
 
+**Interaction Continuity**:
+The product promise that Agent Workspace remains a complete primary work surface while simplifying presentation: requests receive immediate acknowledgement, authoritative execution remains visibly alive, reference media can accompany the conversation, and completed results arrive without requiring a switch to Professional Workspace. Both Workspaces expose the same underlying professional capabilities and facts while retaining distinct presentation systems.
+_Avoid_: Visual parity, duplicated execution, Agent preview mode, switch-to-Professional workaround, silent background work
+
 **Product Timeline View**:
 The Agent Workspace-owned Chat-first rendering of projected Conversation, Decision, Execution, Artifact, and Notice entries. It controls Product View hierarchy and density without embedding native Chat presentation, while Professional Workspace retains the complete native Chat and execution UI.
 _Avoid_: Native Chat skin, raw Tool stream, full Skill payload, duplicated message state, Professional Workspace customization
@@ -41,8 +45,20 @@ The collapsible navigation and orientation surface beside the Product Chat Shell
 _Avoid_: Studio-owned project registry, Design State sidebar, embedded asset gallery, latest-Canvas inference, backend product name in user copy
 
 **Compact Execution Row**:
-The single-line, collapsed-by-default Product Timeline projection of an authoritative Jarvis run. While work is active, its current activity advances in place from authoritative run events alongside stable progress and duration; completion condenses to a result summary and failure remains visible. It may expand only into a curated user-readable summary of capabilities used, completed work, progress, duration, and failure reasons; raw Skill text, Tool input/output, payloads, Agent traces, complete native execution detail, and Workspace navigation remain outside the row.
-_Avoid_: Timed carousel, marquee, raw Skill dump, native Trace clone, always-expanded execution, permanently pinned completed run, hidden failure, replacement execution state, Professional Workspace shortcut
+The Product Timeline projection of one authoritative Jarvis run, whose primary promise is **predictable, truthful progress** rather than complete process exposure. While active, it opens by default to show the main Semantic Work Item, its subordinate items, Actionable Execution Statuses, stable progress when a trustworthy total exists, and elapsed duration. Completion condenses it to a one-line result summary that remains manually expandable; failure and states requiring user action remain visible. Raw Skill text, Tool input/output, payloads, Agent traces, complete native execution detail, and Workspace navigation remain outside the row.
+_Avoid_: Timed carousel, marquee, reassuring fiction, raw Skill dump, native Trace clone, always-expanded history, permanently pinned completed run, hidden failure, replacement execution state, Professional Workspace shortcut
+
+**Semantic Work Item**:
+A user-goal-oriented projection of authoritative execution facts within a Compact Execution Row. Each user request produces one stable main Semantic Work Item. Jarvis-native Todo content and status are the primary source of subordinate items; authoritative run, Media, error, and timing facts supplement their presentation. Their identity and labels describe meaningful work toward the requested outcome rather than the Agent, Sub-agent, Skill, Tool, or orchestration structure that performed it. When no semantic Todo facts exist, the Runtime exposes only a truthful coarse current activity and never reconstructs a task tree from Tool calls.
+_Avoid_: Changing main-task identity, Agent role as task name, Skill row, Tool call row, one-to-one Trace projection, model-generated progress, invented task, implementation-shaped hierarchy
+
+**Actionable Execution Status**:
+The user-facing state of a Jarvis run or Semantic Work Item, expressed as one of: queued, active, awaiting user input, recovering, partially completed, completed, failed, or cancelled. Each status communicates whether work is advancing, whether the user must act, and whether a usable result exists; status is never inferred from elapsed time or color alone.
+_Avoid_: Generic loading state, success-or-failure-only model, silent retry, ambiguous pause, color-only status
+
+**Product Decision Card**:
+The Product Timeline interaction for a professional decision or other required user input. While a run awaits input, its related Semantic Work Item carries the awaiting-user Actionable Execution Status and an adjacent Product Decision Card holds the question and actions. After the user answers, the card condenses to the accepted choice while the run resumes; the question is never buried inside execution detail or reduced to an ordinary assistant message.
+_Avoid_: Question inside task tree, raw `ask_user` trace, detached waiting status, disappearing answer, frontend-owned professional decision
 
 **Product Chat Composer**:
 The compact, auto-growing request input in Agent Workspace, with bounded height and one consolidated action row for attachments, Skills, and sending. Its unsent text, selected Skill, and stable pending reference attachments follow the current Chat Session across the Reciprocal Workspace Switch, while focus, menus, sizing, scroll, and other presentation state remain local to each Workspace. It is a Product Chat Shell presentation and does not replace or restyle the native Chat retained in Professional Workspace.

@@ -98,6 +98,8 @@ describe('Agent Workspace Projection', () => {
         }],
       },
       run: { status: 'running', label: '正在生成视觉成果' },
+      timeline: [],
+      composer: { draft: '', pendingReferences: [], sending: false, ready: true, selectedSkill: null, availableSkills: [] },
     })
   })
 
@@ -121,6 +123,9 @@ describe('Agent Workspace Projection', () => {
     expect(Object.isFrozen(view.projects)).toBe(true)
     expect(Object.isFrozen(view.projects[0]?.sessions)).toBe(true)
     expect(Object.isFrozen(view.assets.current)).toBe(true)
+    expect(Object.isFrozen(view.timeline)).toBe(true)
+    expect(Object.isFrozen(view.composer)).toBe(true)
+    expect(Object.isFrozen(view.composer.pendingReferences)).toBe(true)
   })
 
   it.each([
@@ -138,6 +143,13 @@ describe('Agent Workspace Projection', () => {
     [{ type: 'open-assets' }, { type: 'assets.open' }],
     [{ type: 'asset.modify', asset: projectedAsset }, { type: 'asset.modify', asset: projectedAsset }],
     [{ type: 'asset.reference', asset: projectedAsset }, { type: 'asset.reference', asset: projectedAsset }],
+    [{ type: 'chat.set-draft', text: '新设计要求' }, { type: 'chat.draft.set', text: '新设计要求' }],
+    [{ type: 'chat.submit' }, { type: 'chat.request.submit' }],
+    [{ type: 'chat.interrupt' }, { type: 'chat.request.interrupt' }],
+    [{ type: 'chat.attach-files', files: [] }, { type: 'chat.references.upload', files: [] }],
+    [{ type: 'chat.remove-reference', url: 'https://cdn.example/ref.png' }, { type: 'chat.reference.remove', url: 'https://cdn.example/ref.png' }],
+    [{ type: 'decision.answer', option: '按此策略生成' }, { type: 'chat.decision.answer', option: '按此策略生成' }],
+    [{ type: 'chat.select-skill', skill: { id: 'skill-1', key: 'watch', name: '手表设计' } }, { type: 'chat.skill.select', skill: { id: 'skill-1', key: 'watch', name: '手表设计' } }],
     [{ type: 'open-professional-workspace' }, { type: 'workspace.open-professional' }],
     [{ type: 'open-professional-workspace', nodeId: 'node-1' }, { type: 'workspace.open-professional', nodeId: 'node-1' }],
   ] as const)('maps Product View intent %o to one native command', (intent, command) => {

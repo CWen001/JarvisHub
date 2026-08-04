@@ -1,14 +1,12 @@
 import React from 'react'
-import { listServerAssets, type ProjectDto, type ServerAssetDto } from '../api/server'
+import { listRuntimeAgentSkills, listServerAssets, type ProjectDto, type RuntimeAgentSkillDto, type ServerAssetDto } from '../api/server'
 import { useRFStore } from '../canvas/store'
 import { collectCanvasAssets } from '../ui/canvasAssetModel'
 import { peekAiChatTabsState } from '../ui/chat/chatTabs'
 import { useLiveChatRunStore } from '../ui/chat/liveChatRunStore'
-import { dispatchNativeArtifactChatCommand } from '../ui/chat/NativeArtifactCard'
-import {
-  dispatchNativeChatNavigation,
-  NATIVE_CHAT_NAVIGATION_CHANGED,
-} from './nativeChatNavigation'
+import { createEmptyChatTabRuntime, useAiChatRuntimeStore, type ChatMessage } from '../ui/chat/chatRuntimeStore'
+import { resolveSuccessfulToolSnapshotArtifacts } from '../ui/chat/mediaResultArtifactProjection'
+import { NATIVE_CHAT_NAVIGATION_CHANGED } from './nativeChatNavigation'
 import {
   projectAgentWorkspace,
   type AgentWorkspaceAssetFact,
@@ -22,6 +20,11 @@ import {
   type AgentWorkspaceRuntime,
   type AgentWorkspaceRuntimeAdapter,
 } from './agentWorkspaceRuntime'
+import {
+  executeAgentWorkspaceChatCommand,
+  isAgentWorkspaceChatIntegrationReady,
+  subscribeAgentWorkspaceChatIntegration,
+} from './agentWorkspaceChatIntegration'
 
 type CurrentProject = Readonly<{ id?: string | null; name: string }> | null
 type CurrentFlow = Readonly<{ id?: string | null; name?: string | null; updatedAt?: string | null }> | null
@@ -87,17 +90,124 @@ function projectServerAssetFact(asset: ServerAssetDto): AgentWorkspaceAssetFact 
   }
 }
 
-function projectRunFact(status: 'running' | 'succeeded' | 'failed' | undefined): AgentWorkspaceRunFact {
-  if (status === 'running') return { status, label: '设计任务正在进行' }
-  if (status === 'failed') return { status, label: '本轮设计需要处理' }
-  if (status === 'succeeded') return { status, label: '本轮设计已经完成' }
-  return { status: 'idle', label: '等待你的设计意图' }
+function projectRunFact(
+  run: ReturnType<typeof useLiveChatRunStore.getState>['activeRun'],
+  latestMessage?: ChatMessage,
+): AgentWorkspaceRunFact {
+  if (!run) return { status: 'idle', label: '等待你的设计意图' }
+  const hasUsableArtifact = (latestMessage?.assets ?? []).some((asset) => (
+    Boolean(String(asset.nodeId || '').trim())
+    && Boolean(String(asset.url || '').trim())
+    && Boolean(String(asset.assetId || asset.assetRefId || '').trim())
+  ))
+  const partial = latestMessage?.turnVerdict?.status === 'partial'
+    || (run.status === 'failed' && hasUsableArtifact)
+  if (partial) {
+    return {
+      status: 'partial',
+      label: '结果已生成，后续步骤部分完成',
+      startedAt: run.startedAt,
+      updatedAt: run.updatedAt,
+      todoItems: run.todoItems,
+    }
+  }
+  const mediaCalls = Object.values(run.toolCallsByTurn).flat().filter((call) => call.media)
+  const providerComplete = mediaCalls.some((call) => call.media?.status === 'succeeded' && call.media.pending !== true)
+  if (providerComplete && !hasUsableArtifact && run.status !== 'failed') {
+    return {
+      status: 'running',
+      label: '图片已生成，正在保存到项目',
+      startedAt: run.startedAt,
+      updatedAt: run.updatedAt,
+      todoItems: run.todoItems,
+    }
+  }
+  if (run.status === 'running') {
+    return {
+      status: 'running',
+      label: '设计任务正在进行',
+      startedAt: run.startedAt,
+      updatedAt: run.updatedAt,
+      todoItems: run.todoItems,
+    }
+  }
+  if (run.status === 'failed') return { status: 'failed', label: '本轮设计需要处理', startedAt: run.startedAt, updatedAt: run.updatedAt, todoItems: run.todoItems }
+  return { status: 'succeeded', label: '本轮设计已经完成', startedAt: run.startedAt, updatedAt: run.updatedAt, todoItems: run.todoItems }
+}
+
+function projectTimelineAsset(asset: NonNullable<ChatMessage['assets']>[number]) {
+  const url = String(asset.url || '').trim()
+  if (!url) return null
+  const rawKind = String(asset.mediaType || '').trim()
+  return {
+    title: String(asset.title || '').trim() || (rawKind === 'video' ? '生成视频' : '生成图片'),
+    kind: rawKind === 'video' ? 'video' as const : 'image' as const,
+    url,
+    ...(asset.thumbnailUrl ? { thumbnailUrl: asset.thumbnailUrl } : {}),
+    ...(asset.nodeId ? { nodeId: asset.nodeId } : {}),
+    ...(asset.assetId ? { assetId: asset.assetId } : {}),
+    ...(asset.assetRefId ? { assetRefId: asset.assetRefId } : {}),
+  }
+}
+
+function projectTimelineMessage(message: ChatMessage, nodes: readonly unknown[]) {
+  const projected = message.toolCallSnapshot
+    ? resolveSuccessfulToolSnapshotArtifacts({
+        toolCallsByTurn: message.toolCallSnapshot.record.toolCallsByTurn,
+        nodes,
+      })
+    : []
+  const candidates = [...projected, ...(message.assets ?? [])]
+  const seen = new Set<string>()
+  const assets = candidates.map(projectTimelineAsset).filter((asset): asset is NonNullable<typeof asset> => {
+    if (!asset) return false
+    const identity = asset.nodeId || asset.assetId || asset.assetRefId || asset.url
+    if (seen.has(identity)) return false
+    seen.add(identity)
+    return true
+  })
+  const decision = message.askUserPrompt ? {
+    toolCallId: message.askUserPrompt.toolCallId,
+    question: message.askUserPrompt.question,
+    options: message.askUserPrompt.options,
+    awaitingReply: message.askUserPrompt.awaitingReply,
+  } : null
+  return {
+    id: message.id,
+    role: message.role,
+    content: message.content,
+    timestamp: message.ts,
+    ...(message.phase ? { phase: message.phase } : {}),
+    ...(message.kind ? { result: message.turnVerdict?.status === 'partial' ? 'partial' as const : message.kind } : {}),
+    ...(assets.length ? { assets } : {}),
+    ...(decision ? { decision } : {}),
+  }
+}
+
+function projectTimeline(messages: readonly ChatMessage[], nodes: readonly unknown[]) {
+  return messages.map((message, index) => {
+    const entry = projectTimelineMessage(message, nodes)
+    if (!entry.decision || entry.decision.awaitingReply) return entry
+    const nextUser = messages.slice(index + 1).find((candidate) => candidate.role === 'user')
+    return nextUser ? {
+      ...entry,
+      decision: { ...entry.decision, selectedOption: nextUser.content },
+    } : entry
+  })
 }
 
 function useAuthoritativeAgentWorkspaceFacts(input: AuthoritativeInput): AgentWorkspaceFacts {
   const nodes = useRFStore((state) => state.nodes)
   const runsBySessionKey = useLiveChatRunStore((state) => state.runsBySessionKey)
+  const tabRuntimeById = useAiChatRuntimeStore((state) => state.tabRuntimeById)
+  const chatReady = React.useSyncExternalStore(
+    subscribeAgentWorkspaceChatIntegration,
+    isAgentWorkspaceChatIntegrationReady,
+    isAgentWorkspaceChatIntegrationReady,
+  )
+  const shouldRefreshAssetsContinuously = Object.values(runsBySessionKey).some((run) => run.status === 'running')
   const [serverAssets, setServerAssets] = React.useState<ServerAssetDto[]>([])
+  const [runtimeSkills, setRuntimeSkills] = React.useState<RuntimeAgentSkillDto[]>([])
   const [serverAssetState, setServerAssetState] = React.useState<Readonly<{
     status: 'loading' | 'ready' | 'error'
     message: string
@@ -111,20 +221,44 @@ function useAuthoritativeAgentWorkspaceFacts(input: AuthoritativeInput): AgentWo
       return
     }
     let cancelled = false
-    setServerAssetState({ status: 'loading', message: '' })
-    void listServerAssets({ limit: 80 })
-      .then((result) => {
+    let firstRead = true
+    const refresh = async () => {
+      if (firstRead) setServerAssetState({ status: 'loading', message: '' })
+      try {
+        const projectId = String(input.currentProject?.id || '').trim()
+        const result = await listServerAssets({ ...(projectId ? { projectId } : {}), limit: 80 })
         if (cancelled) return
         setServerAssets(result.items)
         setServerAssetState({ status: 'ready', message: '' })
-      })
-      .catch(() => {
+      } catch {
         if (cancelled) return
-        setServerAssets([])
+        if (firstRead) setServerAssets([])
         setServerAssetState({ status: 'error', message: '无法读取项目资产，请稍后重试。' })
-      })
+      } finally {
+        firstRead = false
+      }
+    }
+    void refresh()
+    const intervalId = shouldRefreshAssetsContinuously
+      ? window.setInterval(() => void refresh(), 5_000)
+      : null
+    return () => {
+      cancelled = true
+      if (intervalId !== null) window.clearInterval(intervalId)
+    }
+  }, [input.currentProject?.id, input.enabled, shouldRefreshAssetsContinuously])
+
+  React.useEffect(() => {
+    if (input.enabled === false) {
+      setRuntimeSkills([])
+      return
+    }
+    let cancelled = false
+    void listRuntimeAgentSkills()
+      .then((result) => { if (!cancelled) setRuntimeSkills(result.skills) })
+      .catch(() => { if (!cancelled) setRuntimeSkills([]) })
     return () => { cancelled = true }
-  }, [input.currentProject?.id, input.enabled])
+  }, [input.enabled])
 
   React.useEffect(() => {
     const refresh = () => refreshNavigation()
@@ -184,7 +318,75 @@ function useAuthoritativeAgentWorkspaceFacts(input: AuthoritativeInput): AgentWo
         && (!currentFlowId || run.flowId === currentFlowId)
         && (!currentSessionKey || run.sessionKey === currentSessionKey)
       ))
-      .sort((left, right) => right.updatedAt - left.updatedAt)[0]
+      .sort((left, right) => right.updatedAt - left.updatedAt)[0] ?? null
+    const tabRuntime = currentSessionId
+      ? tabRuntimeById[currentSessionId] ?? createEmptyChatTabRuntime()
+      : createEmptyChatTabRuntime()
+    const baseTimeline = projectTimeline(tabRuntime.messages, nodes)
+    const terminalMediaNodeIds = new Set(
+      currentRun
+        ? Object.values(currentRun.toolCallsByTurn)
+            .flat()
+            .map((call) => call.media)
+            .filter((media) => media?.status === 'succeeded' && media.pending !== true && Boolean(media.nodeId))
+            .map((media) => media!.nodeId)
+        : [],
+    )
+    const deliveredMediaAssets = assets
+      .filter((asset) => (
+        terminalMediaNodeIds.has(asset.nodeId)
+        && asset.status === 'success'
+        && Boolean(asset.nodeId && asset.url && (asset.assetId || asset.assetRefId))
+      ))
+      .map((asset) => ({
+        title: asset.title,
+        kind: asset.kind,
+        url: asset.url,
+        ...(asset.thumbnailUrl ? { thumbnailUrl: asset.thumbnailUrl } : {}),
+        nodeId: asset.nodeId,
+        ...(asset.assetId ? { assetId: asset.assetId } : {}),
+        ...(asset.assetRefId ? { assetRefId: asset.assetRefId } : {}),
+      }))
+    let latestAssistantIndex = currentRun?.assistantMessageId
+      ? baseTimeline.findIndex((entry) => entry.id === currentRun.assistantMessageId)
+      : -1
+    if (latestAssistantIndex < 0) {
+      for (let index = baseTimeline.length - 1; index >= 0; index -= 1) {
+        if (baseTimeline[index]?.role === 'assistant') {
+          latestAssistantIndex = index
+          break
+        }
+      }
+    }
+    const timeline = deliveredMediaAssets.length > 0 && latestAssistantIndex >= 0
+      ? baseTimeline.map((entry, index) => index === latestAssistantIndex
+          ? { ...entry, assets: [...deliveredMediaAssets, ...(entry.assets ?? [])].filter((asset, assetIndex, all) => all.findIndex((candidate) => (candidate.nodeId || candidate.url) === (asset.nodeId || asset.url)) === assetIndex) }
+          : entry)
+      : baseTimeline
+    const latestAssistant = [...tabRuntime.messages].reverse().find((message) => message.role === 'assistant')
+    const latestTimelineAssistant = [...timeline].reverse().find((entry) => entry.role === 'assistant')
+    const latestAssistantForRun = latestAssistant
+      ? { ...latestAssistant, assets: latestTimelineAssistant?.assets ? [...latestTimelineAssistant.assets] : latestAssistant.assets }
+      : undefined
+    const pendingReferences = [
+      ...tabRuntime.manualReferenceImages.map((url) => {
+        const metadata = tabRuntime.uploadedReferenceAssetMeta[url]
+        return {
+          kind: 'image' as const,
+          url,
+          label: metadata?.name || '参考图片',
+          ...(metadata?.assetId ? { assetId: metadata.assetId } : {}),
+          ...(metadata?.assetRefId ? { assetRefId: metadata.assetRefId } : {}),
+        }
+      }),
+      ...(tabRuntime.manualReferenceVideos ?? []).map((item) => ({
+        kind: 'video' as const,
+        url: item.url,
+        label: item.label || '参考视频',
+        ...(item.thumbnailUrl ? { thumbnailUrl: item.thumbnailUrl } : {}),
+        ...(item.nodeId ? { nodeId: item.nodeId } : {}),
+      })),
+    ]
 
     return {
       projects: input.projects,
@@ -195,9 +397,23 @@ function useAuthoritativeAgentWorkspaceFacts(input: AuthoritativeInput): AgentWo
       assets,
       assetsState: serverAssetState.status,
       assetsErrorMessage: serverAssetState.message,
-      run: projectRunFact(currentRun?.status),
+      run: projectRunFact(currentRun, latestAssistantForRun),
+      timeline,
+      composer: {
+        draft: tabRuntime.draft,
+        pendingReferences,
+        sending: currentRun?.status === 'running',
+        ready: chatReady,
+        selectedSkill: tabRuntime.activeSkill ? {
+          id: tabRuntime.activeSkill.id,
+          key: tabRuntime.activeSkill.key,
+          name: tabRuntime.activeSkill.name,
+        } : null,
+        availableSkills: runtimeSkills.map((skill) => ({ id: skill.id, key: skill.key, name: skill.name })),
+        ...(tabRuntime.historyLoadError ? { errorMessage: tabRuntime.historyLoadError } : {}),
+      },
     }
-  }, [input.currentFlow, input.currentProject?.id, input.projects, nodes, runsBySessionKey, serverAssets, serverAssetState])
+  }, [chatReady, input.currentFlow, input.currentProject?.id, input.projects, nodes, runsBySessionKey, runtimeSkills, serverAssets, serverAssetState, tabRuntimeById])
 }
 
 export function useAuthoritativeAgentWorkspaceViewModel(input: AuthoritativeInput): AgentWorkspaceViewModel {
@@ -233,7 +449,9 @@ export function useAuthoritativeAgentWorkspaceRuntime(
         if (command.type === 'chat.navigate') {
           const project = current.projects.find((candidate) => candidate.id === command.command.projectId)
           if (project && project.id !== String(current.currentProject?.id || '')) current.onSelectProject(project)
-          dispatchNativeChatNavigation(command.command)
+          await executeAgentWorkspaceChatCommand(command.command.type === 'new-session'
+            ? { type: 'session.create', projectId: command.command.projectId }
+            : { type: 'session.select', projectId: command.command.projectId, sessionId: command.command.sessionId })
           return
         }
         if (command.type === 'flow.create') {
@@ -263,10 +481,47 @@ export function useAuthoritativeAgentWorkspaceRuntime(
           return
         }
         if (command.type === 'asset.modify' || command.type === 'asset.reference') {
-          dispatchNativeArtifactChatCommand({
-            type: command.type === 'asset.modify' ? 'modify' : 'reference',
-            asset: command.asset,
+          await executeAgentWorkspaceChatCommand({
+            type: 'reference.add',
+            reference: {
+              kind: command.asset.kind,
+              url: command.asset.url,
+              ...(command.asset.thumbnailUrl ? { thumbnailUrl: command.asset.thumbnailUrl } : {}),
+              label: command.asset.title,
+              ...(command.asset.nodeId ? { nodeId: command.asset.nodeId } : {}),
+              ...(command.asset.assetId ? { assetId: command.asset.assetId } : {}),
+              ...(command.asset.assetRefId ? { assetRefId: command.asset.assetRefId } : {}),
+            },
+            continuation: command.type === 'asset.modify' ? 'modify' : 'reference',
           })
+          return
+        }
+        if (command.type === 'chat.draft.set') {
+          await executeAgentWorkspaceChatCommand({ type: 'draft.set', text: command.text })
+          return
+        }
+        if (command.type === 'chat.request.submit') {
+          await executeAgentWorkspaceChatCommand({ type: 'request.submit' })
+          return
+        }
+        if (command.type === 'chat.request.interrupt') {
+          await executeAgentWorkspaceChatCommand({ type: 'request.interrupt' })
+          return
+        }
+        if (command.type === 'chat.references.upload') {
+          await executeAgentWorkspaceChatCommand({ type: 'references.upload', files: command.files })
+          return
+        }
+        if (command.type === 'chat.reference.remove') {
+          await executeAgentWorkspaceChatCommand({ type: 'reference.remove', url: command.url })
+          return
+        }
+        if (command.type === 'chat.decision.answer') {
+          await executeAgentWorkspaceChatCommand({ type: 'decision.answer', option: command.option })
+          return
+        }
+        if (command.type === 'chat.skill.select') {
+          await executeAgentWorkspaceChatCommand({ type: 'skill.select', skill: command.skill })
           return
         }
         current.onOpenProfessionalWorkspace(command.nodeId)

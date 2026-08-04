@@ -62,7 +62,8 @@ import {
 import {
   buildRequiredSkillsForChat,
   buildSelectedImageAssetInputs,
-	buildStyleReferenceTranscriptAsset,
+  buildStyleReferenceTranscriptAsset,
+  resolveCanvasSelectionPolicy,
   resolveChatRequestExecution,
   selectChatRuntimeSkillsForMenu,
   type ChatAssetInput,
@@ -92,11 +93,7 @@ import {
   NATIVE_ARTIFACT_CHAT_COMMAND,
   type NativeArtifactChatCommand,
 } from './NativeArtifactCard'
-import { CompactExecutionSummary } from '../../product-host/ExecutionSummary'
-import { useAgentWorkspaceRuntime } from '../../product-host/agentWorkspaceRuntimeContext'
-import { resolvePersistedExecutionSummary } from './executionSummaryModel'
-import type { NativeArtifactCardProjection } from './nativeArtifactProjection'
-import type { ArtifactPreviewAction } from '../shared/ArtifactPreview'
+import { registerAgentWorkspaceChatIntegration } from '../../product-host/agentWorkspaceChatIntegration'
 import { useTimelineAutoFollow, type TimelineAutoFollowResumeReason } from './timelineAutoFollow'
 import {
   addAiChatTab,
@@ -139,7 +136,6 @@ import {
 import { AskUserPendingCard } from './AskUserPendingCard'
 import { buildMergedMessageGroups } from './mergeAskUserGroups'
 import { SubagentProgressStrip } from './SubagentProgressStrip'
-import { ExecutionSummary } from '../../product-host/ExecutionSummary'
 import {
   resolveSuccessfulMediaResultArtifact,
   resolveSuccessfulToolSnapshotArtifacts,
@@ -2152,100 +2148,6 @@ function useVisibleAssistantAssets(
   }, [canvasNodes, message.assets, message.phase, message.role, message.toolCallSnapshot, projectArtifacts])
 }
 
-type ProductTimelineGroup = import('./mergeAskUserGroups').MergedMessageGroup
-
-function PersistedCompactExecution({ message }: { message: ChatMessage }): JSX.Element | null {
-  const summary = React.useMemo(() => {
-    const snapshot = message.toolCallSnapshot?.record.toolCallsByTurn
-    return snapshot ? resolvePersistedExecutionSummary(snapshot) : null
-  }, [message.toolCallSnapshot])
-  return summary ? <CompactExecutionSummary summary={summary} identity={message.id} /> : null
-}
-
-export function ProductTimelineEntry({
-  group,
-  onRetry,
-}: {
-  group: ProductTimelineGroup
-  onRetry?: (messageId: string) => void
-}): JSX.Element {
-  const agentWorkspaceRuntime = useAgentWorkspaceRuntime()
-  const message = group.kind === 'single' ? group.message : group.continuation
-  const visibleAssets = useVisibleAssistantAssets(message, true)
-  const onProductArtifactAction = React.useCallback((
-    action: ArtifactPreviewAction,
-    artifact: NativeArtifactCardProjection,
-  ) => {
-    if (!agentWorkspaceRuntime) return
-    const projectedAsset = {
-      nodeId: artifact.nodeId,
-      title: artifact.title,
-      kind: artifact.mediaType,
-      url: artifact.url,
-      thumbnailUrl: artifact.previewUrl,
-      ...(artifact.assetId ? { assetId: artifact.assetId } : {}),
-      ...(artifact.assetRefId ? { assetRefId: artifact.assetRefId } : {}),
-      scope: 'canvas' as const,
-    }
-    if (action === 'modify') void agentWorkspaceRuntime.dispatch({ type: 'asset.modify', asset: projectedAsset })
-    if (action === 'reference') void agentWorkspaceRuntime.dispatch({ type: 'asset.reference', asset: projectedAsset })
-    if (action === 'open-node') {
-      void agentWorkspaceRuntime.dispatch({ type: 'open-professional-workspace', nodeId: artifact.nodeId })
-    }
-  }, [agentWorkspaceRuntime])
-  const { markdownText } = React.useMemo(
-    () => extractLatestTodoBlock(message.content),
-    [message.content],
-  )
-  const isUser = group.kind === 'single' && message.role === 'user'
-  const failed = message.kind === 'error' || message.turnVerdict?.status === 'failed'
-
-  return (
-    <article
-      className={`product-timeline-entry product-timeline-entry--${isUser ? 'user' : 'assistant'}`}
-      data-entry-kind={group.kind === 'ask-user-merged' ? 'decision' : message.kind || 'message'}
-    >
-      <header className="product-timeline-entry__meta">
-        <strong>{isUser ? '你' : '设计顾问'}</strong>
-        <time>{group.kind === 'ask-user-merged' ? group.askMessage.ts : message.ts}</time>
-      </header>
-      {group.kind === 'ask-user-merged' ? (
-        <section className="product-timeline-decision-history" aria-label="已完成的设计决策">
-          <span>设计决策</span>
-          <p>{group.askMessage.askUserPrompt?.question || '已确认设计方向'}</p>
-          <div><strong>你的选择</strong><span>{group.userReply.content}</span></div>
-        </section>
-      ) : null}
-      {message.role === 'assistant' ? <PersistedCompactExecution message={message} /> : null}
-      {String(markdownText || '').trim() ? (
-        <div className="product-timeline-entry__content">
-          <ChatMarkdownContent markdownText={markdownText} />
-        </div>
-      ) : null}
-      {message.turnVerdict?.status === 'partial' ? (
-        <div className="product-timeline-entry__notice is-partial">本轮部分完成，请查看结果与提示。</div>
-      ) : null}
-      {failed ? (
-        <div className="product-timeline-entry__notice is-failed">
-          <span>{message.turnVerdict?.reasons?.[0] || '本轮未能完成。'}</span>
-          {onRetry ? <Button size="compact-xs" variant="subtle" onClick={() => onRetry(message.id)}>重试</Button> : null}
-        </div>
-      ) : null}
-      {visibleAssets.length > 0 ? (
-        <div className="product-timeline-entry__artifacts">
-          {visibleAssets.map((asset, index) => (
-            <NativeArtifactCard
-              key={`${message.id}:artifact:${asset.nodeId || index}`}
-              asset={asset}
-              onProductAction={agentWorkspaceRuntime ? onProductArtifactAction : undefined}
-            />
-          ))}
-        </div>
-      ) : null}
-    </article>
-  )
-}
-
 type MergedAskUserBubbleProps = {
   group: Extract<import('./mergeAskUserGroups').MergedMessageGroup, { kind: 'ask-user-merged' }>
   activeRun?: LiveChatRunRecord | null
@@ -2695,9 +2597,11 @@ type AiChatSurface = 'native' | 'agent-workspace'
 function ChatRuntimeController({
   className,
   surface = 'native',
+  headless = false,
 }: {
   className?: string
   surface?: AiChatSurface
+  headless?: boolean
 }): JSX.Element | null {
   const productMode = surface === 'agent-workspace'
   const cardRef = React.useRef<HTMLDivElement | null>(null)
@@ -3828,16 +3732,16 @@ function ChatRuntimeController({
   }, [])
 
   const visibleAutoReferenceImages = React.useMemo(() => {
-    if (!autoReferenceImages.length) return []
+    if (productMode || !autoReferenceImages.length) return []
     const hidden = new Set(hiddenAutoReferenceUrls)
     return autoReferenceImages.filter((url) => !hidden.has(url))
-  }, [autoReferenceImages, hiddenAutoReferenceUrls])
+  }, [autoReferenceImages, hiddenAutoReferenceUrls, productMode])
 
   const visibleAutoReferenceVideos = React.useMemo(() => {
-    if (!autoReferenceVideos.length) return []
+    if (productMode || !autoReferenceVideos.length) return []
     const hidden = new Set(hiddenAutoReferenceVideoUrls)
     return autoReferenceVideos.filter((item) => !hidden.has(item.url))
-  }, [autoReferenceVideos, hiddenAutoReferenceVideoUrls])
+  }, [autoReferenceVideos, hiddenAutoReferenceVideoUrls, productMode])
 
   const referenceImages = React.useMemo(() => {
     const merged: string[] = []
@@ -4137,7 +4041,7 @@ function ChatRuntimeController({
     }
   }, [addReferenceImagesSafe, refsLoading])
 
-  const onUploadReferenceFiles = React.useCallback(async (files: FileList | null) => {
+  const onUploadReferenceFiles = React.useCallback(async (files: FileList | readonly File[] | null) => {
     const list = files ? Array.from(files) : []
     if (!list.length) return
 
@@ -4448,12 +4352,12 @@ function ChatRuntimeController({
     if (pendingAskUser) return null
     if (normalizedDraft) return null
     return buildImplicitChatRequest({
-      selectedCanvasNodeContext,
+      selectedCanvasNodeContext: productMode ? null : selectedCanvasNodeContext,
       referenceMediaCount: referenceMedia.length,
       hasTargetImage: hasExplicitTargetImage,
       activeSkillName: activeSkillContextName,
     })
-  }, [activeSkillContextName, hasExplicitTargetImage, normalizedDraft, pendingAskUser, referenceMedia.length, selectedCanvasNodeContext])
+  }, [activeSkillContextName, hasExplicitTargetImage, normalizedDraft, pendingAskUser, productMode, referenceMedia.length, selectedCanvasNodeContext])
   const canSendMessage = isAwaitingAskUserReply
     ? Boolean(pendingAskUser?.selectedOption || normalizedDraft)
     : Boolean(normalizedDraft || implicitSendRequest)
@@ -4483,7 +4387,7 @@ function ChatRuntimeController({
       return
     }
     const preSendSave = (window as Window & { silentSaveProject?: () => Promise<void> }).silentSaveProject
-    if (typeof preSendSave === 'function') {
+    if (!productMode && typeof preSendSave === 'function') {
       try { await preSendSave() } catch {}
     }
     void (async () => {
@@ -4507,15 +4411,12 @@ function ChatRuntimeController({
     const explicitAttachCanvasContext = options?.attachCanvasContext === true
     const targetEffectUrl = String(replicateTargetImage || '').trim()
     const selectedReplicateMode = Boolean(targetEffectUrl)
-    const hasCanvasScope =
-      Boolean(currentProjectId) ||
-      Boolean(currentFlowId) ||
-      Boolean(selectedCanvasNodeContext?.nodeId)
-    const shouldAttachCanvasContext =
-      explicitAttachCanvasContext ||
-      (!pendingAskUser && !explicitText && Boolean(implicitSendRequest)) ||
-      selectedReplicateMode ||
-      hasCanvasScope
+    const canvasSelectionPolicy = resolveCanvasSelectionPolicy({
+      surface,
+      explicitAttachCanvasContext,
+      hasImplicitRequest: !pendingAskUser && !explicitText && Boolean(implicitSendRequest),
+      hasReplicateTarget: selectedReplicateMode,
+    })
     // Keep chat send path deterministic: project text material hints should not block
     // or alter reference collection unless an explicit isolation rule is introduced.
     const shouldUseProjectTextIsolation = false
@@ -4542,7 +4443,7 @@ function ChatRuntimeController({
         skill: null,
       },
     }))
-    const requestSelectedCanvasNodeContext = shouldAttachCanvasContext
+    const requestSelectedCanvasNodeContext = canvasSelectionPolicy.attachSelectedCanvasNodeContext
       ? selectedCanvasNodeContext
       : null
 
@@ -4561,7 +4462,7 @@ function ChatRuntimeController({
       const manualReferenceImagesPayload = Array.isArray(referenceImages)
         ? referenceImages.map((u) => String(u || '').trim()).filter(Boolean)
         : []
-      const focusedNodeContext = shouldUseProjectTextIsolation ? null : (() => {
+      const focusedNodeContext = shouldUseProjectTextIsolation || !canvasSelectionPolicy.includeSelectedCanvasMedia ? null : (() => {
         try {
           const { nodes } = useRFStore.getState()
           const selected = nodes.filter((n) => n.selected)
@@ -4607,7 +4508,7 @@ function ChatRuntimeController({
       const referenceImagesPayload = selectedReplicateMode && targetEffectUrl
         ? referenceImagesPayloadRaw.filter((u) => u !== targetEffectUrl)
         : referenceImagesPayloadRaw
-      const selectedAssetInputs: ChatAssetInput[] = shouldUseProjectTextIsolation ? [] : await (async (): Promise<ChatAssetInput[]> => {
+      const selectedAssetInputs: ChatAssetInput[] = shouldUseProjectTextIsolation || !canvasSelectionPolicy.includeSelectedCanvasMedia ? [] : await (async (): Promise<ChatAssetInput[]> => {
         const { nodes } = useRFStore.getState()
         const selectedImages = nodes
           .filter((n) => n.selected && isImageKind(String((n.data as { kind?: string } | undefined)?.kind || '')))
@@ -4779,6 +4680,9 @@ function ChatRuntimeController({
         sessionKey: requestSessionKey,
         skillName: effectiveSkill?.name || effectiveSkill?.key || '',
       })
+      if (productMode && typeof preSendSave === 'function') {
+        try { await preSendSave() } catch {}
+      }
       let resultEventSeq: number | undefined
       let errorEventSeq: number | undefined
       generatedAssetToolReloadQueueRef.current?.reset()
@@ -5169,6 +5073,7 @@ function ChatRuntimeController({
         requestTabId,
       )
       completeLiveChatRun(requestSessionKey, resp, reply || '（空响应）', resultEventSeq)
+      if (productMode) clearReferenceImages()
       if (!keepRunPointerForMediaTail) {
         clearActiveChatRunPointer(requestSessionKey)
       }
@@ -5225,7 +5130,7 @@ function ChatRuntimeController({
       setSending(false)
       setSendingTabId(null)
     }
-  }, [activeChatTab, activeSkill, activeTabId, aiChatWatchAssetsEnabled, animateAssistantReply, attachedDocs, attachSuccessfulMediaResult, chatSessionLane, completeLiveChatRun, currentFlowId, currentProjectId, currentProjectName, draft, failLiveChatRun, implicitSendRequest, isActiveTabSending, mode, pendingAskUser, recordLiveChatRunEvent, referenceImages, referenceMedia, refreshMessageToolSnapshot, reloadAgentSkill, replicateTargetImage, resumeAutoFollow, selectedCanvasNodeContext, startLiveChatRun, updateTabRuntime, uploadedReferenceAssetMeta])
+  }, [activeChatTab, activeSkill, activeTabId, aiChatWatchAssetsEnabled, animateAssistantReply, attachedDocs, attachSuccessfulMediaResult, chatSessionLane, clearReferenceImages, completeLiveChatRun, currentFlowId, currentProjectId, currentProjectName, draft, failLiveChatRun, implicitSendRequest, isActiveTabSending, mode, pendingAskUser, recordLiveChatRunEvent, referenceImages, referenceMedia, refreshMessageToolSnapshot, reloadAgentSkill, replicateTargetImage, resumeAutoFollow, selectedCanvasNodeContext, startLiveChatRun, surface, updateTabRuntime, uploadedReferenceAssetMeta])
 
   const retryFailedAssistantMessage = React.useCallback((messageId: string) => {
     if (isActiveTabSending) return
@@ -5655,123 +5560,102 @@ function ChatRuntimeController({
     void onUploadReferenceFiles(files)
   }, [onUploadReferenceFiles])
 
-  if (productMode) {
-    return (
-      <div
-        className={['product-chat-surface', className || ''].filter(Boolean).join(' ')}
-        onKeyDownCapture={onRootKeyDownCapture}
-        onKeyDown={onRootKeyDown}
-        onDragEnter={handleRootDragEnter}
-        onDragOver={handleRootDragOver}
-        onDragLeave={handleRootDragLeave}
-        onDrop={handleRootDrop}
-      >
-        <input
-          ref={fileInputRef}
-          className="product-chat-surface__file-input"
-          type="file"
-          accept="image/*,.txt,.md,.markdown,.pdf,text/plain,text/markdown,application/pdf"
-          multiple
-          onChange={(event) => void onUploadReferenceFiles(event.currentTarget.files)}
-        />
-        <input
-          ref={targetFileInputRef}
-          className="product-chat-surface__file-input"
-          type="file"
-          accept="image/*"
-          onChange={(event) => void onUploadReplicateTargetFile(event.currentTarget.files)}
-        />
-        <Modal
-          opened={replicatePickerOpened}
-          onClose={() => setReplicatePickerOpened(false)}
-          centered
-          title="选择目标效果图"
-          size="lg"
-        >
-          <div className="product-replicate-picker">
-            {canvasImageCandidates.map((item) => (
-              <button
-                key={`${item.id}_${item.url}`}
-                type="button"
-                className={replicateTargetImage === item.url ? 'is-selected' : ''}
-                onClick={() => void chooseReplicateTargetFromCanvas(item.url)}
-              >
-                <img src={item.url} alt={item.label} />
-                <span>{item.label}</span>
-              </button>
-            ))}
-          </div>
-        </Modal>
+  React.useEffect(() => {
+    if (!productMode) return
+    return registerAgentWorkspaceChatIntegration({
+      execute: async (command) => {
+        if (command.type === 'draft.set') {
+          setDraft(command.text)
+          return
+        }
+        if (command.type === 'request.submit') {
+          await send()
+          return
+        }
+        if (command.type === 'request.interrupt') {
+          interruptActiveChat()
+          return
+        }
+        if (command.type === 'references.upload') {
+          await onUploadReferenceFiles(command.files)
+          return
+        }
+        if (command.type === 'reference.remove') {
+          if (!activeTabId) return
+          updateTabRuntime(activeTabId, (current) => ({
+            ...current,
+            manualReferenceImages: current.manualReferenceImages.filter((url) => url !== command.url),
+            manualReferenceVideos: (current.manualReferenceVideos || []).filter((item) => item.url !== command.url),
+            uploadedReferenceAssetMeta: Object.fromEntries(
+              Object.entries(current.uploadedReferenceAssetMeta).filter(([url]) => url !== command.url),
+            ),
+          }))
+          return
+        }
+        if (command.type === 'reference.add') {
+          const reference = command.reference
+          if (reference.kind === 'video') {
+            if (!activeTabId) return
+            updateTabRuntime(activeTabId, (current) => {
+              const videos = current.manualReferenceVideos || []
+              if (videos.some((item) => item.url === reference.url)) return current
+              return {
+                ...current,
+                manualReferenceVideos: [...videos, {
+                  url: reference.url,
+                  label: reference.label || '参考视频',
+                  ...(reference.thumbnailUrl ? { thumbnailUrl: reference.thumbnailUrl } : {}),
+                  ...(reference.nodeId ? { nodeId: reference.nodeId } : {}),
+                }],
+              }
+            })
+          } else {
+            addReferenceImagesSafe([reference.url], { source: '资产' })
+            if (activeTabId && (reference.assetId || reference.assetRefId || reference.label)) {
+              updateTabRuntime(activeTabId, (current) => ({
+                ...current,
+                uploadedReferenceAssetMeta: {
+                  ...current.uploadedReferenceAssetMeta,
+                  [reference.url]: {
+                    ...(reference.assetId ? { assetId: reference.assetId } : {}),
+                    ...(reference.assetRefId ? { assetRefId: reference.assetRefId } : {}),
+                    ...(reference.label ? { name: reference.label } : {}),
+                  },
+                },
+              }))
+            }
+          }
+          if (command.continuation === 'modify') {
+            setDraft((current) => current || `请基于「${reference.label || '当前资产'}」继续修改：`)
+          }
+          return
+        }
+        if (command.type === 'decision.answer') {
+          await send({ text: command.option, displayText: command.option })
+          return
+        }
+        if (command.type === 'skill.select') {
+          setActiveSkill(command.skill as ChatSelectableSkill | null)
+          return
+        }
+        if (command.type === 'session.create') {
+          if (command.projectId === currentProjectId) startNewConversation()
+          return
+        }
+        if (command.type === 'session.select') {
+          if (command.projectId === currentProjectId) {
+            selectConversationTab(command.sessionId)
+          } else {
+            const projectState = readAiChatTabsState(command.projectId)
+            writeAiChatTabsState(selectAiChatTab(projectState, command.sessionId), command.projectId)
+            notifyNativeChatNavigationChanged(command.projectId)
+          }
+        }
+      },
+    })
+  }, [activeTabId, addReferenceImagesSafe, currentProjectId, interruptActiveChat, onUploadReferenceFiles, productMode, selectConversationTab, send, setActiveSkill, setDraft, startNewConversation, updateTabRuntime])
 
-        <div className="product-chat-surface__scroll" ref={viewportRef}>
-          <div className="product-timeline" ref={messagesContentRef}>
-            {canShowHistory && historyLoadError ? (
-              <div className="product-timeline__state is-error">{historyLoadError}</div>
-            ) : null}
-            {isEmptyConversation ? (
-              <div className="product-timeline__empty">
-                <strong>从一句设计意图开始</strong>
-                <span>描述产品、场景、用户或希望探索的设计方向。</span>
-              </div>
-            ) : null}
-            {activeLiveRun?.status === 'running' ? <ExecutionSummary run={activeLiveRun} /> : null}
-            {mergedGroups.map((group) => (
-              <ProductTimelineEntry
-                key={group.kind === 'single' ? group.message.id : group.askMessage.id}
-                group={group}
-                onRetry={retryFailedAssistantMessage}
-              />
-            ))}
-            {activeLiveRun?.status !== 'running' && !activeRunHasPersistedExecution
-              ? <ExecutionSummary run={activeLiveRun} />
-              : null}
-            {pendingAskUserCard ? <div className="product-chat-surface__decision">{pendingAskUserCard}</div> : null}
-          </div>
-        </div>
-
-        {showJumpToLatest ? (
-          <button type="button" className="product-chat-surface__jump-latest" onClick={() => scrollToBottom('jump-to-latest')}>
-            回到最新
-          </button>
-        ) : null}
-
-        <div className="product-composer-shell">
-          <ReferenceMediaStrip items={referenceMedia} onClear={clearReferenceImages} disabled={isActiveTabSending || refsLoading} />
-          <AttachedDocsStrip docs={attachedDocs} onRemove={removeAttachedDoc} disabled={isActiveTabSending || refsLoading} />
-          <div className="product-composer">
-            <div className="product-composer__tools">
-              {attachMenu}
-              {taskEntryMenuButton}
-            </div>
-            <div className="product-composer__input">
-              {renderInputSkillToken()}
-              <Textarea
-                ref={expandedInputRef}
-                autosize
-                minRows={1}
-                maxRows={6}
-                placeholder={composerPlaceholder}
-                value={draft}
-                onChange={(event) => setDraft(event.currentTarget.value)}
-              />
-            </div>
-            <ChatTooltip label={isActiveTabSending ? '中断' : sendActionLabel} withArrow>
-              <ActionIcon
-                className="product-composer__send"
-                variant="filled"
-                aria-label={isActiveTabSending ? '中断' : sendActionLabel}
-                onClick={isActiveTabSending ? interruptActiveChat : () => void send()}
-                disabled={isActiveTabSending ? false : !canSendMessage}
-              >
-                {isActiveTabSending ? <IconX size={20} /> : <IconSend2 size={20} />}
-              </ActionIcon>
-            </ChatTooltip>
-          </div>
-        </div>
-        {isDragOver ? <div className="product-chat-surface__dropzone">释放文件以添加参考素材</div> : null}
-      </div>
-    )
-  }
+  if (productMode && headless) return null
 
   return (
     <div
@@ -6141,9 +6025,11 @@ function ChatRuntimeController({
 export default function AiChatDialog({
   className,
   surface = 'native',
+  headless = false,
 }: {
   className?: string
   surface?: AiChatSurface
+  headless?: boolean
 }): JSX.Element | null {
-  return <ChatRuntimeController className={className} surface={surface} />
+  return <ChatRuntimeController className={className} surface={surface} headless={headless} />
 }

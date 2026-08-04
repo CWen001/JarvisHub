@@ -44,7 +44,6 @@ import PreviewModal from './ui/PreviewModal'
 import AiChatDialog from './ui/chat/AiChatDialog'
 import { AgentWorkspace } from './product-host/AgentWorkspace'
 import { useAuthoritativeAgentWorkspaceRuntime } from './product-host/agentWorkspaceAdapter'
-import { AgentWorkspaceRuntimeProvider } from './product-host/agentWorkspaceRuntimeContext'
 import { runNodeRemote } from './runner/remoteRunner'
 import { Background } from '@xyflow/react'
 import { FeatureTour, type FeatureTourStep } from './ui/tour/FeatureTour'
@@ -1237,30 +1236,26 @@ function CanvasApp({
         <ModelPanel />
         <HistoryPanel />
         <MemoryPanel />
-        <AgentWorkspaceRuntimeProvider runtime={agentWorkspaceRuntime}>
-          <div
-            className={isProductSurface ? 'agent-workspace-surface' : undefined}
-            data-rail-collapsed={isProductSurface ? agentWorkspaceRailCollapsed : undefined}
-          >
-            {isProductSurface ? (
+        <div
+          className={isProductSurface ? 'agent-workspace-surface' : undefined}
+          data-rail-collapsed={isProductSurface ? agentWorkspaceRailCollapsed : undefined}
+        >
+          {isProductSurface ? (
+            <>
               <AgentWorkspace
                 brand={productBrand}
                 runtime={agentWorkspaceRuntime}
                 railCollapsed={agentWorkspaceRailCollapsed}
                 onRailCollapsedChange={setAgentWorkspaceRailCollapsed}
               />
-            ) : null}
-            <div
-              className={isProductSurface ? 'agent-workspace__timeline' : 'app-chat-engine-host'}
-              aria-label={isProductSurface ? '设计时间线' : undefined}
-            >
-              <AiChatDialog
-                className="app-ai-chat-dialog"
-                surface={isProductSurface ? 'agent-workspace' : 'native'}
-              />
+              <AiChatDialog surface="agent-workspace" headless />
+            </>
+          ) : (
+            <div className="app-chat-engine-host">
+              <AiChatDialog className="app-ai-chat-dialog" surface="native" />
             </div>
-          </div>
-        </AgentWorkspaceRuntimeProvider>
+          )}
+        </div>
       </BodyPortal>
       <ParamModal />
       <PreviewModal />

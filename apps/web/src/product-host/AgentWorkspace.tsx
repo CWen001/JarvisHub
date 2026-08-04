@@ -11,6 +11,7 @@ import type { AgentWorkspaceRuntime } from './agentWorkspaceRuntime'
 import type { AgentWorkspaceIntent } from './agentWorkspaceProjection'
 import { ProjectContextRail } from './ProjectContextRail'
 import { ProductAssetPanel } from './ProductAssetPanel'
+import { ProductChat } from './ProductChat'
 import type { VerticalBrand } from './productHost'
 import './agentWorkspace.css'
 
@@ -58,8 +59,8 @@ export function AgentWorkspace({
         </ActionIcon>
         <div className="product-host-institution-lockup">
           <picture>
-            <source media="(max-width: 760px)" srcSet="/product-host/hust-design-logo-compact.png" />
-            <img src="/product-host/hust-design-logo-full.png" alt="华中科技大学设计学院" />
+            <source media="(max-width: 760px)" srcSet="/product-host/hust-design-logo-wordmark-compact.png" />
+            <img src="/product-host/hust-design-logo-wordmark.png" alt="华中科技大学设计学院" />
           </picture>
           <span aria-hidden="true" />
           <small>{brand.name}</small>
@@ -120,6 +121,7 @@ export function AgentWorkspace({
         ) : null}
       </Drawer>
 
+      <ProductChat view={view} onIntent={onIntent} />
       <ProductAssetPanel runtime={runtime} />
     </div>
   )

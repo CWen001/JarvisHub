@@ -33,6 +33,28 @@ type ChatRequestExecution = {
   forceAssetGeneration: boolean
 }
 
+export type ChatSurface = 'native' | 'agent-workspace'
+
+export function resolveCanvasSelectionPolicy(input: {
+  surface: ChatSurface
+  explicitAttachCanvasContext: boolean
+  hasImplicitRequest: boolean
+  hasReplicateTarget: boolean
+}): {
+  includeSelectedCanvasMedia: boolean
+  attachSelectedCanvasNodeContext: boolean
+} {
+  const nativeSurface = input.surface === 'native'
+  return {
+    includeSelectedCanvasMedia: nativeSurface,
+    attachSelectedCanvasNodeContext:
+      nativeSurface ||
+      input.explicitAttachCanvasContext ||
+      input.hasImplicitRequest ||
+      input.hasReplicateTarget,
+  }
+}
+
 type ChatRuntimeSkillMenuItem = {
   key: string
   updatedAt?: string | null
