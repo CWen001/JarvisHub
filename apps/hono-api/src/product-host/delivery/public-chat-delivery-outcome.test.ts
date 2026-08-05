@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildAgentsBridgeTurnVerdict } from "./task.agents-bridge";
+import { buildAgentsBridgeTurnVerdict } from "../../modules/task/task.agents-bridge";
 
 const baseInput = {
 	text: "图片已经生成并保存到项目。",

@@ -8,10 +8,7 @@ import { writeUserExecutionTrace, buildUserMemoryContext, formatMemoryContextFor
 import type { PublicChatPromptContext, PublicChatReferenceImageSlot } from "./chat-prompt.types";
 import { buildPublicChatExecutionPlanningDirective } from "./public-chat-execution-planning";
 import { countRecoveredAgentDispatchValidationFailures } from "./agents-tool-recovery";
-import {
-	collectSuccessfulPersistedMediaNodeIds,
-	reconcilePublicChatMediaDelivery,
-} from "./public-chat-media-reconciliation";
+import { reconcilePublicChatDelivery } from "../../product-host/delivery/public-chat-delivery-adapter";
 import { detectPptIntent, buildPptMasterSystemPromptAddendum } from "./agents-tool-bridge.ppt-master-prompt";
 import {
 	buildPublicChatExpectedDeliverySummary,
@@ -6352,29 +6349,17 @@ export async function runAgentsBridgeChatTask(
 				.filter((asset): asset is { type: "image" | "video"; url: string; thumbnailUrl?: string } => !!asset)
 				.slice(0, 24)
 		: [];
-	const nestedMediaNodeIds = collectSuccessfulPersistedMediaNodeIds(normalizedBridgeToolCalls);
-	const reconciliationMediaResults = [
-		...detectedMediaResults,
-		...nestedMediaNodeIds.map((nodeId) => ({ nodeId, status: "succeeded", pending: false })),
-	];
-	let reconciliationFlowGraph: Record<string, unknown> | null = null;
-	if (canvasFlowId && reconciliationMediaResults.length > 0) {
-		try {
-			const flow = await getFlowForOwner(c.env.DB, canvasFlowId, effectiveUserId);
-			reconciliationFlowGraph = flow ? parseFlowGraphRecord(flow.data) : null;
-		} catch (error) {
-			console.warn("[agents-bridge] media delivery Flow read failed", {
-				flowId: canvasFlowId,
-				error: readErrorMessage(error),
-			});
-		}
-	}
-	const mediaDelivery = reconcilePublicChatMediaDelivery({
+	const deliveryAdapterResult = await reconcilePublicChatDelivery({
 		upstreamAssets,
-		mediaResults: reconciliationMediaResults,
-		flowGraph: reconciliationFlowGraph,
+		streamMediaResults: detectedMediaResults,
+		toolCalls: normalizedBridgeToolCalls,
+		flowId: canvasFlowId,
+		readFlowGraph: async (flowId) => {
+			const flow = await getFlowForOwner(c.env.DB, flowId, effectiveUserId);
+			return flow ? parseFlowGraphRecord(flow.data) : null;
+		},
 	});
-	const assets = mediaDelivery.assets.slice(0, 24);
+	const assets = deliveryAdapterResult.assets.slice(0, 24);
 	const traceOutput =
 		data?.trace?.output && typeof data.trace.output === "object" && !Array.isArray(data.trace.output)
 			? data.trace.output
@@ -6408,11 +6393,10 @@ export async function runAgentsBridgeChatTask(
 	});
 	const canvasPlanDiagnosticsRaw = buildCanvasPlanDiagnostics(text);
 	const summarizedToolEvidence = summarizeBridgeToolEvidence(normalizedBridgeToolCalls);
-	const recoveredPersistedMedia = mediaDelivery.persistedSuccessfulNodeIds.length > 0;
 	const toolEvidence: BridgeToolEvidence = {
 		...summarizedToolEvidence,
-		generatedAssets: summarizedToolEvidence.generatedAssets || recoveredPersistedMedia,
-		wroteCanvas: summarizedToolEvidence.wroteCanvas || recoveredPersistedMedia,
+		generatedAssets: summarizedToolEvidence.generatedAssets || deliveryAdapterResult.executionEvidence.generatedAssets,
+		wroteCanvas: summarizedToolEvidence.wroteCanvas || deliveryAdapterResult.executionEvidence.wroteCanvas,
 	};
 	const outputMode = classifyBridgeOutputMode({
 		assetCount: assets.length,
@@ -6586,15 +6570,9 @@ export async function runAgentsBridgeChatTask(
 			...(expectedDelivery.active ? { expectedDelivery } : {}),
 			...(deliveryVerification.applicable ? { deliveryVerification } : {}),
 			...(expectedDelivery.active ? { deliveryEvidence } : {}),
-			...(reconciliationMediaResults.length > 0 ? {
-				mediaReconciliation: {
-					claimedSuccessfulNodeIds: Array.from(new Set(reconciliationMediaResults
-						.map((item) => readTrimmedString(item.nodeId))
-						.filter(Boolean))),
-					persistedSuccessfulNodeIds: mediaDelivery.persistedSuccessfulNodeIds,
-					unresolvedSuccessfulNodeIds: mediaDelivery.unresolvedSuccessfulNodeIds,
-				},
-			} : {}),
+			...(deliveryAdapterResult.mediaReconciliation.claimedSuccessfulNodeIds.length > 0
+				? { mediaReconciliation: deliveryAdapterResult.mediaReconciliation }
+				: {}),
 			promptPipeline,
 			toolStatusSummary,
 			diagnosticFlags,
@@ -6695,7 +6673,7 @@ export async function runAgentsBridgeChatTask(
 				`canvasPlanNodes=${Number(canvasPlanDiagnostics.nodeCount || 0)}`,
 				`expectedDelivery=${expectedDelivery.active ? `${expectedDelivery.kind}:${expectedDelivery.reason}` : "none"}`,
 				`deliveryVerification=${deliveryVerification.status}:${deliveryVerification.code || "ok"}`,
-				`mediaReconciliation=claimed:${reconciliationMediaResults.length},persisted:${mediaDelivery.persistedSuccessfulNodeIds.length},unresolved:${mediaDelivery.unresolvedSuccessfulNodeIds.length}`,
+				`mediaReconciliation=claimed:${deliveryAdapterResult.mediaReconciliation.claimedSuccessfulNodeIds.length},persisted:${deliveryAdapterResult.mediaReconciliation.persistedSuccessfulNodeIds.length},unresolved:${deliveryAdapterResult.mediaReconciliation.unresolvedSuccessfulNodeIds.length}`,
 				`readProjectState=${toolEvidence.readProjectState ? "yes" : "no"}`,
 				`flags=${diagnosticFlags.length}`,
 				`turnVerdict=${turnVerdict.status}:${turnVerdict.reasons.join(",")}`,

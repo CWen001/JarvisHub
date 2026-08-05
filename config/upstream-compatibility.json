@@ -155,11 +155,11 @@
     {
       "path": "apps/hono-api/src/modules/task/task.agents-bridge.ts",
       "classification": "integration-seam",
-      "purpose": "Invoke Product-owned Public Chat Delivery Adapter",
-      "adapter": "Shared Product Trunk",
+      "purpose": "Invoke the Product-owned Public Chat Delivery Adapter through one removable Seam",
+      "adapter": "Public Chat Delivery Adapter",
       "tests": [
-        "pnpm run test:upstream-compatibility",
-        "pnpm --filter @jarvishub/web test"
+        "pnpm --filter @jarvishub/api exec vitest run src/product-host/delivery/public-chat-delivery-adapter.test.ts",
+        "pnpm run test:upstream-compatibility"
       ],
       "upstreamDisposition": "permanent",
       "warningChangedLines": 80
@@ -649,39 +649,6 @@
       "path": "apps/hono-api/src/modules/task/agents-tool-recovery.ts",
       "classification": "upstream-patch",
       "purpose": "Retain recovered native execution truth",
-      "adapter": "Native Jarvis correction",
-      "tests": [
-        "pnpm run test:upstream-compatibility"
-      ],
-      "upstreamDisposition": "pending-upstream-review",
-      "warningChangedLines": 100
-    },
-    {
-      "path": "apps/hono-api/src/modules/task/public-chat-media-reconciliation.test.ts",
-      "classification": "upstream-patch",
-      "purpose": "Temporary regression coverage before Product Adapter migration",
-      "adapter": "Native Jarvis correction",
-      "tests": [
-        "pnpm run test:upstream-compatibility"
-      ],
-      "upstreamDisposition": "pending-upstream-review",
-      "warningChangedLines": 100
-    },
-    {
-      "path": "apps/hono-api/src/modules/task/public-chat-media-reconciliation.ts",
-      "classification": "upstream-patch",
-      "purpose": "Temporary Public Chat delivery correction before Product Adapter migration",
-      "adapter": "Native Jarvis correction",
-      "tests": [
-        "pnpm run test:upstream-compatibility"
-      ],
-      "upstreamDisposition": "pending-upstream-review",
-      "warningChangedLines": 100
-    },
-    {
-      "path": "apps/hono-api/src/modules/task/task.agents-bridge.verdict.test.ts",
-      "classification": "upstream-patch",
-      "purpose": "Temporary turn-verdict regression coverage before Product Adapter migration",
       "adapter": "Native Jarvis correction",
       "tests": [
         "pnpm run test:upstream-compatibility"
