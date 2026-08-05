@@ -68,13 +68,19 @@ function runValidationCommands(repoRoot, commands) {
   return results
 }
 
-function reportMarkdown({ ref, sourceHead, plan, coverage, validationResults }) {
+export function describeUpstreamDivergence(upstreamAheadCount) {
+  return upstreamAheadCount > 0
+    ? `${upstreamAheadCount} upstream commit(s) are not in Product HEAD; a real temporary-worktree merge or rebase rehearsal is required.`
+    : 'no new upstream changes were present; this is replayability verification, not a conflict rehearsal.'
+}
+
+function reportMarkdown({ ref, sourceHead, upstreamAheadCount, plan, coverage, validationResults }) {
   const lines = [
     '# Upstream replayability report',
     '',
     `- Upstream baseline: \`${ref}\``,
     `- Product head: \`${sourceHead}\``,
-    '- Upstream divergence: no new upstream changes were present; this is replayability verification, not a conflict rehearsal.',
+    `- Upstream divergence: ${describeUpstreamDivergence(upstreamAheadCount)}`,
     `- Product-owned paths replayed: ${plan.productOwnedPaths.length}`,
     `- Integration Seams replayed: ${plan.touchpoints.filter((item) => item.classification === 'integration-seam').length}`,
     `- Upstream Patches replayed: ${plan.touchpoints.filter((item) => item.classification === 'upstream-patch').length}`,
@@ -128,6 +134,7 @@ export function runReplayCli(argv = process.argv.slice(2)) {
   const ref = registry.upstreamRef
   git(options.repoRoot, ['rev-parse', '--verify', ref])
   const sourceHead = git(options.repoRoot, ['rev-parse', 'HEAD'])
+  const upstreamAheadCount = Number(git(options.repoRoot, ['rev-list', '--count', `HEAD..${ref}`]) || 0)
   const changes = readCommittedChanges(options.repoRoot, ref)
   const plan = buildReplayPlan({ registry, changes })
   const tempRoot = mkdtempSync(join(tmpdir(), 'jarvishub-upstream-replay-'))
@@ -152,7 +159,7 @@ export function runReplayCli(argv = process.argv.slice(2)) {
   const validationResults = options.runTests
     ? runValidationCommands(options.repoRoot, registry.replayValidationCommands || [])
     : []
-  const report = reportMarkdown({ ref, sourceHead, plan, coverage, validationResults })
+  const report = reportMarkdown({ ref, sourceHead, upstreamAheadCount, plan, coverage, validationResults })
   writeFileSync(resolve(options.repoRoot, options.report), report)
   console.log(`Replayability: PASS (${changes.length} paths)`)
   console.log(`Report: ${resolve(options.repoRoot, options.report)}`)

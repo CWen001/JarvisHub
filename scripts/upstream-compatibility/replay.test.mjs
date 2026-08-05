@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { buildReplayPlan, verifyReplayCoverage } from './replay.mjs'
+import { buildReplayPlan, describeUpstreamDivergence, verifyReplayCoverage } from './replay.mjs'
 
 const touchpoint = (path, classification) => ({
   path,
@@ -34,6 +34,11 @@ test('builds a replay plan with Product roots first and each native touchpoint i
       { path: 'apps/web/src/ui/chat/chatRetry.ts', classification: 'upstream-patch' },
     ],
   })
+})
+
+test('reports when a real upstream merge rehearsal is required', () => {
+  assert.equal(describeUpstreamDivergence(0), 'no new upstream changes were present; this is replayability verification, not a conflict rehearsal.')
+  assert.equal(describeUpstreamDivergence(3), '3 upstream commit(s) are not in Product HEAD; a real temporary-worktree merge or rebase rehearsal is required.')
 })
 
 test('rejects replay coverage that omits or adds a changed path', () => {
