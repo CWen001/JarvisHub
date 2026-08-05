@@ -77,6 +77,28 @@ describe('Product Chat Interaction Continuity', () => {
     expect(screen.getAllByText('已完成').length).toBeGreaterThan(0)
   })
 
+  it('preserves Chinese IME composition while an older authoritative draft snapshot arrives', () => {
+    const onIntent = vi.fn()
+    const rendered = render(<MantineProvider><ProductChat view={{
+      ...base,
+      composer: { ...base.composer, draft: '', sending: false },
+    }} onIntent={onIntent} /></MantineProvider>)
+    const input = screen.getByRole('textbox') as HTMLTextAreaElement
+
+    fireEvent.compositionStart(input)
+    fireEvent.change(input, { target: { value: 'ni' } })
+    rendered.rerender(<MantineProvider><ProductChat view={{
+      ...base,
+      revision: 2,
+      composer: { ...base.composer, draft: '', sending: false },
+    }} onIntent={onIntent} /></MantineProvider>)
+
+    expect(input.value).toBe('ni')
+    fireEvent.change(input, { target: { value: '你' } })
+    fireEvent.compositionEnd(input)
+    expect(onIntent).toHaveBeenLastCalledWith({ type: 'chat.set-draft', text: '你' })
+  })
+
   it('delivers a stable Artifact while truthfully labelling partial completion', () => {
     const onIntent = vi.fn()
     const partial: AgentWorkspaceRuntimeSnapshot = {

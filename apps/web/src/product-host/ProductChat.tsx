@@ -184,6 +184,38 @@ export function ProductChat({
   const fileInput = React.useRef<HTMLInputElement | null>(null)
   const viewport = React.useRef<HTMLDivElement | null>(null)
   const nearBottom = React.useRef(true)
+  const composingDraft = React.useRef(false)
+  const pendingDraft = React.useRef<string | null>(null)
+  const lastDispatchedDraft = React.useRef(view.composer.draft)
+  const sessionIdentity = `${view.current?.projectId || ''}:${view.current?.sessionId || ''}`
+  const previousSessionIdentity = React.useRef(sessionIdentity)
+  const [draftBuffer, setDraftBuffer] = React.useState(view.composer.draft)
+
+  React.useEffect(() => {
+    if (previousSessionIdentity.current !== sessionIdentity) {
+      previousSessionIdentity.current = sessionIdentity
+      composingDraft.current = false
+      pendingDraft.current = null
+      lastDispatchedDraft.current = view.composer.draft
+      setDraftBuffer(view.composer.draft)
+      return
+    }
+    if (composingDraft.current) return
+    if (pendingDraft.current !== null) {
+      if (view.composer.draft !== pendingDraft.current) return
+      pendingDraft.current = null
+    }
+    lastDispatchedDraft.current = view.composer.draft
+    setDraftBuffer(view.composer.draft)
+  }, [sessionIdentity, view.composer.draft])
+
+  const updateDraft = (text: string) => {
+    setDraftBuffer(text)
+    pendingDraft.current = text
+    if (lastDispatchedDraft.current === text) return
+    lastDispatchedDraft.current = text
+    onIntent({ type: 'chat.set-draft', text })
+  }
 
   React.useEffect(() => {
     if (!nearBottom.current) return
@@ -254,14 +286,19 @@ export function ProductChat({
             <Textarea
               autosize minRows={1} maxRows={6}
               placeholder={view.composer.ready ? '请输入你的设计需求' : '正在准备对话能力…'}
-              value={view.composer.draft}
+              value={draftBuffer}
               disabled={!view.composer.ready}
-              onChange={(event) => onIntent({ type: 'chat.set-draft', text: event.currentTarget.value })}
+              onCompositionStart={() => { composingDraft.current = true }}
+              onCompositionEnd={(event) => {
+                composingDraft.current = false
+                updateDraft(event.currentTarget.value)
+              }}
+              onChange={(event) => updateDraft(event.currentTarget.value)}
               onKeyDown={(event) => {
                 if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
                   event.preventDefault()
                   if (view.composer.sending) onIntent({ type: 'chat.interrupt' })
-                  else if (view.composer.draft.trim() || view.composer.pendingReferences.length) onIntent({ type: 'chat.submit' })
+                  else if (draftBuffer.trim() || view.composer.pendingReferences.length) onIntent({ type: 'chat.submit' })
                 }
               }}
             />
@@ -269,7 +306,7 @@ export function ProductChat({
           <Tooltip label={view.composer.sending ? '中断' : '发送'}>
             <ActionIcon
               className="product-composer__send" variant="filled" aria-label={view.composer.sending ? '中断' : '发送'}
-              disabled={!view.composer.sending && (!view.composer.ready || (!view.composer.draft.trim() && !view.composer.pendingReferences.length))}
+              disabled={!view.composer.sending && (!view.composer.ready || (!draftBuffer.trim() && !view.composer.pendingReferences.length))}
               onClick={() => onIntent({ type: view.composer.sending ? 'chat.interrupt' : 'chat.submit' })}
             >{view.composer.sending ? <IconX size={20} /> : <IconSend2 size={20} />}</ActionIcon>
           </Tooltip>
