@@ -19,6 +19,18 @@
       "owner": "Architecture decisions"
     },
     {
+      "path": "docs/product-architecture.md",
+      "owner": "Product architecture guidance"
+    },
+    {
+      "path": "docs/vertical-development.md",
+      "owner": "Vertical development guidance"
+    },
+    {
+      "path": "docs/upstream-maintenance.md",
+      "owner": "Upstream maintenance guidance"
+    },
+    {
       "path": "docs/agent-workspace-*.md",
       "owner": "Agent Workspace specifications"
     },

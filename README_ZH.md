@@ -87,6 +87,12 @@ JarvisHub 由三个核心层组成：
 | **Protocol Bridge** | 暴露能力清单与本轮执行授权，校验画布修改与工具动作，并提交状态转换 | `apps/hono-api` |
 | **Agent Runtime** | 观察画布、规划动作、调用 Skills / Memory / Tools / Subagents，并返回可提交的观察结果 | `apps/agents-cli` |
 
+本仓库在原生 JarvisHub 之上维护共享产品主线和 Watch、Tablet 等专业垂类。开发前请阅读：
+
+- [产品架构指南](docs/product-architecture.md)：系统心智模型、Authority、Runtime、Adapter、关键流程与既定决策；
+- [垂类开发指南](docs/vertical-development.md)：新增或修改 Vertical Design Extension；
+- [上游维护指南](docs/upstream-maintenance.md)：维护 Compatibility Surface 并升级 JarvisHub 上游。
+
 ---
 
 ## 🚀 快速开始

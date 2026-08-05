@@ -95,6 +95,12 @@ JarvisHub is organized into three core layers:
 | **Protocol Bridge** | Exposes capabilities and execution grants, validates canvas mutations and tool actions, and commits state transitions | `apps/hono-api` |
 | **Agent Runtime** | Observes the canvas, plans actions, invokes Skills / Memory / Tools / Subagents, and returns commit-ready observations | `apps/agents-cli` |
 
+This repository also maintains a shared Product mainline with professional verticals such as Watch and Tablet. The internal architecture and development guides are currently maintained in Chinese:
+
+- [Product architecture](docs/product-architecture.md): mental model, authorities, Runtime, Adapters, key flows, and settled decisions;
+- [Vertical development](docs/vertical-development.md): adding or changing a Vertical Design Extension;
+- [Upstream maintenance](docs/upstream-maintenance.md): maintaining the Compatibility Surface and adopting JarvisHub upstream updates.
+
 ---
 
 ## 🚀 Quick Start
