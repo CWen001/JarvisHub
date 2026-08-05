@@ -11,7 +11,6 @@ import {
   projectAgentWorkspace,
   type AgentWorkspaceAssetFact,
   type AgentWorkspaceFacts,
-  type AgentWorkspaceRunFact,
   type AgentWorkspaceViewModel,
   type NativeAgentWorkspaceCommand,
 } from './agentWorkspaceProjection'
@@ -25,6 +24,7 @@ import {
   isAgentWorkspaceChatIntegrationReady,
   subscribeAgentWorkspaceChatIntegration,
 } from './agentWorkspaceChatIntegration'
+import { reconcileArtifactDelivery } from './artifactDeliveryReconciliation'
 
 type CurrentProject = Readonly<{ id?: string | null; name: string }> | null
 type CurrentFlow = Readonly<{ id?: string | null; name?: string | null; updatedAt?: string | null }> | null
@@ -88,51 +88,6 @@ function projectServerAssetFact(asset: ServerAssetDto): AgentWorkspaceAssetFact 
     updatedAt: Number.isFinite(updatedAt) ? updatedAt : 0,
     scope: 'all',
   }
-}
-
-function projectRunFact(
-  run: ReturnType<typeof useLiveChatRunStore.getState>['activeRun'],
-  latestMessage?: ChatMessage,
-): AgentWorkspaceRunFact {
-  if (!run) return { status: 'idle', label: '等待你的设计意图' }
-  const hasUsableArtifact = (latestMessage?.assets ?? []).some((asset) => (
-    Boolean(String(asset.nodeId || '').trim())
-    && Boolean(String(asset.url || '').trim())
-    && Boolean(String(asset.assetId || asset.assetRefId || '').trim())
-  ))
-  const partial = latestMessage?.turnVerdict?.status === 'partial'
-    || (run.status === 'failed' && hasUsableArtifact)
-  if (partial) {
-    return {
-      status: 'partial',
-      label: '结果已生成，后续步骤部分完成',
-      startedAt: run.startedAt,
-      updatedAt: run.updatedAt,
-      todoItems: run.todoItems,
-    }
-  }
-  const mediaCalls = Object.values(run.toolCallsByTurn).flat().filter((call) => call.media)
-  const providerComplete = mediaCalls.some((call) => call.media?.status === 'succeeded' && call.media.pending !== true)
-  if (providerComplete && !hasUsableArtifact && run.status !== 'failed') {
-    return {
-      status: 'running',
-      label: '图片已生成，正在保存到项目',
-      startedAt: run.startedAt,
-      updatedAt: run.updatedAt,
-      todoItems: run.todoItems,
-    }
-  }
-  if (run.status === 'running') {
-    return {
-      status: 'running',
-      label: '设计任务正在进行',
-      startedAt: run.startedAt,
-      updatedAt: run.updatedAt,
-      todoItems: run.todoItems,
-    }
-  }
-  if (run.status === 'failed') return { status: 'failed', label: '本轮设计需要处理', startedAt: run.startedAt, updatedAt: run.updatedAt, todoItems: run.todoItems }
-  return { status: 'succeeded', label: '本轮设计已经完成', startedAt: run.startedAt, updatedAt: run.updatedAt, todoItems: run.todoItems }
 }
 
 function projectTimelineAsset(asset: NonNullable<ChatMessage['assets']>[number]) {
@@ -322,52 +277,24 @@ function useAuthoritativeAgentWorkspaceFacts(input: AuthoritativeInput): AgentWo
     const tabRuntime = currentSessionId
       ? tabRuntimeById[currentSessionId] ?? createEmptyChatTabRuntime()
       : createEmptyChatTabRuntime()
-    const baseTimeline = projectTimeline(tabRuntime.messages, nodes)
-    const terminalMediaNodeIds = new Set(
-      currentRun
-        ? Object.values(currentRun.toolCallsByTurn)
-            .flat()
-            .map((call) => call.media)
-            .filter((media) => media?.status === 'succeeded' && media.pending !== true && Boolean(media.nodeId))
-            .map((media) => media!.nodeId)
-        : [],
-    )
-    const deliveredMediaAssets = assets
-      .filter((asset) => (
-        terminalMediaNodeIds.has(asset.nodeId)
-        && asset.status === 'success'
-        && Boolean(asset.nodeId && asset.url && (asset.assetId || asset.assetRefId))
-      ))
-      .map((asset) => ({
-        title: asset.title,
-        kind: asset.kind,
-        url: asset.url,
-        ...(asset.thumbnailUrl ? { thumbnailUrl: asset.thumbnailUrl } : {}),
-        nodeId: asset.nodeId,
-        ...(asset.assetId ? { assetId: asset.assetId } : {}),
-        ...(asset.assetRefId ? { assetRefId: asset.assetRefId } : {}),
-      }))
-    let latestAssistantIndex = currentRun?.assistantMessageId
-      ? baseTimeline.findIndex((entry) => entry.id === currentRun.assistantMessageId)
-      : -1
-    if (latestAssistantIndex < 0) {
-      for (let index = baseTimeline.length - 1; index >= 0; index -= 1) {
-        if (baseTimeline[index]?.role === 'assistant') {
-          latestAssistantIndex = index
-          break
-        }
-      }
-    }
-    const timeline = deliveredMediaAssets.length > 0 && latestAssistantIndex >= 0
-      ? baseTimeline.map((entry, index) => index === latestAssistantIndex
-          ? { ...entry, assets: [...deliveredMediaAssets, ...(entry.assets ?? [])].filter((asset, assetIndex, all) => all.findIndex((candidate) => (candidate.nodeId || candidate.url) === (asset.nodeId || asset.url)) === assetIndex) }
-          : entry)
-      : baseTimeline
-    const latestAssistant = [...tabRuntime.messages].reverse().find((message) => message.role === 'assistant')
-    const latestTimelineAssistant = [...timeline].reverse().find((entry) => entry.role === 'assistant')
-    const latestAssistantForRun = latestAssistant
-      ? { ...latestAssistant, assets: latestTimelineAssistant?.assets ? [...latestTimelineAssistant.assets] : latestAssistant.assets }
-      : undefined
+    const delivery = reconcileArtifactDelivery({
+      timeline: projectTimeline(tabRuntime.messages, nodes),
+      assets,
+      run: currentRun ? {
+        status: currentRun.status,
+        assistantMessageId: currentRun.assistantMessageId,
+        startedAt: currentRun.startedAt,
+        updatedAt: currentRun.updatedAt,
+        todoItems: currentRun.todoItems,
+        media: Object.values(currentRun.toolCallsByTurn)
+          .flat()
+          .flatMap((call) => call.media ? [{
+            nodeId: call.media.nodeId,
+            status: call.media.status,
+            pending: call.media.pending,
+          }] : []),
+      } : null,
+    })
     const pendingReferences = [
       ...tabRuntime.manualReferenceImages.map((url) => {
         const metadata = tabRuntime.uploadedReferenceAssetMeta[url]
@@ -397,8 +324,8 @@ function useAuthoritativeAgentWorkspaceFacts(input: AuthoritativeInput): AgentWo
       assets,
       assetsState: serverAssetState.status,
       assetsErrorMessage: serverAssetState.message,
-      run: projectRunFact(currentRun, latestAssistantForRun),
-      timeline,
+      run: delivery.run,
+      timeline: delivery.timeline,
       composer: {
         draft: tabRuntime.draft,
         pendingReferences,

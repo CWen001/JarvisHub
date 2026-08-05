@@ -29,6 +29,7 @@ export function AgentWorkspace({
   onRailCollapsedChange,
 }: AgentWorkspaceProps): JSX.Element {
   const [mobileRailOpened, setMobileRailOpened] = React.useState(false)
+  const [assetPanelOpened, setAssetPanelOpened] = React.useState(false)
   const narrow = useMediaQuery('(max-width: 760px)') ?? false
   const view = React.useSyncExternalStore(runtime.subscribe, runtime.getSnapshot, runtime.getSnapshot)
 
@@ -71,7 +72,7 @@ export function AgentWorkspace({
         </div>
         <div className="product-host-header__actions">
           <Tooltip label="打开资产">
-            <ActionIcon variant="subtle" size={40} aria-label="打开资产" onClick={() => onIntent({ type: 'open-assets' })}>
+            <ActionIcon variant="subtle" size={40} aria-label="打开资产" onClick={() => setAssetPanelOpened(true)}>
               <IconPhoto size={19} />
             </ActionIcon>
           </Tooltip>
@@ -90,7 +91,12 @@ export function AgentWorkspace({
       </header>
 
       <div className="agent-workspace__desktop-rail">
-        <ProjectContextRail view={view} collapsed={railCollapsed} onIntent={onIntent} />
+        <ProjectContextRail
+          view={view}
+          collapsed={railCollapsed}
+          onIntent={onIntent}
+          onOpenAssets={() => setAssetPanelOpened(true)}
+        />
       </div>
 
       <Drawer
@@ -116,13 +122,22 @@ export function AgentWorkspace({
                 <IconX size={20} />
               </ActionIcon>
             </div>
-            <ProjectContextRail view={view} onIntent={onIntent} onNavigate={() => setMobileRailOpened(false)} />
+            <ProjectContextRail
+              view={view}
+              onIntent={onIntent}
+              onOpenAssets={() => setAssetPanelOpened(true)}
+              onNavigate={() => setMobileRailOpened(false)}
+            />
           </div>
         ) : null}
       </Drawer>
 
       <ProductChat view={view} onIntent={onIntent} />
-      <ProductAssetPanel runtime={runtime} />
+      <ProductAssetPanel
+        runtime={runtime}
+        opened={assetPanelOpened}
+        onClose={() => setAssetPanelOpened(false)}
+      />
     </div>
   )
 }

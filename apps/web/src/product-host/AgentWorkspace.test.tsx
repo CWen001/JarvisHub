@@ -163,9 +163,14 @@ describe('Agent Workspace Product View', () => {
     expect(screen.getByRole('button', { name: '中断' })).toBeTruthy()
 
     fireEvent.click(screen.getByRole('button', { name: '打开资产' }))
+    fireEvent.click(await screen.findByRole('button', { name: '关闭资产' }))
+    await waitFor(() => expect(screen.queryByRole('button', { name: '关闭资产' })).toBeNull())
+    fireEvent.click(screen.getByRole('button', { name: '资产，1 项' }))
+    fireEvent.click(await screen.findByRole('button', { name: '关闭资产' }))
+    await waitFor(() => expect(screen.queryByRole('button', { name: '关闭资产' })).toBeNull())
     fireEvent.click(screen.getByRole('button', { name: '进入专业工作台' }))
-    expect(runtimeDispatch).toHaveBeenNthCalledWith(1, { type: 'open-assets' })
-    expect(runtimeDispatch).toHaveBeenNthCalledWith(2, { type: 'open-professional-workspace' })
+    expect(runtimeDispatch).toHaveBeenCalledTimes(1)
+    expect(runtimeDispatch).toHaveBeenCalledWith({ type: 'open-professional-workspace' })
 
     fireEvent.change(screen.getByRole('textbox'), { target: { value: '继续优化表带' } })
     expect(runtimeDispatch).toHaveBeenLastCalledWith({ type: 'chat.set-draft', text: '继续优化表带' })

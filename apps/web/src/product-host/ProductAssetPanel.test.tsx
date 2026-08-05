@@ -2,9 +2,7 @@
 
 import { MantineProvider } from '@mantine/core'
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
-import { useRFStore } from '../canvas/store'
-import { useUIStore } from '../ui/uiStore'
+import { beforeAll, describe, expect, it, vi } from 'vitest'
 import { ProductAssetPanel } from './ProductAssetPanel'
 import { createAgentWorkspaceRuntime, createInMemoryAgentWorkspaceAdapter } from './agentWorkspaceRuntime'
 
@@ -26,11 +24,6 @@ beforeAll(() => {
   })
 })
 
-afterEach(() => {
-  useUIStore.getState().setActivePanel(null)
-  useRFStore.setState({ nodes: [] })
-})
-
 describe('Product Asset Panel', () => {
   it('renders authoritative Canvas assets in Product-owned presentation', async () => {
     const adapter = createInMemoryAgentWorkspaceAdapter({
@@ -49,11 +42,11 @@ describe('Product Asset Panel', () => {
       }],
     })
     const runtime = createAgentWorkspaceRuntime(adapter)
-    useUIStore.getState().setActivePanel('gallery')
+    const onClose = vi.fn()
 
     render(
       <MantineProvider>
-        <ProductAssetPanel runtime={runtime} />
+        <ProductAssetPanel runtime={runtime} opened onClose={onClose} />
       </MantineProvider>,
     )
 
@@ -61,6 +54,9 @@ describe('Product Asset Panel', () => {
     expect(screen.getByText('GT Runner concept')).toBeTruthy()
     expect(document.querySelector('.product-asset-panel')).not.toBeNull()
     expect(document.querySelector('.asset-center-panel-root')).toBeNull()
+
+    fireEvent.click(screen.getByRole('button', { name: '关闭资产' }))
+    expect(onClose).toHaveBeenCalledOnce()
 
     fireEvent.click(screen.getByRole('button', { name: '在专业工作台打开' }))
     fireEvent.click(screen.getByRole('button', { name: '继续修改' }))
@@ -92,9 +88,7 @@ describe('Product Asset Panel', () => {
       assetsState,
       assetsErrorMessage: assetsState === 'error' ? message : '',
     }))
-    useUIStore.getState().setActivePanel('gallery')
-
-    render(<MantineProvider><ProductAssetPanel runtime={runtime} /></MantineProvider>)
+    render(<MantineProvider><ProductAssetPanel runtime={runtime} opened onClose={() => {}} /></MantineProvider>)
 
     expect(screen.getByRole(role).textContent).toContain(message)
   })
@@ -116,11 +110,10 @@ describe('Product Asset Panel', () => {
         scope: 'all',
       }],
     })
-    useUIStore.getState().setActivePanel('gallery')
+    render(<MantineProvider><ProductAssetPanel runtime={createAgentWorkspaceRuntime(adapter)} opened onClose={() => {}} /></MantineProvider>)
 
-    render(<MantineProvider><ProductAssetPanel runtime={createAgentWorkspaceRuntime(adapter)} /></MantineProvider>)
-
-    const drawer = screen.getAllByRole('dialog').at(-1)!
+    const dialogs = screen.getAllByRole('dialog')
+    const drawer = dialogs[dialogs.length - 1]!
     fireEvent.click(within(drawer).getByRole('radio', { name: '全部资产' }))
     expect(await within(drawer).findByText('Library reference')).toBeTruthy()
     expect(within(drawer).queryByRole('button', { name: '在专业工作台打开' })).toBeNull()

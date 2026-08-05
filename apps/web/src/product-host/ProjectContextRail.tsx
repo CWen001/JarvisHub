@@ -21,11 +21,13 @@ export function ProjectContextRail({
   view,
   collapsed = false,
   onIntent,
+  onOpenAssets,
   onNavigate,
 }: {
   view: AgentWorkspaceViewModel
   collapsed?: boolean
   onIntent: (intent: AgentWorkspaceIntent) => void
+  onOpenAssets: () => void
   onNavigate?: () => void
 }): JSX.Element {
   const [expanded, setExpanded] = React.useState<Set<string>>(
@@ -41,6 +43,11 @@ export function ProjectContextRail({
 
   const dispatch = (intent: AgentWorkspaceIntent) => {
     onIntent(intent)
+    onNavigate?.()
+  }
+
+  const openAssets = () => {
+    onOpenAssets()
     onNavigate?.()
   }
 
@@ -186,7 +193,7 @@ export function ProjectContextRail({
         type="button"
         className="project-context-rail__assets"
         aria-label={`资产，${view.assets.count} 项`}
-        onClick={() => dispatch({ type: 'open-assets' })}
+        onClick={openAssets}
       >
         <IconPhoto size={18} />
         <span>资产</span>

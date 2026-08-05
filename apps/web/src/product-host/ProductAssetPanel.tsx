@@ -20,7 +20,6 @@ import {
   IconX,
 } from '@tabler/icons-react'
 import { toast } from '../ui/toast'
-import { useUIStore } from '../ui/uiStore'
 import type { AgentWorkspaceAssetView } from './agentWorkspaceProjection'
 import type { AgentWorkspaceRuntime } from './agentWorkspaceRuntime'
 import { ArtifactPreview, type ArtifactPreviewAction } from '../ui/shared/ArtifactPreview'
@@ -39,13 +38,14 @@ function productAssetItem(asset: AgentWorkspaceAssetView, index: number): Produc
 
 export function ProductAssetPanel({
   runtime,
+  opened,
+  onClose,
 }: {
   runtime: AgentWorkspaceRuntime
+  opened: boolean
+  onClose: () => void
 }): JSX.Element {
-  const activePanel = useUIStore((state) => state.activePanel)
-  const setActivePanel = useUIStore((state) => state.setActivePanel)
   const snapshot = React.useSyncExternalStore(runtime.subscribe, runtime.getSnapshot, runtime.getSnapshot)
-  const opened = activePanel === 'gallery'
   const [scope, setScope] = React.useState<Scope>('canvas')
   const [kind, setKind] = React.useState<AssetKind>('all')
   const [preview, setPreview] = React.useState<ProductAssetItem | null>(null)
@@ -94,7 +94,7 @@ export function ProductAssetPanel({
       <Drawer
         className="product-asset-panel"
         opened={opened}
-        onClose={() => setActivePanel(null)}
+        onClose={onClose}
         position="right"
         size="min(92vw, 760px)"
         withCloseButton={false}
@@ -105,7 +105,7 @@ export function ProductAssetPanel({
             <Text fw={700} size="lg">资产</Text>
             <Text size="xs" c="dimmed">权威项目资产与当前画布成果</Text>
           </div>
-          <ActionIcon variant="subtle" size={44} aria-label="关闭资产" onClick={() => setActivePanel(null)}>
+          <ActionIcon variant="subtle" size={44} aria-label="关闭资产" onClick={onClose}>
             <IconX size={20} />
           </ActionIcon>
         </header>
