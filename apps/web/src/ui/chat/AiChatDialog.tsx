@@ -88,12 +88,12 @@ import {
   normalizeLoadedChatMessageUiSnapshot,
 } from './chatMessageState'
 import AiChatTabBar from './AiChatTabBar'
+import { NativeArtifactCard } from './NativeArtifactCard'
 import {
-  NativeArtifactCard,
-  NATIVE_ARTIFACT_CHAT_COMMAND,
-  type NativeArtifactChatCommand,
-} from './NativeArtifactCard'
-import { registerAgentWorkspaceChatIntegration } from '../../product-host/agentWorkspaceChatIntegration'
+  createNativeChatWorkspaceAuthority,
+  useNativeArtifactWorkspaceAdapter,
+  useNativeChatWorkspaceAdapter,
+} from '../../product-host/nativeChatWorkspaceAdapter'
 import { resolveLoadedVerticalSkill } from '../../product-host/verticalSkillActivation'
 import { useTimelineAutoFollow, type TimelineAutoFollowResumeReason } from './timelineAutoFollow'
 import {
@@ -107,11 +107,7 @@ import {
   writeAiChatTabsState,
   type AiChatTabsState,
 } from './chatTabs'
-import {
-  NATIVE_CHAT_NAVIGATION_COMMAND,
-  notifyNativeChatNavigationChanged,
-  type NativeChatNavigationCommand,
-} from '../../product-host/nativeChatNavigation'
+import { notifyNativeChatNavigationChanged } from '../../product-host/nativeChatNavigation'
 import {
   buildAttachedDocsPromptBlock,
   classifyUploadedFile,
@@ -2604,25 +2600,9 @@ function ChatRuntimeController({
   surface?: AiChatSurface
   headless?: boolean
 }): JSX.Element | null {
-  const productMode = surface === 'agent-workspace'
   const cardRef = React.useRef<HTMLDivElement | null>(null)
   const initialLayoutPreference = React.useMemo(() => readAiChatLayoutPreference(), [])
-  const [mode, setMode] = React.useState<'compact' | 'expanded' | 'maximized'>(
-    productMode ? 'maximized' : initialLayoutPreference.mode,
-  )
-  const previousSurfaceRef = React.useRef<AiChatSurface>(surface)
-  const nativeModeRef = React.useRef<'compact' | 'expanded' | 'maximized'>(initialLayoutPreference.mode)
-  React.useLayoutEffect(() => {
-    const previousSurface = previousSurfaceRef.current
-    if (previousSurface === surface) return
-    if (surface === 'agent-workspace') {
-      nativeModeRef.current = mode
-      setMode('maximized')
-    } else {
-      setMode(nativeModeRef.current)
-    }
-    previousSurfaceRef.current = surface
-  }, [surface])
+  const [mode, setMode] = React.useState<'compact' | 'expanded' | 'maximized'>(initialLayoutPreference.mode)
   const [expandedWidthPx, setExpandedWidthPx] = React.useState<number>(
     () => clampPanelWidth(initialLayoutPreference.expandedWidthPx),
   )
@@ -3772,16 +3752,16 @@ function ChatRuntimeController({
   }, [activeChatTab?.sessionScope?.skill, activeTabId, agentSkills, updateTabRuntime])
 
   const visibleAutoReferenceImages = React.useMemo(() => {
-    if (productMode || !autoReferenceImages.length) return []
+    if (headless || !autoReferenceImages.length) return []
     const hidden = new Set(hiddenAutoReferenceUrls)
     return autoReferenceImages.filter((url) => !hidden.has(url))
-  }, [autoReferenceImages, hiddenAutoReferenceUrls, productMode])
+  }, [autoReferenceImages, headless, hiddenAutoReferenceUrls])
 
   const visibleAutoReferenceVideos = React.useMemo(() => {
-    if (productMode || !autoReferenceVideos.length) return []
+    if (headless || !autoReferenceVideos.length) return []
     const hidden = new Set(hiddenAutoReferenceVideoUrls)
     return autoReferenceVideos.filter((item) => !hidden.has(item.url))
-  }, [autoReferenceVideos, hiddenAutoReferenceVideoUrls, productMode])
+  }, [autoReferenceVideos, headless, hiddenAutoReferenceVideoUrls])
 
   const referenceImages = React.useMemo(() => {
     const merged: string[] = []
@@ -3941,53 +3921,13 @@ function ChatRuntimeController({
     }
   }, [activeTabId, autoReferenceImages, updateTabRuntime])
 
-  React.useEffect(() => {
-    const onArtifactCommand = (event: Event) => {
-      const command = (event as CustomEvent<NativeArtifactChatCommand>).detail
-      const url = String(command?.asset?.url || '').trim()
-      if (!command || !url || !activeTabId) return
-      const assetId = String(command.asset.assetId || '').trim()
-      const assetRefId = String(command.asset.assetRefId || '').trim()
-      const name = String(command.asset.title || '').trim()
-      updateTabRuntime(activeTabId, (current) => ({
-        ...current,
-        uploadedReferenceAssetMeta: {
-          ...current.uploadedReferenceAssetMeta,
-          [url]: {
-            ...(assetId ? { assetId } : {}),
-            ...(assetRefId ? { assetRefId } : {}),
-            ...(name ? { name } : {}),
-          },
-        },
-      }))
-      if (command.asset.mediaType === 'video') {
-        updateTabRuntime(activeTabId, (current) => {
-          const currentVideos = current.manualReferenceVideos || []
-          if (currentVideos.some((item) => item.url === url)) return current
-          return {
-            ...current,
-            manualReferenceVideos: [
-              ...currentVideos,
-              {
-                url,
-                label: name || 'Reference video',
-                ...(command.asset.thumbnailUrl ? { thumbnailUrl: command.asset.thumbnailUrl } : {}),
-                ...(command.asset.nodeId ? { nodeId: command.asset.nodeId } : {}),
-              },
-            ],
-          }
-        })
-        toast('已添加 1 个参考视频（Artifact）', 'success')
-      } else {
-        addReferenceImagesSafe([url], { source: 'Artifact' })
-      }
-      if (command.type === 'modify') {
-        setDraft((current) => current || `请基于「${name || '当前资产'}」继续修改：`)
-      }
-    }
-    window.addEventListener(NATIVE_ARTIFACT_CHAT_COMMAND, onArtifactCommand)
-    return () => window.removeEventListener(NATIVE_ARTIFACT_CHAT_COMMAND, onArtifactCommand)
-  }, [activeTabId, addReferenceImagesSafe, setDraft, updateTabRuntime])
+  useNativeArtifactWorkspaceAdapter({
+    activeTabId,
+    updateTabRuntime,
+    addReferenceImages: addReferenceImagesSafe,
+    setDraft,
+    notify: toast,
+  })
 
   const clearReferenceImages = React.useCallback(() => {
     if (!activeTabId) return
@@ -4185,21 +4125,21 @@ function ChatRuntimeController({
   }, [])
 
   const collapseChat = React.useCallback(() => {
-    if (productMode) return
+    if (headless) return
     setMode((m) => {
       if (m === 'compact') return m
       return 'compact'
     })
-  }, [productMode])
+  }, [headless])
 
   const toggleMaximized = React.useCallback(() => {
-    if (productMode) return
+    if (headless) return
     setMode((m) => {
       if (m === 'maximized') return modeBeforeMaximizeRef.current
       modeBeforeMaximizeRef.current = m === 'expanded' ? 'expanded' : 'compact'
       return 'maximized'
     })
-  }, [productMode])
+  }, [headless])
 
   const onResizeHandlePointerDown = React.useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (mode !== 'expanded') return
@@ -4392,12 +4332,12 @@ function ChatRuntimeController({
     if (pendingAskUser) return null
     if (normalizedDraft) return null
     return buildImplicitChatRequest({
-      selectedCanvasNodeContext: productMode ? null : selectedCanvasNodeContext,
+      selectedCanvasNodeContext: headless ? null : selectedCanvasNodeContext,
       referenceMediaCount: referenceMedia.length,
       hasTargetImage: hasExplicitTargetImage,
       activeSkillName: activeSkillContextName,
     })
-  }, [activeSkillContextName, hasExplicitTargetImage, normalizedDraft, pendingAskUser, productMode, referenceMedia.length, selectedCanvasNodeContext])
+  }, [activeSkillContextName, hasExplicitTargetImage, headless, normalizedDraft, pendingAskUser, referenceMedia.length, selectedCanvasNodeContext])
   const canSendMessage = isAwaitingAskUserReply
     ? Boolean(pendingAskUser?.selectedOption || normalizedDraft)
     : Boolean(normalizedDraft || implicitSendRequest)
@@ -4427,7 +4367,7 @@ function ChatRuntimeController({
       return
     }
     const preSendSave = (window as Window & { silentSaveProject?: () => Promise<void> }).silentSaveProject
-    if (!productMode && typeof preSendSave === 'function') {
+    if (!headless && typeof preSendSave === 'function') {
       try { await preSendSave() } catch {}
     }
     void (async () => {
@@ -4720,7 +4660,7 @@ function ChatRuntimeController({
         sessionKey: requestSessionKey,
         skillName: effectiveSkill?.name || effectiveSkill?.key || '',
       })
-      if (productMode && typeof preSendSave === 'function') {
+      if (headless && typeof preSendSave === 'function') {
         try { await preSendSave() } catch {}
       }
       let resultEventSeq: number | undefined
@@ -5114,7 +5054,7 @@ function ChatRuntimeController({
         requestTabId,
       )
       completeLiveChatRun(requestSessionKey, resp, reply || '（空响应）', resultEventSeq)
-      if (productMode) clearReferenceImages()
+      if (headless) clearReferenceImages()
       if (!keepRunPointerForMediaTail) {
         clearActiveChatRunPointer(requestSessionKey)
       }
@@ -5244,28 +5184,6 @@ function ChatRuntimeController({
     resumeAutoFollow('session-change')
     setChatTabsState((prev) => selectAiChatTab(prev, tabId))
   }, [resumeAutoFollow])
-
-  React.useEffect(() => {
-    const onNavigationCommand = (event: Event) => {
-      const command = (event as CustomEvent<NativeChatNavigationCommand>).detail
-      if (!command || command.projectId !== currentProjectId) {
-        if (command?.type === 'select-session' && command.projectId) {
-          const projectState = readAiChatTabsState(command.projectId)
-          const next = selectAiChatTab(projectState, command.sessionId)
-          writeAiChatTabsState(next, command.projectId)
-          notifyNativeChatNavigationChanged(command.projectId)
-        }
-        return
-      }
-      if (command.type === 'new-session') {
-        startNewConversation()
-      } else {
-        selectConversationTab(command.sessionId)
-      }
-    }
-    window.addEventListener(NATIVE_CHAT_NAVIGATION_COMMAND, onNavigationCommand)
-    return () => window.removeEventListener(NATIVE_CHAT_NAVIGATION_COMMAND, onNavigationCommand)
-  }, [currentProjectId, selectConversationTab, startNewConversation])
 
   const closeConversationTab = React.useCallback((tabId: string) => {
     const normalizedTabId = String(tabId || '').trim()
@@ -5601,102 +5519,24 @@ function ChatRuntimeController({
     void onUploadReferenceFiles(files)
   }, [onUploadReferenceFiles])
 
-  React.useEffect(() => {
-    if (!productMode) return
-    return registerAgentWorkspaceChatIntegration({
-      execute: async (command) => {
-        if (command.type === 'draft.set') {
-          setDraft(command.text)
-          return
-        }
-        if (command.type === 'request.submit') {
-          await send()
-          return
-        }
-        if (command.type === 'request.interrupt') {
-          interruptActiveChat()
-          return
-        }
-        if (command.type === 'references.upload') {
-          await onUploadReferenceFiles(command.files)
-          return
-        }
-        if (command.type === 'reference.remove') {
-          if (!activeTabId) return
-          updateTabRuntime(activeTabId, (current) => ({
-            ...current,
-            manualReferenceImages: current.manualReferenceImages.filter((url) => url !== command.url),
-            manualReferenceVideos: (current.manualReferenceVideos || []).filter((item) => item.url !== command.url),
-            uploadedReferenceAssetMeta: Object.fromEntries(
-              Object.entries(current.uploadedReferenceAssetMeta).filter(([url]) => url !== command.url),
-            ),
-          }))
-          return
-        }
-        if (command.type === 'reference.add') {
-          const reference = command.reference
-          if (reference.kind === 'video') {
-            if (!activeTabId) return
-            updateTabRuntime(activeTabId, (current) => {
-              const videos = current.manualReferenceVideos || []
-              if (videos.some((item) => item.url === reference.url)) return current
-              return {
-                ...current,
-                manualReferenceVideos: [...videos, {
-                  url: reference.url,
-                  label: reference.label || '参考视频',
-                  ...(reference.thumbnailUrl ? { thumbnailUrl: reference.thumbnailUrl } : {}),
-                  ...(reference.nodeId ? { nodeId: reference.nodeId } : {}),
-                }],
-              }
-            })
-          } else {
-            addReferenceImagesSafe([reference.url], { source: '资产' })
-            if (activeTabId && (reference.assetId || reference.assetRefId || reference.label)) {
-              updateTabRuntime(activeTabId, (current) => ({
-                ...current,
-                uploadedReferenceAssetMeta: {
-                  ...current.uploadedReferenceAssetMeta,
-                  [reference.url]: {
-                    ...(reference.assetId ? { assetId: reference.assetId } : {}),
-                    ...(reference.assetRefId ? { assetRefId: reference.assetRefId } : {}),
-                    ...(reference.label ? { name: reference.label } : {}),
-                  },
-                },
-              }))
-            }
-          }
-          if (command.continuation === 'modify') {
-            setDraft((current) => current || `请基于「${reference.label || '当前资产'}」继续修改：`)
-          }
-          return
-        }
-        if (command.type === 'decision.answer') {
-          await send({ text: command.option, displayText: command.option })
-          return
-        }
-        if (command.type === 'skill.select') {
-          setActiveSkill(command.skill as ChatSelectableSkill | null)
-          return
-        }
-        if (command.type === 'session.create') {
-          if (command.projectId === currentProjectId) startNewConversation()
-          return
-        }
-        if (command.type === 'session.select') {
-          if (command.projectId === currentProjectId) {
-            selectConversationTab(command.sessionId)
-          } else {
-            const projectState = readAiChatTabsState(command.projectId)
-            writeAiChatTabsState(selectAiChatTab(projectState, command.sessionId), command.projectId)
-            notifyNativeChatNavigationChanged(command.projectId)
-          }
-        }
-      },
-    })
-  }, [activeTabId, addReferenceImagesSafe, currentProjectId, interruptActiveChat, onUploadReferenceFiles, productMode, selectConversationTab, send, setActiveSkill, setDraft, startNewConversation, updateTabRuntime])
+  useNativeChatWorkspaceAdapter({
+    enabled: surface === 'agent-workspace',
+    authority: createNativeChatWorkspaceAuthority({
+      activeTabId,
+      currentProjectId,
+      updateTabRuntime,
+      setDraft,
+      send,
+      interrupt: interruptActiveChat,
+      uploadReferences: onUploadReferenceFiles,
+      addReferenceImages: addReferenceImagesSafe,
+      selectSkill: setActiveSkill,
+      startNewConversation,
+      selectConversation: selectConversationTab,
+    }),
+  })
 
-  if (productMode && headless) return null
+  if (headless) return null
 
   return (
     <div

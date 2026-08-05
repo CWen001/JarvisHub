@@ -263,14 +263,38 @@
     {
       "path": "apps/web/src/ui/chat/AiChatDialog.tsx",
       "classification": "integration-seam",
-      "purpose": "Register mounted Native Chat Authority with Agent Workspace Adapter",
-      "adapter": "Shared Product Trunk",
+      "purpose": "Register mounted Native Chat Authority through one Product-owned Adapter Seam",
+      "adapter": "Agent Workspace Adapter",
       "tests": [
-        "pnpm run test:upstream-compatibility",
-        "pnpm --filter @jarvishub/web test"
+        "pnpm --filter @jarvishub/web exec vitest run src/product-host/nativeChatWorkspaceAdapter.test.ts src/product-host/nativeChatCompatibility.contract.test.ts",
+        "pnpm --filter @jarvishub/web build",
+        "pnpm --filter @jarvishub/web build:native"
       ],
       "upstreamDisposition": "permanent",
-      "warningChangedLines": 120
+      "warningChangedLines": 400,
+      "embeddedUpstreamPatches": [
+        {
+          "name": "chinese-ime-visible-draft",
+          "status": "pending-upstream-review",
+          "tests": [
+            "native Chat IME regression"
+          ]
+        },
+        {
+          "name": "session-and-recovered-execution-continuity",
+          "status": "pending-upstream-review",
+          "tests": [
+            "Agent Workspace interaction continuity contracts"
+          ]
+        },
+        {
+          "name": "artifact-and-media-result-projection",
+          "status": "pending-upstream-review",
+          "tests": [
+            "Artifact projection contracts"
+          ]
+        }
+      ]
     },
     {
       "path": "apps/web/src/ui/chat/MergedAskUserBubble.test.tsx",

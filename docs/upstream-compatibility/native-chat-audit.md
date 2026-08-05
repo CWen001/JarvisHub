@@ -55,3 +55,7 @@ The following behavior is the migration baseline:
 - Agent Workspace Runtime and Chat Integration contracts.
 - Native Chat request, retry, Session, IME, reference, decision, Skill, and Artifact tests.
 - Professional Workspace native build and Product Workspace production build.
+
+## Contact-surface reduction result
+
+The Product command switch, explicit reference mutation, Artifact continuation listener, and obsolete window-navigation listener now live behind the Product-owned Native Chat Workspace Adapter. Native Chat retains a generic headless controller lifecycle and one mounted-authority registration call. The remaining broad diff against the old upstream baseline is explicitly tracked as native capability evolution and the three independently named Upstream Patch groups above; it is still reported as a size warning and remains future upstream-submission work rather than being disguised as Product implementation.
