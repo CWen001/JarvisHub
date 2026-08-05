@@ -54,7 +54,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 0 16px;
+  padding: 0 24px;
   border-bottom: 1px solid var(--pds-border);
   background: var(--pds-canvas);
 }
@@ -87,22 +87,22 @@
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
 }
 
 .product-host-institution-lockup picture { display: flex; align-items: center; }
 .product-host-institution-lockup img {
   display: block;
-  width: 220px;
-  height: 52px;
+  width: 248px;
+  height: 56px;
   object-fit: contain;
   object-position: left center;
 }
-.product-host-institution-lockup > span { width: 1px; height: 36px; background: var(--pds-border-strong); }
+.product-host-institution-lockup > span { width: 1px; height: 32px; background: var(--pds-border); }
 .product-host-institution-lockup > small {
-  max-width: 150px;
-  color: var(--pds-secondary);
-  font-size: 12px;
+  max-width: 168px;
+  color: var(--pds-primary);
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.25;
 }
@@ -124,7 +124,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.product-host-header__actions { display: flex; align-items: center; gap: 4px; }
+.product-host-header__actions { display: flex; align-items: center; gap: 8px; }
 .product-host-professional-action { border: 1px solid var(--pds-border); background: var(--pds-surface); }
 
 .agent-workspace__desktop-rail {
@@ -341,7 +341,7 @@
 .product-asset-card__actions .mantine-ActionIcon-root { width: 40px; height: 40px; border-radius: 4px; color: var(--pds-primary); }
 
 @media (max-width: 980px) {
-  .product-host-institution-lockup img { width: 190px; }
+  .product-host-institution-lockup img { width: 200px; }
   .product-host-current-project span,
   .product-host-institution-lockup > small { display: none; }
   .product-asset-panel__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

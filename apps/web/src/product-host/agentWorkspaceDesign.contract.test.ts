@@ -54,10 +54,12 @@ describe('Agent Workspace Design System', () => {
     expect(productChatSource).toContain('展开全部')
   })
 
-  it('uses the crest-free Design School lockup at every Agent header size', () => {
+  it('uses a confidently sized crest-free Design School lockup at every Agent header size', () => {
     expect(agentWorkspaceSource).toContain('hust-design-logo-wordmark.png')
     expect(agentWorkspaceSource).toContain('hust-design-logo-wordmark-compact.png')
     expect(agentWorkspaceSource).not.toContain('hust-design-logo-full.png')
+    expect(css).toMatch(/\.product-host-institution-lockup img\s*\{[^}]*width:\s*248px[^}]*height:\s*56px/)
+    expect(css).toMatch(/\.product-host-institution-lockup\s*>\s*small\s*\{[^}]*font-size:\s*14px[^}]*font-weight:\s*600/)
   })
 
   it('renders Product-owned Agent presentation over a headless native authority seam', () => {
