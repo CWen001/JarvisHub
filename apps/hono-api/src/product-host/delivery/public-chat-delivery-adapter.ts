@@ -127,6 +127,37 @@ function assetIdentity(asset: PublicChatResponseAsset): string {
 	return text(asset.assetId) || text(asset.assetRefId) || text(asset.url);
 }
 
+function claimsArtifactCompletion(value: string): boolean {
+	const normalized = value.replace(/\s+/g, " ").trim();
+	if (!normalized) return false;
+	return /(?:已完成生成|已生成并|已持久化到画布|资产已生成|可在画布中查看)/u.test(normalized) ||
+		/(?:generated|created|rendered).{0,32}(?:image|video|asset|artifact)|(?:image|video|asset|artifact).{0,32}(?:generated|created|rendered)/i.test(normalized);
+}
+
+function hasCompletedGenerationTodo(toolCalls: readonly unknown[]): boolean {
+	for (const value of toolCalls) {
+		if (!isRecord(value) || text(value.name) !== "TodoWrite" || text(value.status).toLowerCase() !== "succeeded") continue;
+		const input = isRecord(value.input) ? value.input : null;
+		const items = input && Array.isArray(input.items) ? input.items : [];
+		for (const item of items) {
+			if (!isRecord(item) || text(item.status).toLowerCase() !== "completed") continue;
+			const label = `${text(item.content)} ${text(item.activeForm)}`;
+			if (/(?:生成|渲染|绘制|generate|render|create)/iu.test(label)) return true;
+		}
+	}
+	return false;
+}
+
+export function hasUnsupportedArtifactCompletionClaim(input: {
+	text: string;
+	toolCalls: readonly unknown[];
+	hasExecutionEvidence: boolean;
+}): boolean {
+	return !input.hasExecutionEvidence &&
+		claimsArtifactCompletion(input.text) &&
+		hasCompletedGenerationTodo(input.toolCalls);
+}
+
 export function finalizePublicChatDeliveryOutcome(input: {
 	outcome: PublicChatDeliveryOutcome;
 	hasUsableArtifact: boolean;

@@ -59,11 +59,17 @@ tablet-atom:<atom_id>@sha256:<review_digest>
 
 Include exactly one BaseModel entry, one quality-benchmark entry, one catalog entry, and one entry for each selected atom. Copy every digest exactly from `approval-ledger.json`. Never fabricate a digest. If evidence cannot be resolved, return blocked instead of generating.
 
+For output identity and references:
+
+- A new directional generation must allocate a fresh outputKey that is stable for that requested direction but does not collide with a historical Artifact. The example below is a naming shape, not one canonical reusable ID.
+- A historical Canvas image must not become a visual reference merely because it exists, shares a prefix, was returned by `canvas_flow_inspect`, or appeared in an earlier failed recovery. Use an existing image only when the user explicitly selected/attached it or explicitly requested modification of that Artifact.
+- For a new direction, keep image `contextNodeIds` empty unless the user supplied an explicit visual reference. A follow-up such as “图呢？” resumes the authorized fresh generation; it does not authorize converting an unrelated historical image into an image-edit source.
+
 Example shape:
 
 ```json
 {
-  "outputKey": "tablet_concept_01",
+  "outputKey": "tablet_concept_jade_axis_01",
   "label": "Professional tablet Concept Sketch",
   "prompt": "<complete provider-ready prompt>",
   "sourceEvidence": [

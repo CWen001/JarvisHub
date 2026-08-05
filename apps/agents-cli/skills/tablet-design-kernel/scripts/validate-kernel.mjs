@@ -27,6 +27,9 @@ assert(skill.includes("task_contract.userConstraints"), "SKILL.md must carry acc
 assert(skill.includes("按此策略生成") && skill.includes("调整策略"), "SKILL.md must use the two native dialogue options");
 assert(skill.includes("question` itself must literally contain all 3–6 complete Markdown cards"), "SKILL.md must require cards inside ask_user.question");
 assert(!skill.includes("strategyCards"), "SKILL.md must not extend the ask_user schema");
+assert(skill.includes("new directional generation must allocate a fresh outputKey"), "SKILL.md must prevent historical outputKey collisions");
+assert(skill.includes("must not become a visual reference merely because it exists"), "SKILL.md must preserve explicit reference authority");
+assert(!skill.includes('"outputKey": "tablet_concept_01"'), "SKILL.md must not prescribe one reusable Tablet outputKey");
 assert(manifest.design_dialogue?.recommended_card_count?.minimum === 3, "dialogue minimum must be 3");
 assert(manifest.design_dialogue?.recommended_card_count?.maximum === 6, "dialogue maximum must be 6");
 

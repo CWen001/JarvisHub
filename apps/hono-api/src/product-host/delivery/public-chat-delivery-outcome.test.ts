@@ -60,6 +60,57 @@ const baseInput = {
 };
 
 describe("public Chat turn verdict with a usable persisted asset", () => {
+	it("rejects a text-only completion claim when no current-turn Artifact was delivered", () => {
+		const verdict = buildAgentsBridgeTurnVerdict({
+			...baseInput,
+			text: [
+				"已完成生成。",
+				"- 画布节点：`tablet_concept_01`",
+				"- 状态：成功",
+				"- 结果：已持久化到画布",
+				"- 资产已生成并可在画布中查看。",
+			].join("\n"),
+			assetCount: 0,
+			toolEvidence: {
+				...baseInput.toolEvidence,
+				toolNames: ["Skill", "TodoWrite", "canvas_flow_inspect"],
+				generatedAssets: false,
+				wroteCanvas: false,
+			},
+			toolCalls: [{
+				name: "TodoWrite",
+				status: "succeeded",
+				input: {
+					items: [{
+						activeForm: "生成平板概念草图",
+						content: "派发媒体代理生成平板概念草图",
+						status: "completed",
+					}],
+				},
+			}],
+			forceAssetGeneration: false,
+			semanticExecutionIntent: {
+				detected: false,
+				source: "none" as const,
+				taskKind: null,
+				mustStop: false,
+				requiresExecutionDelivery: false,
+				reason: "none",
+			},
+			deliveryVerification: {
+				applicable: false,
+				status: "not_applicable" as const,
+				code: null,
+				summary: "not_applicable_text_only",
+			},
+		});
+
+		expect(verdict).toEqual({
+			status: "failed",
+			reasons: ["unsupported_artifact_completion_claim"],
+		});
+	});
+
 	it("reports partial completion instead of discarding the asset after a downstream runtime failure", () => {
 		const verdict = buildAgentsBridgeTurnVerdict({
 			...baseInput,

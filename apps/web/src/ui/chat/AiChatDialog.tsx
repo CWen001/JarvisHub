@@ -4593,7 +4593,12 @@ function ChatRuntimeController({
         skill: effectiveSkill,
       })
       const requiredSkillsPayload = buildRequiredSkillsForChat(effectiveSkill)
-      const requestExecution = resolveChatRequestExecution()
+      const isGenerationAuthorization = Boolean(
+        pendingAskUser
+        && pendingAskUser.optionCards.some((option) => option.value === '按此策略生成')
+        && (pendingAskUser.selectedOption === '按此策略生成' || requestText === '按此策略生成'),
+      )
+      const requestExecution = resolveChatRequestExecution({ isGenerationAuthorization })
       const selectedReferenceAnchorBindings = requestSelectedCanvasNodeContext
         ? normalizeSelectedReferenceAnchorBindings(requestSelectedCanvasNodeContext.anchorBindings)
         : undefined
@@ -4640,6 +4645,7 @@ function ChatRuntimeController({
             : {}),
         },
         mode: requestExecution.mode,
+        ...(requestExecution.forceAssetGeneration ? { forceAssetGeneration: true } : {}),
         temperature: 0.7,
         ...(referenceImagesPayload.length ? { referenceImages: referenceImagesPayload } : {}),
         ...(assetInputsPayload.length ? { assetInputs: assetInputsPayload } : {}),

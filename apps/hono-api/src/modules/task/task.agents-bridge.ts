@@ -10,6 +10,7 @@ import { buildPublicChatExecutionPlanningDirective } from "./public-chat-executi
 import { countRecoveredAgentDispatchValidationFailures } from "./agents-tool-recovery";
 import {
 	finalizePublicChatDeliveryOutcome,
+	hasUnsupportedArtifactCompletionClaim,
 	reconcilePublicChatDelivery,
 } from "../../product-host/delivery/public-chat-delivery-adapter";
 import { detectPptIntent, buildPptMasterSystemPromptAddendum } from "./agents-tool-bridge.ppt-master-prompt";
@@ -3768,6 +3769,13 @@ export function buildAgentsBridgeTurnVerdict(input: {
 	if (invalidCanvasPlan) failedReasons.add("invalid_canvas_plan");
 	if (parsedPlanWithoutNodes) failedReasons.add("parsed_plan_without_nodes");
 	if (!hasDeliveredResult) failedReasons.add("empty_response_without_execution");
+	if (hasUnsupportedArtifactCompletionClaim({
+		text: input.text,
+		toolCalls: input.toolCalls,
+		hasExecutionEvidence,
+	})) {
+		failedReasons.add("unsupported_artifact_completion_claim");
+	}
 	if (forceAssetGenerationUnmet) failedReasons.add("force_asset_generation_unmet");
 	if (semanticExecutionDeliveryUnmet) {
 		failedReasons.add("semantic_execution_delivery_unmet");

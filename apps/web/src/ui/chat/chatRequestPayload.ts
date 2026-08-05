@@ -139,9 +139,11 @@ export function buildRequiredSkillsForChat(skill: ChatSelectedRuntimeSkill | nul
   return key ? [key] : []
 }
 
-export function resolveChatRequestExecution(): ChatRequestExecution {
+export function resolveChatRequestExecution(input: {
+  isGenerationAuthorization: boolean
+}): ChatRequestExecution {
   return {
     mode: 'auto',
-    forceAssetGeneration: false,
+    forceAssetGeneration: input.isGenerationAuthorization,
   }
 }
