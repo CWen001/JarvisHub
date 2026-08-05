@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { evaluateCompatibility } from './upstream-compatibility.mjs'
+import { evaluateCompatibility, mergeGitChanges } from './upstream-compatibility.mjs'
 
 const registry = {
   upstreamRef: 'upstream/main',
@@ -71,6 +71,26 @@ test('warns when a registered seam grows without redefining compliance as line c
     changedLines: 55,
     warningChangedLines: 40,
   }])
+})
+
+test('supports explicit wildcard Product-owned roots without treating upstream changes as local edits', () => {
+  const result = evaluateCompatibility({
+    registry: {
+      ...registry,
+      productOwnedRoots: [...registry.productOwnedRoots, { path: 'docs/agent-workspace-*.md', owner: 'Product docs' }],
+    },
+    changes: [{ path: 'docs/agent-workspace-product-view.md', added: 10, deleted: 0 }],
+  })
+  assert.equal(result.ok, true)
+  assert.equal(result.productOwnedChanges[0].owner, 'Product docs')
+
+  assert.deepEqual(mergeGitChanges(
+    [{ path: 'apps/web/src/App.tsx', added: 2, deleted: 1 }],
+    [{ path: 'apps/web/src/App.tsx', added: 1, deleted: 0 }, { path: 'README.md', added: 3, deleted: 0 }],
+  ), [
+    { path: 'apps/web/src/App.tsx', added: 3, deleted: 1 },
+    { path: 'README.md', added: 3, deleted: 0 },
+  ])
 })
 
 test('requires complete ownership and verification metadata for every touchpoint', () => {

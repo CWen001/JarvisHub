@@ -17,6 +17,11 @@ function matchesOwnedRoot(filePath, pattern) {
     const prefix = root.slice(0, -3).replace(/\/$/, '')
     return path === prefix || path.startsWith(`${prefix}/`)
   }
+  if (root.includes('*')) {
+    const escaped = root.replace(/[.+?^${}()|[\]\\]/g, '\\$&')
+    const expression = escaped.replaceAll('**', '\u0000').replaceAll('*', '[^/]*').replaceAll('\u0000', '.*')
+    return new RegExp(`^${expression}$`).test(path)
+  }
   return path === root
 }
 
@@ -93,9 +98,8 @@ function git(repoRoot, args) {
   return execFileSync('git', ['-C', repoRoot, ...args], { encoding: 'utf8' }).trim()
 }
 
-function readGitChanges(repoRoot, ref, includeUntracked) {
-  const output = git(repoRoot, ['diff', '--numstat', ref, '--'])
-  const changes = output ? output.split('\n').map((line) => {
+function parseNumstat(output) {
+  return output ? output.split('\n').filter(Boolean).map((line) => {
     const [addedRaw, deletedRaw, ...pathParts] = line.split('\t')
     return {
       path: pathParts.join('\t'),
@@ -103,6 +107,27 @@ function readGitChanges(repoRoot, ref, includeUntracked) {
       deleted: deletedRaw === '-' ? 0 : Number(deletedRaw || 0),
     }
   }) : []
+}
+
+export function mergeGitChanges(...groups) {
+  const byPath = new Map()
+  for (const change of groups.flat()) {
+    const path = normalizePath(change.path)
+    const previous = byPath.get(path) || { path, added: 0, deleted: 0 }
+    byPath.set(path, {
+      path,
+      added: previous.added + Number(change.added || 0),
+      deleted: previous.deleted + Number(change.deleted || 0),
+      ...(previous.untracked || change.untracked ? { untracked: true } : {}),
+    })
+  }
+  return [...byPath.values()].sort((left, right) => left.path.localeCompare(right.path))
+}
+
+function readGitChanges(repoRoot, ref, includeUntracked) {
+  const committed = parseNumstat(git(repoRoot, ['diff', '--numstat', `${ref}...HEAD`, '--']))
+  const worktree = parseNumstat(git(repoRoot, ['diff', '--numstat', 'HEAD', '--']))
+  const changes = mergeGitChanges(committed, worktree)
   if (includeUntracked) {
     const untracked = git(repoRoot, ['ls-files', '--others', '--exclude-standard'])
     const known = new Set(changes.map((item) => item.path))
