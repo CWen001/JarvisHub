@@ -16,7 +16,7 @@
     "build:api": "pnpm --filter @jarvishub/api build",
     "build:agents": "pnpm --filter agents build",
     "test": "pnpm run test:upstream-compatibility",
-    "test:upstream-compatibility": "node --test scripts/upstream-compatibility/upstream-compatibility.test.mjs && node scripts/upstream-compatibility/upstream-compatibility.mjs",
+    "test:upstream-compatibility": "node --test scripts/upstream-compatibility/upstream-compatibility.test.mjs scripts/upstream-compatibility/replay.test.mjs && node scripts/upstream-compatibility/upstream-compatibility.mjs",
     "verify:upstream-replay": "node scripts/upstream-compatibility/replay.mjs",
     "compose:up": "docker compose up -d",
     "compose:down": "docker compose down",

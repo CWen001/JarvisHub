@@ -40,6 +40,9 @@ jobs:
           node scripts/guards/no-debugger-statement.mjs
           node scripts/upstream-compatibility/upstream-compatibility.mjs
 
+      - name: Verify upstream replayability
+        run: pnpm run verify:upstream-replay -- --no-tests --report /tmp/upstream-replay-report.md
+
       - name: Run guards and core tests
         run: pnpm run test
 

@@ -702,5 +702,17 @@
       "upstreamDisposition": "pending-upstream-review",
       "warningChangedLines": 100
     }
+  ],
+  "replayValidationCommands": [
+    "pnpm run test:upstream-compatibility",
+    "pnpm --filter @jarvishub/api exec vitest run src/product-host/delivery/public-chat-delivery-adapter.test.ts src/product-host/delivery/public-chat-delivery-outcome.test.ts src/modules/task/agents-tool-bridge.generate-image-to-canvas.test.ts src/modules/task/agents-tool-recovery.test.ts src/modules/asset/asset.hosting.test.ts src/modules/apiKey/public-chat-session.repo.test.ts",
+    "pnpm --filter @jarvishub/web test",
+    "pnpm --filter @jarvishub/api build",
+    "pnpm --filter @jarvishub/web build",
+    "pnpm --filter @jarvishub/web build:native",
+    "pnpm --filter agents validate:agent-defs",
+    "pnpm --filter agents validate:watch-skill",
+    "pnpm --filter agents validate:tablet-skill",
+    "pnpm --filter agents build"
   ]
 }
