@@ -15,7 +15,9 @@
     "build:web": "pnpm --filter @jarvishub/web build",
     "build:api": "pnpm --filter @jarvishub/api build",
     "build:agents": "pnpm --filter agents build",
-    "test": "echo \"Tests are not included in this open-source distribution.\"",
+    "test": "pnpm run test:upstream-compatibility",
+    "test:upstream-compatibility": "node --test scripts/upstream-compatibility/upstream-compatibility.test.mjs && node scripts/upstream-compatibility/upstream-compatibility.mjs",
+    "verify:upstream-replay": "node scripts/upstream-compatibility/replay.mjs",
     "compose:up": "docker compose up -d",
     "compose:down": "docker compose down",
     "prepare": "husky"

@@ -15,6 +15,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Fetch upstream compatibility baseline
+        run: |
+          git remote add upstream https://github.com/LYL1015/JarvisHub.git || true
+          git fetch --no-tags upstream main:refs/remotes/upstream/main
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -33,6 +38,7 @@ jobs:
         run: |
           node scripts/guards/no-merge-conflict-markers.mjs
           node scripts/guards/no-debugger-statement.mjs
+          node scripts/upstream-compatibility/upstream-compatibility.mjs
 
       - name: Run guards and core tests
         run: pnpm run test

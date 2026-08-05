@@ -1,0 +1,715 @@
+{
+  "schemaVersion": 1,
+  "upstreamRef": "upstream/main",
+  "productOwnedRoots": [
+    {
+      "path": "CONTEXT.md",
+      "owner": "Domain model"
+    },
+    {
+      "path": "README.md",
+      "owner": "Product documentation"
+    },
+    {
+      "path": "README_ZH.md",
+      "owner": "Product documentation"
+    },
+    {
+      "path": "docs/adr/**",
+      "owner": "Architecture decisions"
+    },
+    {
+      "path": "docs/agent-workspace-*.md",
+      "owner": "Agent Workspace specifications"
+    },
+    {
+      "path": "docs/vertical-product-*.md",
+      "owner": "Vertical product acceptance"
+    },
+    {
+      "path": "docs/watch-jvs/**",
+      "owner": "Watch product documentation"
+    },
+    {
+      "path": "docs/tablet-jvs/**",
+      "owner": "Tablet product documentation"
+    },
+    {
+      "path": "apps/web/src/product-host/**",
+      "owner": "Agent Workspace Product Host"
+    },
+    {
+      "path": "apps/web/public/product-host/**",
+      "owner": "Agent Workspace Product Host"
+    },
+    {
+      "path": "apps/hono-api/src/product-host/**",
+      "owner": "Public Chat Product Host"
+    },
+    {
+      "path": "apps/agents-cli/skills/watch-design-kernel/**",
+      "owner": "Watch Vertical Skill Package"
+    },
+    {
+      "path": "apps/agents-cli/skills/tablet-design-kernel/**",
+      "owner": "Tablet Vertical Skill Package"
+    },
+    {
+      "path": "scripts/upstream-compatibility/**",
+      "owner": "Upstream Compatibility Surface"
+    },
+    {
+      "path": "config/upstream-compatibility.json",
+      "owner": "Upstream Compatibility Surface"
+    },
+    {
+      "path": "apps/web/native.html",
+      "owner": "Native build entry"
+    },
+    {
+      "path": "apps/web/src/native-main.tsx",
+      "owner": "Native build entry"
+    },
+    {
+      "path": "apps/web/src/native.tsx",
+      "owner": "Native build entry"
+    },
+    {
+      "path": "apps/web/src/bootstrap.tsx",
+      "owner": "Shared product bootstrap"
+    },
+    {
+      "path": "bin/jvs-watch.mjs",
+      "owner": "Product launcher"
+    },
+    {
+      "path": "docs/agent-workspace-interaction-continuity-spec.md",
+      "owner": "Agent Workspace specifications"
+    },
+    {
+      "path": "docs/agent-workspace-product-view.md",
+      "owner": "Agent Workspace specifications"
+    },
+    {
+      "path": "docs/vertical-product-mvp-acceptance.md",
+      "owner": "Vertical product acceptance"
+    },
+    {
+      "path": "docs/upstream-compatibility/**",
+      "owner": "Upstream Compatibility Surface"
+    },
+    {
+      "path": ".github/workflows/quality-gate.yml",
+      "owner": "Upstream Compatibility Surface"
+    }
+  ],
+  "touchpoints": [
+    {
+      "path": "apps/agents-cli/agent-definitions/canvas.json",
+      "classification": "integration-seam",
+      "purpose": "Expose native Canvas media capability to Vertical Skills",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/agents-cli/package.json",
+      "classification": "integration-seam",
+      "purpose": "Register Vertical Skill validation commands",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/agents-cli/src/core/root-persona.ts",
+      "classification": "integration-seam",
+      "purpose": "Keep Root Agent orchestration compatible with Product execution",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/hono-api/src/modules/task/canvas-tools/catalog.ts",
+      "classification": "integration-seam",
+      "purpose": "Expose native Canvas tools used by Product execution",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/hono-api/src/modules/task/task.agents-bridge.ts",
+      "classification": "integration-seam",
+      "purpose": "Invoke Product-owned Public Chat Delivery Adapter",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/package.json",
+      "classification": "integration-seam",
+      "purpose": "Expose Product and native verification commands",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/App.tsx",
+      "classification": "integration-seam",
+      "purpose": "Mount Agent Workspace and the native Workspace Integration Seam",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/main.tsx",
+      "classification": "integration-seam",
+      "purpose": "Install the Vertical Product Host at startup",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/styles.css",
+      "classification": "integration-seam",
+      "purpose": "Keep native and Product presentation isolated",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/AssetCenterPanel.tsx",
+      "classification": "integration-seam",
+      "purpose": "Expose native asset intents to Product Workspace",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/assetChatReference.contract.test.ts",
+      "classification": "integration-seam",
+      "purpose": "Protect native asset reference Integration Seam",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/assetChatReference.ts",
+      "classification": "integration-seam",
+      "purpose": "Translate native asset intent through Product integration",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/canvasAssetModel.ts",
+      "classification": "integration-seam",
+      "purpose": "Project authoritative Canvas assets for Product use",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/AiChatDialog.tsx",
+      "classification": "integration-seam",
+      "purpose": "Register mounted Native Chat Authority with Agent Workspace Adapter",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 120
+    },
+    {
+      "path": "apps/web/src/ui/chat/MergedAskUserBubble.test.tsx",
+      "classification": "integration-seam",
+      "purpose": "Protect native decision projection used by Product timeline",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/NativeArtifactCard.tsx",
+      "classification": "integration-seam",
+      "purpose": "Expose native Artifact actions through Product integration",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/TodoProgressCard.test.tsx",
+      "classification": "integration-seam",
+      "purpose": "Protect compact execution projection inputs",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/TodoProgressCard.tsx",
+      "classification": "integration-seam",
+      "purpose": "Expose native Todo execution facts to Product projection",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/chatRequestPayload.test.ts",
+      "classification": "integration-seam",
+      "purpose": "Protect Product-safe native Chat request projection",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/chatRequestPayload.ts",
+      "classification": "integration-seam",
+      "purpose": "Build native Chat requests from Product-safe facts",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/chatRuntimeStore.ts",
+      "classification": "integration-seam",
+      "purpose": "Expose authoritative Session-scoped Chat facts to Agent Workspace",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/chatTabs.ts",
+      "classification": "integration-seam",
+      "purpose": "Preserve native Session scope across Workspaces",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/chatTabs.verticalSkill.test.ts",
+      "classification": "integration-seam",
+      "purpose": "Protect Session-scoped Vertical Skill selection",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/executionSummaryModel.contract.test.ts",
+      "classification": "integration-seam",
+      "purpose": "Protect authoritative execution projection",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/executionSummaryModel.ts",
+      "classification": "integration-seam",
+      "purpose": "Project native execution facts for Product timeline",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/mediaResultArtifactProjection.contract.test.ts",
+      "classification": "integration-seam",
+      "purpose": "Protect Media-to-Artifact projection",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/mediaResultArtifactProjection.ts",
+      "classification": "integration-seam",
+      "purpose": "Project native Media results as Artifacts",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/nativeArtifactProjection.contract.test.ts",
+      "classification": "integration-seam",
+      "purpose": "Protect native Artifact identity projection",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/nativeArtifactProjection.ts",
+      "classification": "integration-seam",
+      "purpose": "Project native Artifact identities for Product use",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/timelineAutoFollow.test.ts",
+      "classification": "integration-seam",
+      "purpose": "Protect Product timeline continuity over native Chat",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/timelineAutoFollow.ts",
+      "classification": "integration-seam",
+      "purpose": "Coordinate timeline follow behavior with native Chat",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/shared/ArtifactPreview.tsx",
+      "classification": "integration-seam",
+      "purpose": "Share authoritative Artifact preview across Workspaces",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/vite.config.ts",
+      "classification": "integration-seam",
+      "purpose": "Build Product and native Workspace entrypoints",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "package.json",
+      "classification": "integration-seam",
+      "purpose": "Expose Shared Product Trunk validation and launch commands",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "package-lock.json",
+      "classification": "integration-seam",
+      "purpose": "Retain launcher metadata for npm consumers",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "pnpm run test:upstream-compatibility",
+        "pnpm --filter @jarvishub/web test"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/agents-cli/src/llm/client.ts",
+      "classification": "upstream-patch",
+      "purpose": "General Jarvis model-client correction",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/agents-cli/src/server/http-server.ts",
+      "classification": "upstream-patch",
+      "purpose": "General Jarvis Agent server correction",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/hono-api/src/modules/apiKey/public-agents-chat-response.ts",
+      "classification": "upstream-patch",
+      "purpose": "Persist truthful Public Chat response metadata",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/hono-api/src/modules/apiKey/public-chat-session.repo.test.ts",
+      "classification": "upstream-patch",
+      "purpose": "Protect native Public Chat Session recovery",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/hono-api/src/modules/apiKey/public-chat-session.repo.ts",
+      "classification": "upstream-patch",
+      "purpose": "Restore complete native Public Chat Session decisions",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/hono-api/src/modules/asset/asset.hosting.test.ts",
+      "classification": "upstream-patch",
+      "purpose": "Protect stable native generated-asset hosting",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/hono-api/src/modules/asset/asset.hosting.ts",
+      "classification": "upstream-patch",
+      "purpose": "Persist generated native assets with stable identity",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/hono-api/src/modules/memory/memory.service.ts",
+      "classification": "upstream-patch",
+      "purpose": "Preserve native conversation memory across Product turns",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/hono-api/src/modules/task/agents-tool-bridge.generate-image-to-canvas.test.ts",
+      "classification": "upstream-patch",
+      "purpose": "Protect native Canvas output identity preflight",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/hono-api/src/modules/task/agents-tool-bridge.generate-image-to-canvas.ts",
+      "classification": "upstream-patch",
+      "purpose": "Reject incompatible native Canvas output identity before generation",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/hono-api/src/modules/task/agents-tool-recovery.test.ts",
+      "classification": "upstream-patch",
+      "purpose": "Protect recovered native execution truth",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/hono-api/src/modules/task/agents-tool-recovery.ts",
+      "classification": "upstream-patch",
+      "purpose": "Retain recovered native execution truth",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/hono-api/src/modules/task/public-chat-media-reconciliation.test.ts",
+      "classification": "upstream-patch",
+      "purpose": "Temporary regression coverage before Product Adapter migration",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/hono-api/src/modules/task/public-chat-media-reconciliation.ts",
+      "classification": "upstream-patch",
+      "purpose": "Temporary Public Chat delivery correction before Product Adapter migration",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/hono-api/src/modules/task/task.agents-bridge.verdict.test.ts",
+      "classification": "upstream-patch",
+      "purpose": "Temporary turn-verdict regression coverage before Product Adapter migration",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/web/src/ui/chat/chatRetry.contract.test.ts",
+      "classification": "upstream-patch",
+      "purpose": "Protect general native Chat retry behavior",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/web/src/ui/chat/chatRetry.ts",
+      "classification": "upstream-patch",
+      "purpose": "Correct general native Chat retry behavior",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 100
+    }
+  ]
+}
