@@ -1,9 +1,9 @@
 # Upstream replayability report
 
 - Upstream baseline: `upstream/main`
-- Product head: `9e8932bb86e8ceeac9bb3673f6f89eff66498d0c`
+- Product head: `51dc5ac2db411fcdbcbe314157459e9b19aa82c5`
 - Upstream divergence: no new upstream changes were present; this is replayability verification, not a conflict rehearsal.
-- Product-owned paths replayed: 113
+- Product-owned paths replayed: 114
 - Integration Seams replayed: 35
 - Upstream Patches replayed: 14
 - Coverage: PASS
@@ -62,16 +62,7 @@
 
 ## Validation commands
 
-- PASS (334 ms): `pnpm run test:upstream-compatibility`
-- PASS (1378 ms): `pnpm --filter @jarvishub/api exec vitest run src/product-host/delivery/public-chat-delivery-adapter.test.ts src/product-host/delivery/public-chat-delivery-outcome.test.ts src/modules/task/agents-tool-bridge.generate-image-to-canvas.test.ts src/modules/task/agents-tool-recovery.test.ts src/modules/asset/asset.hosting.test.ts src/modules/apiKey/public-chat-session.repo.test.ts`
-- PASS (2663 ms): `pnpm --filter @jarvishub/web test`
-- PASS (266 ms): `pnpm --filter @jarvishub/api build`
-- PASS (4171 ms): `pnpm --filter @jarvishub/web build`
-- PASS (4147 ms): `pnpm --filter @jarvishub/web build:native`
-- PASS (360 ms): `pnpm --filter agents validate:agent-defs`
-- PASS (207 ms): `pnpm --filter agents validate:watch-skill`
-- PASS (200 ms): `pnpm --filter agents validate:tablet-skill`
-- PASS (1865 ms): `pnpm --filter agents build`
+- Not run by this invocation.
 
 ## Future upstream change
 
