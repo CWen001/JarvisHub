@@ -1,6 +1,6 @@
 # Enterprise Vertical Design Product
 
-A single-enterprise, single-category professional design product built on JarvisHub's upstream-derived Agent foundation. Another enterprise or design category receives a separate product fork rather than becoming a selectable vertical inside the same running product.
+A shared professional-design product mainline built on JarvisHub's upstream-derived Agent foundation. It preserves one category-neutral Product infrastructure while independently packaged design verticals supply their own professional authority; the current demo may expose several verticals, while customer activation, authorization, tenancy, and deployment isolation remain future delivery decisions.
 
 ## Language
 
@@ -88,25 +88,29 @@ _Avoid_: Product View reskin, shared presentation DOM, second asset authority
 The Jarvis-owned Project and current Flow context shared by the Product Chat Shell, Product Asset Panel, history, and Professional Workspace. Product launch resumes the most recent Jarvis Project; when none exists, the Product View guides creation through Jarvis's native project path. The collapsible Project Context Rail treats Projects as the primary history unit, with Flows as design directions and multiple Jarvis-native Chat Sessions subordinate to their owning Project; selecting a Project resumes its most recent Session, and native new-conversation behavior preserves the current Flow. Project identity, membership, lifecycle, conversation identity, and persistence never belong to the Product View.
 _Avoid_: Global unscoped Chat, one forced lifetime conversation, conversation-first cross-project history, frontend project or session registry, copied metadata
 
-**Vertical Product Fork**:
-An independently branded and deployed product for one enterprise and one professional design category. It tracks Jarvis Core upstream while owning exactly one Product Chat Shell, one Design Kernel, and their integration adapters.
-_Avoid_: Runtime vertical switch, plugin marketplace, multi-tenant category catalog
+**Shared Product Trunk**:
+The common foundation from which every professional design capability grows: upstream-compatible Jarvis Core and Professional Workspace form the execution layer, while the category-neutral Agent Workspace and Product View infrastructure form the shared product layer. A vertical may consume this trunk but never copy, specialize, or bypass it.
+_Avoid_: Watch infrastructure, Tablet Workspace fork, vertical-specific Runtime, copied Product View, modified Professional Workspace
+
+**Shared Vertical Product Mainline**:
+The single maintained product codebase containing the Shared Product Trunk and independently packaged design verticals that may coexist for development and demo use. Customer-specific activation, authorization, tenancy, and deployment isolation are deliberately deferred until a delivery agreement requires them.
+_Avoid_: Long-lived product fork, copied Agent Workspace, frontend-only security claim, premature multi-tenant platform
 
 **Vertical Design Extension**:
-A compile-time deep module that turns the generic Vertical Product Host into one enterprise design product. Its entire external Interface is an Extension Descriptor containing `id`, `brand`, and `skillRoot`; behind that Interface it owns the category brand, thin Skill entry, and framework-independent professional references. Each deployed fork installs exactly one Extension.
-_Avoid_: Runtime plugin marketplace, callback registry, Jarvis Core patch, parallel Harness, prompt pack
+A deep, self-contained native Skill Package that supplies one professional design capability to the shared Product Host. Its Skill entry and progressively loaded references package portable BaseModels, professional knowledge, quality standards, process guidance, provenance, and validation without owning a brand shell, Runtime callback, or Jarvis execution concern.
+_Avoid_: Separate product runtime, Web descriptor object, callback registry, Jarvis Core patch, parallel Harness, copied Product View, prompt pack
 
-**Extension Descriptor**:
-The small Interface presented by a Vertical Design Extension to Jarvis: one stable installation `id`, one `brand` definition, and one `skillRoot`. It does not expose Agent, Tool, persistence, Canvas, knowledge-selection, or Artifact-rendering callbacks; new fields require evidence from another real vertical implementation.
-_Avoid_: Plugin SDK, lifecycle hooks, vertical workflow configuration, speculative optional callbacks
+**Exclusive Composer Vertical Activation**:
+The Session-visible rule that a completed native load of a registered supported-category Skill selects exactly one matching vertical in the existing Composer Skill slot, replacing any previously selected vertical. Selection persists in the existing Chat Session scope until the user closes or switches it or Jarvis visibly loads another vertical for clearly changed intent; ordinary native Skills remain available independently, and with no selected vertical Jarvis retains unrestricted general capability.
+_Avoid_: New activation Runtime, optional quality hint, hidden one-turn loading, simultaneous verticals, Project vertical binding, permanently locked Session, frontend keyword classifier
+
+**Vertical Skill Registry**:
+The ordered compile-time list of native Skill keys that identify mutually exclusive professional verticals. Startup validates every key through native Skill discovery; the registry contains no brand, path, Prompt, recognition keywords, callbacks, workflow configuration, or persistence hooks.
+_Avoid_: Extension Descriptor, plugin SDK, lifecycle hooks, per-vertical callback, duplicate Skill identity
 
 **Vertical Product Host**:
-The category-neutral Product View host that consumes one Extension Descriptor and exposes the shared product experience: a projected Product Timeline, Project/Flow/Session navigation, Product Asset Panel entry, Native Artifact Projection, and transition to the complete Professional Workspace. It changes presentation through the Agent Workspace Runtime without becoming another Harness or source of durable facts.
-_Avoid_: Watch-only workflow, multi-extension runtime, copied Jarvis state, extension-owned orchestration
-
-**Fixture Extension**:
-A non-production test Adapter satisfying the same three-field Extension Descriptor as the Watch Extension. It proves that the Vertical Product Host and its tests depend only on the Extension Interface and contain no hidden Watch assumptions; it is never exposed as a selectable category or deployed product.
-_Avoid_: Demo vertical, runtime plugin, second product, test-only callback interface
+The category-neutral Product View host that supplies one shared brand and product experience while validating the Vertical Skill Registry. It owns no professional Design Authority, intent classifier, Jarvis execution, or durable product fact, and it reuses the existing Agent Workspace Runtime and Composer Skill Interface unchanged.
+_Avoid_: Watch-only workflow, per-vertical shell, copied Jarvis state, extension-owned orchestration, deployment authorization policy
 
 **Harness Adapter**:
 The thin translation between framework-independent Kernel concepts and one Harness's native primitives. It maps rather than redefines Design State, Design Dialogue, Artifact requirements, Knowledge Evidence, and evaluation rules.
@@ -115,6 +119,10 @@ _Avoid_: Second backend, workflow engine, domain authority, Jarvis fork logic
 **Watch Design Skill**:
 The single native Jarvis package for the Watch Design Kernel. Its `references/` directory is the sole professional knowledge source and remains free of Jarvis Agent, Tool, Canvas, and task-contract concepts; its thin `SKILL.md` is the Jarvis-specific loading and usage entry. No duplicate Kernel package or generated Skill copy exists.
 _Avoid_: Duplicated knowledge source, generated mirror package, second Agent, custom Harness, Jarvis concepts inside professional references
+
+**Tablet Design Skill**:
+The self-contained native Jarvis package adapted from the `tablet_pi` TypeScript mainline. It owns the Tablet Concept Sketch BaseModel, Tablet Quality Benchmark, versioned professional Knowledge Corpus, Directional Design Dialogue, and downstream Artifact guidance while relying exclusively on Jarvis-native Skill, Media, Canvas, assets, Session, persistence, and Trace execution. Concept Sketch is its first acceptance-backed executable target.
+_Avoid_: Runtime dependency on `tablet_pi`, copied Pure Pi frontend, Tablet Session state machine, custom image Tool, automatic Critic
 
 **Knowledge Evidence**:
 The internal, persisted list of the BaseModel version and approved Knowledge Atom revision IDs actually used for one generation. The MVP records it through the native image Tool's existing `sourceEvidence` field, making automatic Agent selection inspectable without adding a user-confirmation workflow or new schema.
@@ -187,3 +195,15 @@ _Avoid_: Default Canvas, Mini Canvas, rebuilt Artifact editor, Product View resk
 **Workspace Integration Seam**:
 The single minimal Product Host integration point that injects reciprocal Agent Workspace navigation into Professional Workspace without changing native Canvas, Chat, layout, theme, components, or persistence. It carries only workspace-switch intent and authoritative context, keeping the fork compatible with upstream Professional Workspace updates.
 _Avoid_: Professional Workspace redesign, copied header, CSS override, parallel navigation state, broad upstream patch
+
+**Upstream Compatibility Surface**:
+The complete, explicitly registered set of narrow integration seams where the Shared Product Trunk touches upstream-derived Jarvis files. Each touchpoint is a small contiguous connection to a Product-owned Adapter, contains no Product behavior, moves or copies no Jarvis Authority, and can be removed without damaging native Jarvis operation. Its size is governed primarily by touchpoint count and semantic scope, with changed-line count used only as an upgrade-risk warning; automated review reports the native-file delta against `upstream/main`, and contract tests protect native behavior across upgrades.
+_Avoid_: Unregistered native edit, Product logic in native presentation, copied Chat runtime, broad upstream refactor, line-count-only compliance
+
+**Public Chat Delivery Adapter**:
+The category-neutral Product-owned Adapter that reconciles one Public Chat turn's nested Media completion claims with authoritative Jarvis Flow, Canvas node, and asset persistence before materializing response assets and the final delivery verdict. It owns no generation, asset record, Canvas state, retry policy, or professional meaning; the upstream-derived Public Chat bridge contains only one narrow, removable call through the Upstream Compatibility Surface. If a usable persisted Artifact exists but a later step fails, the Adapter preserves the Artifact and reports usable partial completion.
+_Avoid_: Latest-Canvas inference, Product asset database, copied Media runtime, vertical-specific delivery rule, reconciliation logic spread through the upstream bridge
+
+**Upstream Patch**:
+A small, independently tested correction to upstream-derived Jarvis behavior that benefits native Jarvis independently of the Product Host. It remains isolated from Product behavior, is prepared for upstream submission, is temporarily registered in the Upstream Compatibility Surface while unmerged, and is deleted locally once an equivalent upstream correction is adopted.
+_Avoid_: Permanent local bugfix pile, Product feature disguised as upstream fix, untested native edit, patch mixed with an integration seam

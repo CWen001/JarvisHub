@@ -1,12 +1,13 @@
 import React from 'react'
 import App from './App'
 import { bootstrapJarvisApp } from './bootstrap'
-import { installedVerticalExtension } from './product-host/installedExtension'
+import { installedVerticalSkills } from './product-host/installedVerticalSkills'
+import { sharedProductBrand } from './product-host/productIdentity'
 import { installVerticalProductHost } from './product-host/productHost'
 
 async function startInstalledProduct(): Promise<void> {
-  await installVerticalProductHost(installedVerticalExtension)
-  bootstrapJarvisApp(<App extension={installedVerticalExtension} />)
+  await installVerticalProductHost(installedVerticalSkills)
+  bootstrapJarvisApp(<App productBrand={sharedProductBrand} />)
 }
 
 void startInstalledProduct().catch((error: unknown) => {

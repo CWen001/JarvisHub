@@ -25,6 +25,8 @@ import {
   subscribeAgentWorkspaceChatIntegration,
 } from './agentWorkspaceChatIntegration'
 import { reconcileArtifactDelivery } from './artifactDeliveryReconciliation'
+import { installedVerticalSkills } from './installedVerticalSkills'
+import { selectRegisteredVerticalSkills } from './productHost'
 import {
   clearSubmittedAgentWorkspaceReferences,
   projectAgentWorkspacePendingReferences,
@@ -335,7 +337,8 @@ function useAuthoritativeAgentWorkspaceFacts(input: AuthoritativeInput): AgentWo
           key: tabRuntime.activeSkill.key,
           name: tabRuntime.activeSkill.name,
         } : null,
-        availableSkills: runtimeSkills.map((skill) => ({ id: skill.id, key: skill.key, name: skill.name })),
+        availableSkills: selectRegisteredVerticalSkills(runtimeSkills, installedVerticalSkills)
+          .map((skill) => ({ id: skill.id, key: skill.key, name: skill.name })),
         ...(tabRuntime.historyLoadError ? { errorMessage: tabRuntime.historyLoadError } : {}),
       },
     }

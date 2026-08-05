@@ -94,6 +94,7 @@ import {
   type NativeArtifactChatCommand,
 } from './NativeArtifactCard'
 import { registerAgentWorkspaceChatIntegration } from '../../product-host/agentWorkspaceChatIntegration'
+import { resolveLoadedVerticalSkill } from '../../product-host/verticalSkillActivation'
 import { useTimelineAutoFollow, type TimelineAutoFollowResumeReason } from './timelineAutoFollow'
 import {
   addAiChatTab,
@@ -2875,13 +2876,39 @@ function ChatRuntimeController({
     })
   }, [activeTabId, updateTabRuntime])
 
-  const setActiveSkill = React.useCallback((nextSkill: React.SetStateAction<ChatSelectableSkill | null>) => {
-    const tabId = activeTabId
-    updateTabRuntime(tabId, (current) => {
-      const value = typeof nextSkill === 'function' ? nextSkill(current.activeSkill) : nextSkill
-      return current.activeSkill?.id === value?.id ? current : { ...current, activeSkill: value }
+  const persistTabSkill = React.useCallback((tabId: string, skill: ChatSelectableSkill | null) => {
+    setChatTabsState((prev) => {
+      const tab = prev.tabs.find((candidate) => candidate.id === tabId)
+      if (!tab?.sessionKey || !tab.sessionScope) return prev
+      return bindAiChatTabSession(prev, tabId, {
+        sessionKey: tab.sessionKey,
+        scope: {
+          ...tab.sessionScope,
+          skill: skill ? { id: skill.id, key: skill.key, name: skill.name } : null,
+        },
+      })
     })
-  }, [activeTabId, updateTabRuntime])
+  }, [])
+
+  const setActiveSkill = React.useCallback((skill: ChatSelectableSkill | null) => {
+    const tabId = activeTabId
+    persistTabSkill(tabId, skill)
+    updateTabRuntime(tabId, (current) => (
+      current.activeSkill?.id === skill?.id ? current : { ...current, activeSkill: skill }
+    ))
+  }, [activeTabId, persistTabSkill, updateTabRuntime])
+
+  const activateLoadedVerticalSkill = React.useCallback((
+    payload: AgentsChatToolStreamPayload,
+    targetTabId: string,
+  ) => {
+    const skill = resolveLoadedVerticalSkill(payload, agentSkills)
+    if (!skill) return
+    persistTabSkill(targetTabId, skill)
+    updateTabRuntime(targetTabId, (current) => (
+      current.activeSkill?.id === skill.id ? current : { ...current, activeSkill: skill }
+    ))
+  }, [agentSkills, persistTabSkill, updateTabRuntime])
 
   const setChatSessionLane = React.useCallback((nextLane: React.SetStateAction<ChatSessionLane>) => {
     const tabId = activeTabId
@@ -3109,7 +3136,7 @@ function ChatRuntimeController({
           projectId: currentProjectId,
           flowId: currentFlowId,
           lane: chatSessionLane,
-          skill: null,
+          skill: activeSkill ? { id: activeSkill.id, key: activeSkill.key, name: activeSkill.name } : null,
         },
       }))
     }
@@ -3443,6 +3470,7 @@ function ChatRuntimeController({
               return
             }
             if (event.event === 'tool') {
+              activateLoadedVerticalSkill(event.data, requestTabId)
               const askUserPrompt = parseAskUserPromptFromToolEvent(event.data)
               if (askUserPrompt) {
                 setMessages((prev) =>
@@ -3603,6 +3631,7 @@ function ChatRuntimeController({
     }
   }, [
     activeTabId,
+    activateLoadedVerticalSkill,
     attachSuccessfulMediaResult,
     completeLiveChatRun,
     currentFlowId,
@@ -3726,10 +3755,21 @@ function ChatRuntimeController({
   }, [])
 
   React.useEffect(() => {
+    void reloadAgentSkill()
     return () => {
       agentSkillsAbortRef.current?.abort()
     }
-  }, [])
+  }, [reloadAgentSkill])
+
+  React.useEffect(() => {
+    const storedSkill = activeChatTab?.sessionScope?.skill
+    if (!storedSkill || !activeTabId || agentSkills.length === 0) return
+    const matched = agentSkills.find((skill) => skill.key === storedSkill.key) ?? null
+    if (!matched) return
+    updateTabRuntime(activeTabId, (current) => (
+      current.activeSkill?.id === matched.id ? current : { ...current, activeSkill: matched }
+    ))
+  }, [activeChatTab?.sessionScope?.skill, activeTabId, agentSkills, updateTabRuntime])
 
   const visibleAutoReferenceImages = React.useMemo(() => {
     if (productMode || !autoReferenceImages.length) return []
@@ -4440,7 +4480,7 @@ function ChatRuntimeController({
         projectId: requestProjectId,
         flowId: requestFlowId,
         lane: nextSessionLane,
-        skill: null,
+        skill: effectiveSkill ? { id: effectiveSkill.id, key: effectiveSkill.key, name: effectiveSkill.name } : null,
       },
     }))
     const requestSelectedCanvasNodeContext = canvasSelectionPolicy.attachSelectedCanvasNodeContext
@@ -4820,6 +4860,7 @@ function ChatRuntimeController({
               return
             }
             if (event.event === 'tool') {
+              activateLoadedVerticalSkill(event.data, requestTabId)
               const askUserPrompt = parseAskUserPromptFromToolEvent(event.data)
               if (askUserPrompt) {
                 setMessages((prev) =>
@@ -5130,7 +5171,7 @@ function ChatRuntimeController({
       setSending(false)
       setSendingTabId(null)
     }
-  }, [activeChatTab, activeSkill, activeTabId, aiChatWatchAssetsEnabled, animateAssistantReply, attachedDocs, attachSuccessfulMediaResult, chatSessionLane, clearReferenceImages, completeLiveChatRun, currentFlowId, currentProjectId, currentProjectName, draft, failLiveChatRun, implicitSendRequest, isActiveTabSending, mode, pendingAskUser, recordLiveChatRunEvent, referenceImages, referenceMedia, refreshMessageToolSnapshot, reloadAgentSkill, replicateTargetImage, resumeAutoFollow, selectedCanvasNodeContext, startLiveChatRun, surface, updateTabRuntime, uploadedReferenceAssetMeta])
+  }, [activeChatTab, activeSkill, activeTabId, activateLoadedVerticalSkill, aiChatWatchAssetsEnabled, animateAssistantReply, attachedDocs, attachSuccessfulMediaResult, chatSessionLane, clearReferenceImages, completeLiveChatRun, currentFlowId, currentProjectId, currentProjectName, draft, failLiveChatRun, implicitSendRequest, isActiveTabSending, mode, pendingAskUser, recordLiveChatRunEvent, referenceImages, referenceMedia, refreshMessageToolSnapshot, reloadAgentSkill, replicateTargetImage, resumeAutoFollow, selectedCanvasNodeContext, startLiveChatRun, surface, updateTabRuntime, uploadedReferenceAssetMeta])
 
   const retryFailedAssistantMessage = React.useCallback((messageId: string) => {
     if (isActiveTabSending) return

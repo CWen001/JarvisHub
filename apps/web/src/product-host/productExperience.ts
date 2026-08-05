@@ -1,4 +1,4 @@
-import type { VerticalExtensionDescriptor, VerticalBrand } from './productHost'
+import type { ProductBrand } from './productIdentity'
 
 type NativeProjectSummary = Readonly<{
   id: string
@@ -13,7 +13,7 @@ type NativeSessionSummary = Readonly<{
 
 export type ProductEntry = Readonly<{
   surface: 'chat'
-  brand: VerticalBrand
+  brand: ProductBrand
   projectId: string | null
   sessionId: string | null
   needsNativeProjectCreation: boolean
@@ -25,7 +25,7 @@ function timestamp(value: string): number {
 }
 
 export function resolveProductEntry(input: Readonly<{
-  extension: VerticalExtensionDescriptor
+  brand: ProductBrand
   projects: readonly NativeProjectSummary[]
   sessionsByProject: Readonly<Record<string, readonly NativeSessionSummary[]>>
 }>): ProductEntry {
@@ -40,7 +40,7 @@ export function resolveProductEntry(input: Readonly<{
 
   return Object.freeze({
     surface: 'chat',
-    brand: input.extension.brand,
+    brand: input.brand,
     projectId: project?.id ?? null,
     sessionId: session?.id ?? null,
     needsNativeProjectCreation: project === null,

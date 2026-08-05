@@ -1,0 +1,35 @@
+{
+  "skill": "tablet-design-knowledge",
+  "version": "tablet-knowledge-2026-07",
+  "review_policy": "Only approved atoms are eligible; the whole-product Tablet Quality Benchmark remains implicit and universal.",
+  "resource": "references/knowledge.json",
+  "atom_count": 12,
+  "design_areas": [
+    "外形与比例",
+    "产品构成",
+    "人机接触",
+    "形态与状态",
+    "输入与反馈",
+    "附件与携带",
+    "CMF与触感",
+    "机构与工艺表达"
+  ],
+  "signals": [
+    "平板",
+    "tablet",
+    "显示面",
+    "边框",
+    "机身",
+    "轻薄",
+    "握持",
+    "携带",
+    "支撑",
+    "键盘",
+    "手写笔",
+    "相机",
+    "CMF",
+    "材质",
+    "接口",
+    "产品状态"
+  ]
+}

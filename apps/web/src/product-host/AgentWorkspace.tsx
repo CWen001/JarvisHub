@@ -12,11 +12,11 @@ import type { AgentWorkspaceIntent } from './agentWorkspaceProjection'
 import { ProjectContextRail } from './ProjectContextRail'
 import { ProductAssetPanel } from './ProductAssetPanel'
 import { ProductChat } from './ProductChat'
-import type { VerticalBrand } from './productHost'
+import type { ProductBrand } from './productIdentity'
 import './agentWorkspace.css'
 
 export type AgentWorkspaceProps = Readonly<{
-  brand: VerticalBrand
+  brand: ProductBrand
   runtime: AgentWorkspaceRuntime
   railCollapsed: boolean
   onRailCollapsedChange: (collapsed: boolean) => void

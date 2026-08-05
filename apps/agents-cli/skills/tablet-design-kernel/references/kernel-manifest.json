@@ -1,0 +1,62 @@
+{
+  "name": "tablet-design-kernel",
+  "version": "0.1.0",
+  "source": {
+    "repository": "tablet_pi",
+    "revision": "6b597de27ad8718bce6176eba7048730f416a279",
+    "status": "source-faithful vendored snapshot with no build-time or runtime dependency",
+    "files": [
+      "CONTEXT.md",
+      "pure-pi/contracts.ts",
+      "pure-pi/knowledge-corpus.ts",
+      "pure-pi/visual-artifact-recipes.ts",
+      "docs/specs/tablet-design-quality-v2.md"
+    ]
+  },
+  "base_model": {
+    "id": "concept-sketch",
+    "version": "2.0.0",
+    "resource": "references/concept-sketch-base-model.md",
+    "source": "pure-pi/contracts.ts#TabletConceptSchema and pure-pi/visual-artifact-recipes.ts#concept_sketch"
+  },
+  "quality_benchmark": {
+    "id": "tablet-quality-benchmark",
+    "version": "2.0.0",
+    "resource": "references/quality-benchmark.md",
+    "source": "docs/specs/tablet-design-quality-v2.md"
+  },
+  "design_dialogue": {
+    "resource": "references/design-dialogue.md",
+    "recommended_card_count": { "minimum": 3, "maximum": 6 }
+  },
+  "knowledge": {
+    "catalog_version": "tablet-knowledge-2026-07",
+    "catalog": "references/catalog.json",
+    "resource": "references/knowledge.json",
+    "approval_ledger": "references/approval-ledger.json",
+    "atom_count": 12,
+    "design_area_count": 8
+  },
+  "artifacts": {
+    "resource": "references/artifact-guidance.md",
+    "acceptance_backed_target": "concept_sketch",
+    "packaged_targets": [
+      "concept_sketch",
+      "use_storyboard",
+      "four_panel_promo",
+      "six_view_concept",
+      "cmf_direction",
+      "structure_concept",
+      "posture_use_relationship",
+      "proportion_dimension_direction",
+      "design_rationale_map"
+    ]
+  },
+  "runtime": {
+    "agent": "media",
+    "skill_tool": "Skill",
+    "image_tool": "canvas_image_generate_to_canvas",
+    "provenance_field": "sourceEvidence"
+  },
+  "usage_scope": "internal demo; commercial content clearance to be reviewed before delivery"
+}

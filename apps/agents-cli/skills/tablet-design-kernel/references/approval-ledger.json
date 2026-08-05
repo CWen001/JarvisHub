@@ -1,0 +1,79 @@
+{
+  "skill": "tablet-design-knowledge",
+  "published_version": "tablet-knowledge-2026-07",
+  "source": "tablet_pi/pure-pi/knowledge-corpus.ts@6b597de27ad8718bce6176eba7048730f416a279",
+  "atoms": [
+    {
+      "review_code": "T01",
+      "atom_id": "edge-section-continuity",
+      "review_digest": "43978cbf32994f558e415635d3a5e9f80e4822f34b6c2fa1f5cfc1779a14b8a9",
+      "notes": "Imported from the accepted current TypeScript mainline for internal demo use."
+    },
+    {
+      "review_code": "T02",
+      "atom_id": "rear-surface-node-hierarchy",
+      "review_digest": "0c1c6fb535655b0cb4b1a30135dec80d4d6648581fbaad54c871e444e76e350c",
+      "notes": "Imported from the accepted current TypeScript mainline for internal demo use."
+    },
+    {
+      "review_code": "T03",
+      "atom_id": "grip-zone-contact-transition",
+      "review_digest": "5a97e97cf41a97e244cee36fdb034576feb3626c8ec54d8682ffc3669690aa79",
+      "notes": "Imported from the accepted current TypeScript mainline for internal demo use."
+    },
+    {
+      "review_code": "T04",
+      "atom_id": "state-change-material-evidence",
+      "review_digest": "1d198b4ae789af1542219f3dc135f47d4489bf387135c1952ca4b8e8f91ec1c2",
+      "notes": "Imported from the accepted current TypeScript mainline for internal demo use."
+    },
+    {
+      "review_code": "T05",
+      "atom_id": "input-feedback-locality",
+      "review_digest": "bc74f4f3294342785b50227e570c33256d5b6d7147acddfc6d90fb882f83bde9",
+      "notes": "Imported from the accepted current TypeScript mainline for internal demo use."
+    },
+    {
+      "review_code": "T06",
+      "atom_id": "accessory-carrying-closure",
+      "review_digest": "ab7f0c8015adceb4b5fc384a811cbf50a70d11f083380b59d02d7e86b45c23f6",
+      "notes": "Imported from the accepted current TypeScript mainline for internal demo use."
+    },
+    {
+      "review_code": "T07",
+      "atom_id": "controlled-reflection-zoning",
+      "review_digest": "e9a60c06ec3a7f18373bd5c1cc2383b06f7c5eb154280f1905259a8ed338a383",
+      "notes": "Imported from the accepted current TypeScript mainline for internal demo use."
+    },
+    {
+      "review_code": "T08",
+      "atom_id": "process-boundary-honesty",
+      "review_digest": "f60e76b8a090ca8cdc415c1f1eb66d787b7bc771a38be51d868b9d15b4f6ed88",
+      "notes": "Imported from the accepted current TypeScript mainline for internal demo use."
+    },
+    {
+      "review_code": "T09",
+      "atom_id": "camera-orientation-balance",
+      "review_digest": "e1896f979b0b6c293eb69113e0f27a42ba414aafe53976410bce43ac0ea8ea4a",
+      "notes": "Imported from the accepted current TypeScript mainline for internal demo use."
+    },
+    {
+      "review_code": "T10",
+      "atom_id": "support-footprint-discipline",
+      "review_digest": "dbdd51a619995c56c31e50a2ef7a763c68614a289e9d8315197d9b6bc3185527",
+      "notes": "Imported from the accepted current TypeScript mainline for internal demo use."
+    },
+    {
+      "review_code": "T11",
+      "atom_id": "carry-weight-perception",
+      "review_digest": "f2626436655a2152cd08709b1e667bef1511f40651f7178d5da14a465eddb437",
+      "notes": "Imported from the accepted current TypeScript mainline for internal demo use."
+    },
+    {
+      "review_code": "T12",
+      "atom_id": "display-frame-restraint",
+      "review_digest": "02c3fea9d54a62eb8bc0ed402911ae41ef86b26bd8bb23eddde86c25613d0ade",
+      "notes": "Imported from the accepted current TypeScript mainline for internal demo use."
+    }
+  ]
+}

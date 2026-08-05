@@ -8,6 +8,10 @@ import { writeUserExecutionTrace, buildUserMemoryContext, formatMemoryContextFor
 import type { PublicChatPromptContext, PublicChatReferenceImageSlot } from "./chat-prompt.types";
 import { buildPublicChatExecutionPlanningDirective } from "./public-chat-execution-planning";
 import { countRecoveredAgentDispatchValidationFailures } from "./agents-tool-recovery";
+import {
+	collectSuccessfulPersistedMediaNodeIds,
+	reconcilePublicChatMediaDelivery,
+} from "./public-chat-media-reconciliation";
 import { detectPptIntent, buildPptMasterSystemPromptAddendum } from "./agents-tool-bridge.ppt-master-prompt";
 import {
 	buildPublicChatExpectedDeliverySummary,
@@ -656,6 +660,11 @@ type AgentsBridgeResponseMeta = {
 	expectedDelivery?: PublicChatExpectedDeliverySummary;
 	deliveryEvidence?: PublicChatDeliveryEvidence;
 	deliveryVerification?: PublicChatDeliveryVerificationSummary;
+	mediaReconciliation?: {
+		claimedSuccessfulNodeIds: string[];
+		persistedSuccessfulNodeIds: string[];
+		unresolvedSuccessfulNodeIds: string[];
+	};
 	promptPipeline: PromptPipelineTraceSummary;
 	toolStatusSummary: ToolStatusSummary;
 	diagnosticFlags: DiagnosticFlag[];
@@ -3688,7 +3697,7 @@ function buildAgentsBridgeDecision(input: {
 	};
 }
 
-function buildAgentsBridgeTurnVerdict(input: {
+export function buildAgentsBridgeTurnVerdict(input: {
 	text: string;
 	assetCount: number;
 	toolEvidence: BridgeToolEvidence;
@@ -3742,15 +3751,16 @@ function buildAgentsBridgeTurnVerdict(input: {
 		);
 
 	if (input.completionTrace) {
+		const completionReasons = hasExecutionEvidence ? partialReasons : failedReasons;
 		if (input.completionTrace.allowFinish !== true || input.completionTrace.terminal === "blocked") {
-			failedReasons.add("runtime_completion_blocked");
+			completionReasons.add("runtime_completion_blocked");
 			if (input.completionTrace.failureReason) {
-				failedReasons.add(`runtime_completion_reason:${input.completionTrace.failureReason}`);
+				completionReasons.add(`runtime_completion_reason:${input.completionTrace.failureReason}`);
 			}
 		} else if (input.completionTrace.terminal === "explicit_failure") {
-			failedReasons.add("runtime_completion_explicit_failure");
+			completionReasons.add("runtime_completion_explicit_failure");
 			if (input.completionTrace.failureReason) {
-				failedReasons.add(`runtime_completion_reason:${input.completionTrace.failureReason}`);
+				completionReasons.add(`runtime_completion_reason:${input.completionTrace.failureReason}`);
 			}
 		}
 	}
@@ -6276,8 +6286,12 @@ export async function runAgentsBridgeChatTask(
 
 		const responseContentType = String(response.headers.get("content-type") || "").toLowerCase();
 		const detectedAskUserPrompts = new Map<string, AgentsBridgeAskUserPrompt>();
+		const detectedMediaResults: AgentsBridgeStreamMediaResult[] = [];
 		const askUserDispatched = new Set<string>();
 		const observerWithAskUserCapture: AgentsBridgeStreamObserver = async (event) => {
+			if (event.event === "media_result") {
+				detectedMediaResults.push(event.data);
+			}
 			if (event.event === "tool") {
 				const prompt = readBridgeAskUserPromptFromStreamEvent(event.data);
 				if (prompt) {
@@ -6316,7 +6330,7 @@ export async function runAgentsBridgeChatTask(
 				.slice(0, 200)
 		: [];
 	const normalizedBridgeToolCalls = normalizeBridgeToolCalls(bridgeToolCalls);
-	const assets = Array.isArray(data?.assets)
+	const upstreamAssets = Array.isArray(data?.assets)
 		? data.assets
 				.map((asset) => {
 					const rawType = typeof asset?.type === "string" ? asset.type.trim().toLowerCase() : "";
@@ -6338,6 +6352,29 @@ export async function runAgentsBridgeChatTask(
 				.filter((asset): asset is { type: "image" | "video"; url: string; thumbnailUrl?: string } => !!asset)
 				.slice(0, 24)
 		: [];
+	const nestedMediaNodeIds = collectSuccessfulPersistedMediaNodeIds(normalizedBridgeToolCalls);
+	const reconciliationMediaResults = [
+		...detectedMediaResults,
+		...nestedMediaNodeIds.map((nodeId) => ({ nodeId, status: "succeeded", pending: false })),
+	];
+	let reconciliationFlowGraph: Record<string, unknown> | null = null;
+	if (canvasFlowId && reconciliationMediaResults.length > 0) {
+		try {
+			const flow = await getFlowForOwner(c.env.DB, canvasFlowId, effectiveUserId);
+			reconciliationFlowGraph = flow ? parseFlowGraphRecord(flow.data) : null;
+		} catch (error) {
+			console.warn("[agents-bridge] media delivery Flow read failed", {
+				flowId: canvasFlowId,
+				error: readErrorMessage(error),
+			});
+		}
+	}
+	const mediaDelivery = reconcilePublicChatMediaDelivery({
+		upstreamAssets,
+		mediaResults: reconciliationMediaResults,
+		flowGraph: reconciliationFlowGraph,
+	});
+	const assets = mediaDelivery.assets.slice(0, 24);
 	const traceOutput =
 		data?.trace?.output && typeof data.trace.output === "object" && !Array.isArray(data.trace.output)
 			? data.trace.output
@@ -6370,7 +6407,13 @@ export async function runAgentsBridgeChatTask(
 		source: semanticTaskSummaryFromToolTrace ? "tool_trace_output_json" : "task_interrogation_json",
 	});
 	const canvasPlanDiagnosticsRaw = buildCanvasPlanDiagnostics(text);
-	const toolEvidence = summarizeBridgeToolEvidence(normalizedBridgeToolCalls);
+	const summarizedToolEvidence = summarizeBridgeToolEvidence(normalizedBridgeToolCalls);
+	const recoveredPersistedMedia = mediaDelivery.persistedSuccessfulNodeIds.length > 0;
+	const toolEvidence: BridgeToolEvidence = {
+		...summarizedToolEvidence,
+		generatedAssets: summarizedToolEvidence.generatedAssets || recoveredPersistedMedia,
+		wroteCanvas: summarizedToolEvidence.wroteCanvas || recoveredPersistedMedia,
+	};
 	const outputMode = classifyBridgeOutputMode({
 		assetCount: assets.length,
 		canvasPlanParsed: Boolean(canvasPlanDiagnosticsRaw.parseSuccess),
@@ -6543,6 +6586,15 @@ export async function runAgentsBridgeChatTask(
 			...(expectedDelivery.active ? { expectedDelivery } : {}),
 			...(deliveryVerification.applicable ? { deliveryVerification } : {}),
 			...(expectedDelivery.active ? { deliveryEvidence } : {}),
+			...(reconciliationMediaResults.length > 0 ? {
+				mediaReconciliation: {
+					claimedSuccessfulNodeIds: Array.from(new Set(reconciliationMediaResults
+						.map((item) => readTrimmedString(item.nodeId))
+						.filter(Boolean))),
+					persistedSuccessfulNodeIds: mediaDelivery.persistedSuccessfulNodeIds,
+					unresolvedSuccessfulNodeIds: mediaDelivery.unresolvedSuccessfulNodeIds,
+				},
+			} : {}),
 			promptPipeline,
 			toolStatusSummary,
 			diagnosticFlags,
@@ -6643,6 +6695,7 @@ export async function runAgentsBridgeChatTask(
 				`canvasPlanNodes=${Number(canvasPlanDiagnostics.nodeCount || 0)}`,
 				`expectedDelivery=${expectedDelivery.active ? `${expectedDelivery.kind}:${expectedDelivery.reason}` : "none"}`,
 				`deliveryVerification=${deliveryVerification.status}:${deliveryVerification.code || "ok"}`,
+				`mediaReconciliation=claimed:${reconciliationMediaResults.length},persisted:${mediaDelivery.persistedSuccessfulNodeIds.length},unresolved:${mediaDelivery.unresolvedSuccessfulNodeIds.length}`,
 				`readProjectState=${toolEvidence.readProjectState ? "yes" : "no"}`,
 				`flags=${diagnosticFlags.length}`,
 				`turnVerdict=${turnVerdict.status}:${turnVerdict.reasons.join(",")}`,

@@ -65,7 +65,7 @@ import { buildStudioUrl, isGithubOauthCallbackRoute, isStudioRoute, type StudioO
 import { spaReplace } from './utils/spaNavigate'
 import { preloadModelOptions } from './config/useModelOptions'
 import CanvasEmptyGuide from './ui/CanvasEmptyGuide'
-import type { VerticalBrand, VerticalExtensionDescriptor } from './product-host/productHost'
+import type { ProductBrand } from './product-host/productIdentity'
 import {
   dispatchProductWorkspaceCommand,
   PRODUCT_WORKSPACE_COMMAND,
@@ -150,7 +150,7 @@ function CanvasApp({
 }: {
   routeKey?: string
   initialSurface?: 'product' | 'canvas'
-  productBrand?: VerticalBrand
+  productBrand?: ProductBrand
 }): JSX.Element {
   const addNode = useRFStore((s) => s.addNode)
   const subflowNodeId = useUIStore(s => s.subflowNodeId)
@@ -1334,26 +1334,26 @@ function matchProjectEntryRoute(): { projectId: string } | null {
 
 function RootEntryPage({
   routeKey,
-  extension,
+  productBrand,
 }: {
   routeKey: string
-  extension?: VerticalExtensionDescriptor
+  productBrand?: ProductBrand
 }): JSX.Element {
   const auth = useAuth()
   if (!auth.user) return <HomePage />
   return (
     <CanvasApp
       routeKey={routeKey}
-      initialSurface={resolveInitialProductWorkspaceSurface(Boolean(extension))}
-      productBrand={extension?.brand}
+      initialSurface={resolveInitialProductWorkspaceSurface(Boolean(productBrand))}
+      productBrand={productBrand}
     />
   )
 }
 
 export default function App({
-  extension,
+  productBrand,
 }: {
-  extension?: VerticalExtensionDescriptor
+  productBrand?: ProductBrand
 } = {}): JSX.Element {
   // Re-render on SPA navigation.
   const [, forceRender] = React.useState(0)
@@ -1391,10 +1391,10 @@ export default function App({
     return (
       <CanvasApp
         routeKey={routeKey}
-        initialSurface={resolveInitialProductWorkspaceSurface(Boolean(extension))}
-        productBrand={extension?.brand}
+        initialSurface={resolveInitialProductWorkspaceSurface(Boolean(productBrand))}
+        productBrand={productBrand}
       />
     )
   }
-  return <RootEntryPage routeKey={routeKey} extension={extension} />
+  return <RootEntryPage routeKey={routeKey} productBrand={productBrand} />
 }
