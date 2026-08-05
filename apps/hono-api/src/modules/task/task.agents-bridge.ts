@@ -8,7 +8,10 @@ import { writeUserExecutionTrace, buildUserMemoryContext, formatMemoryContextFor
 import type { PublicChatPromptContext, PublicChatReferenceImageSlot } from "./chat-prompt.types";
 import { buildPublicChatExecutionPlanningDirective } from "./public-chat-execution-planning";
 import { countRecoveredAgentDispatchValidationFailures } from "./agents-tool-recovery";
-import { reconcilePublicChatDelivery } from "../../product-host/delivery/public-chat-delivery-adapter";
+import {
+	finalizePublicChatDeliveryOutcome,
+	reconcilePublicChatDelivery,
+} from "../../product-host/delivery/public-chat-delivery-adapter";
 import { detectPptIntent, buildPptMasterSystemPromptAddendum } from "./agents-tool-bridge.ppt-master-prompt";
 import {
 	buildPublicChatExpectedDeliverySummary,
@@ -6530,7 +6533,7 @@ export async function runAgentsBridgeChatTask(
 			toolEvidence,
 			canvasPlanDiagnostics,
 		});
-		const turnVerdict = buildAgentsBridgeTurnVerdict({
+		const nativeTurnVerdict = buildAgentsBridgeTurnVerdict({
 			text,
 			assetCount: assets.length,
 			toolEvidence,
@@ -6542,6 +6545,10 @@ export async function runAgentsBridgeChatTask(
 			semanticExecutionIntent,
 			deliveryVerification,
 			completionTrace: traceCompletion,
+		});
+		const turnVerdict = finalizePublicChatDeliveryOutcome({
+			outcome: nativeTurnVerdict,
+			hasUsableArtifact: assets.length > 0,
 		});
 		const canvasMutation = buildAgentsBridgeCanvasMutationSummary(normalizedBridgeToolCalls);
 		let askUserPrompt = findBridgeAskUserPrompt(normalizedBridgeToolCalls);

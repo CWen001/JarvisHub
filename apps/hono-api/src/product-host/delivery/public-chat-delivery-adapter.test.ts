@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+	finalizePublicChatDeliveryOutcome,
 	reconcilePublicChatDelivery,
 } from "./public-chat-delivery-adapter";
 
@@ -56,6 +57,19 @@ describe("Public Chat Delivery Adapter", () => {
 			claimedSuccessfulNodeIds: ["tablet_concept_01"],
 			persistedSuccessfulNodeIds: ["tablet_concept_01"],
 			unresolvedSuccessfulNodeIds: [],
+		});
+	});
+
+	it("preserves a usable Artifact when a downstream runtime failure reaches final delivery", () => {
+		expect(finalizePublicChatDeliveryOutcome({
+			outcome: {
+				status: "failed",
+				reasons: ["runtime_completion_explicit_failure", "runtime_completion_reason:summary_failed"],
+			},
+			hasUsableArtifact: true,
+		})).toEqual({
+			status: "partial",
+			reasons: ["runtime_completion_explicit_failure", "runtime_completion_reason:summary_failed"],
 		});
 	});
 

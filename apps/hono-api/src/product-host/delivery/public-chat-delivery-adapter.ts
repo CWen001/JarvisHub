@@ -6,6 +6,11 @@ export type PublicChatResponseAsset = {
 	assetRefId?: string;
 };
 
+export type PublicChatDeliveryOutcome = {
+	status: "satisfied" | "partial" | "failed";
+	reasons: string[];
+};
+
 export type PublicChatDeliveryAdapterResult = {
 	assets: PublicChatResponseAsset[];
 	executionEvidence: { generatedAssets: boolean; wroteCanvas: boolean };
@@ -120,6 +125,19 @@ function persistedAssetFromNode(node: RecordValue): PublicChatResponseAsset | nu
 
 function assetIdentity(asset: PublicChatResponseAsset): string {
 	return text(asset.assetId) || text(asset.assetRefId) || text(asset.url);
+}
+
+export function finalizePublicChatDeliveryOutcome(input: {
+	outcome: PublicChatDeliveryOutcome;
+	hasUsableArtifact: boolean;
+}): PublicChatDeliveryOutcome {
+	if (!input.hasUsableArtifact || input.outcome.status !== "failed") return input.outcome;
+	const downstreamOnly = input.outcome.reasons.length > 0 && input.outcome.reasons.every((reason) => (
+		reason === "runtime_completion_blocked" ||
+		reason === "runtime_completion_explicit_failure" ||
+		reason.startsWith("runtime_completion_reason:")
+	));
+	return downstreamOnly ? { status: "partial", reasons: [...input.outcome.reasons] } : input.outcome;
 }
 
 export async function reconcilePublicChatDelivery(input: {
