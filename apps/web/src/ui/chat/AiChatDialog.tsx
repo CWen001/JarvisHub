@@ -91,10 +91,11 @@ import AiChatTabBar from './AiChatTabBar'
 import { NativeArtifactCard } from './NativeArtifactCard'
 import {
   createNativeChatWorkspaceAuthority,
+  notifyNativeChatNavigationChanged,
+  resolveLoadedVerticalSkill,
   useNativeArtifactWorkspaceAdapter,
   useNativeChatWorkspaceAdapter,
 } from '../../product-host/nativeChatWorkspaceAdapter'
-import { resolveLoadedVerticalSkill } from '../../product-host/verticalSkillActivation'
 import { useTimelineAutoFollow, type TimelineAutoFollowResumeReason } from './timelineAutoFollow'
 import {
   addAiChatTab,
@@ -107,7 +108,6 @@ import {
   writeAiChatTabsState,
   type AiChatTabsState,
 } from './chatTabs'
-import { notifyNativeChatNavigationChanged } from '../../product-host/nativeChatNavigation'
 import {
   buildAttachedDocsPromptBlock,
   classifyUploadedFile,

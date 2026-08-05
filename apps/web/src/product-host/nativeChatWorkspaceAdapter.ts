@@ -6,6 +6,8 @@ import {
   type AgentWorkspaceChatIntegrationCommand,
 } from './agentWorkspaceChatIntegration'
 import { notifyNativeChatNavigationChanged } from './nativeChatNavigation'
+export { notifyNativeChatNavigationChanged } from './nativeChatNavigation'
+export { resolveLoadedVerticalSkill } from './verticalSkillActivation'
 
 export type NativeChatWorkspaceAuthority = Readonly<{
   setDraft: (text: string) => void

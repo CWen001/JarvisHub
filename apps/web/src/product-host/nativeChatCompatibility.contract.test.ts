@@ -15,6 +15,7 @@ describe('Native Chat Upstream Compatibility Surface', () => {
   it('retains a narrow mounted-controller registration without Product command implementation', () => {
     expect(nativeChatSource).toContain('useNativeChatWorkspaceAdapter({')
     expect(nativeChatSource).toContain("enabled: surface === 'agent-workspace'")
+    expect(nativeChatSource.match(/from '\.\.\/\.\.\/product-host\//g)).toHaveLength(1)
     for (const token of productImplementationTokens) expect(nativeChatSource).not.toContain(token)
   })
 
