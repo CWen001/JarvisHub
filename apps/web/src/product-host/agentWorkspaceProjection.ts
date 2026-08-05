@@ -24,8 +24,10 @@ export type AgentWorkspaceAssetFact = Readonly<{
 }>
 
 export type AgentWorkspaceRunFact = Readonly<{
+  id?: string
   status: 'idle' | 'running' | 'succeeded' | 'failed' | 'partial'
   label: string
+  goal?: string
   startedAt?: number
   updatedAt?: number
   todoItems?: readonly Readonly<{

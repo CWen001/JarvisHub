@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 
 import { MantineProvider } from '@mantine/core'
-import { fireEvent, render, screen } from '@testing-library/react'
-import { beforeAll, describe, expect, it, vi } from 'vitest'
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import type { AgentWorkspaceRuntimeSnapshot } from './agentWorkspaceRuntime'
 import { ProductChat } from './ProductChat'
 
@@ -16,6 +16,8 @@ beforeAll(() => {
     })),
   })
 })
+
+afterEach(cleanup)
 
 const base: AgentWorkspaceRuntimeSnapshot = {
   revision: 1,
@@ -36,6 +38,43 @@ describe('Product Chat Interaction Continuity', () => {
     expect(screen.getByRole('status', { name: '图片已生成，正在保存到项目' })).toBeTruthy()
     expect(screen.getByText('**保持原样**')).toBeTruthy()
     expect(screen.queryByText('保持原样')).toBeNull()
+  })
+
+  it('shows the Semantic Work Item details while active, then condenses completion until reopened', async () => {
+    const active: AgentWorkspaceRuntimeSnapshot = {
+      ...base,
+      run: {
+        id: 'run-1',
+        status: 'running',
+        label: '设计任务正在进行',
+        goal: '生成一组儿童手表设计提案',
+        startedAt: Date.now() - 5_000,
+        todoItems: [
+          { content: '建立造型方向', status: 'completed' },
+          { content: '生成视觉提案', status: 'in_progress' },
+        ],
+      },
+    }
+    const rendered = render(<MantineProvider><ProductChat view={active} onIntent={vi.fn()} /></MantineProvider>)
+
+    expect(screen.getByText('生成一组儿童手表设计提案')).toBeTruthy()
+    expect(screen.getByText('生成视觉提案')).toBeTruthy()
+    expect(screen.getAllByText('进行中').length).toBeGreaterThan(0)
+    expect(screen.getByRole('button', { name: /设计任务正在进行/ }).getAttribute('aria-expanded')).toBe('true')
+
+    rendered.rerender(<MantineProvider><ProductChat view={{
+      ...active,
+      revision: 2,
+      run: { ...active.run, status: 'succeeded', label: '本轮设计已经完成' },
+      composer: { ...active.composer, sending: false },
+    }} onIntent={vi.fn()} /></MantineProvider>)
+
+    const completed = screen.getByRole('button', { name: /本轮设计已经完成/ })
+    await waitFor(() => expect(completed.getAttribute('aria-expanded')).toBe('false'))
+    expect(screen.queryByText('生成视觉提案')).toBeNull()
+    fireEvent.click(completed)
+    expect(screen.getByText('生成视觉提案')).toBeTruthy()
+    expect(screen.getAllByText('已完成').length).toBeGreaterThan(0)
   })
 
   it('delivers a stable Artifact while truthfully labelling partial completion', () => {

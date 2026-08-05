@@ -4,7 +4,7 @@ import { useRFStore } from '../canvas/store'
 import { collectCanvasAssets } from '../ui/canvasAssetModel'
 import { peekAiChatTabsState } from '../ui/chat/chatTabs'
 import { useLiveChatRunStore } from '../ui/chat/liveChatRunStore'
-import { createEmptyChatTabRuntime, useAiChatRuntimeStore, type ChatMessage } from '../ui/chat/chatRuntimeStore'
+import { createEmptyChatTabRuntime, useAiChatRuntimeStore, type ChatMessage, type ChatTabRuntimeState } from '../ui/chat/chatRuntimeStore'
 import { resolveSuccessfulToolSnapshotArtifacts } from '../ui/chat/mediaResultArtifactProjection'
 import { NATIVE_CHAT_NAVIGATION_CHANGED } from './nativeChatNavigation'
 import {
@@ -25,9 +25,24 @@ import {
   subscribeAgentWorkspaceChatIntegration,
 } from './agentWorkspaceChatIntegration'
 import { reconcileArtifactDelivery } from './artifactDeliveryReconciliation'
+import {
+  clearSubmittedAgentWorkspaceReferences,
+  projectAgentWorkspacePendingReferences,
+  removeAgentWorkspacePendingReference,
+} from './agentWorkspaceReferenceProjection'
 
 type CurrentProject = Readonly<{ id?: string | null; name: string }> | null
 type CurrentFlow = Readonly<{ id?: string | null; name?: string | null; updatedAt?: string | null }> | null
+
+function updateActiveProjectChatRuntime(
+  projectId: string,
+  updater: (current: ChatTabRuntimeState) => ChatTabRuntimeState,
+): void {
+  const tabs = peekAiChatTabsState(projectId)
+  const tabId = String(tabs?.activeTabId || '').trim()
+  if (!tabId) return
+  useAiChatRuntimeStore.getState().updateTabRuntime(tabId, updater)
+}
 
 type AuthoritativeInput = Readonly<{
   enabled?: boolean
@@ -281,7 +296,9 @@ function useAuthoritativeAgentWorkspaceFacts(input: AuthoritativeInput): AgentWo
       timeline: projectTimeline(tabRuntime.messages, nodes),
       assets,
       run: currentRun ? {
+        id: currentRun.runId,
         status: currentRun.status,
+        goal: currentRun.displayText || currentRun.requestText,
         assistantMessageId: currentRun.assistantMessageId,
         startedAt: currentRun.startedAt,
         updatedAt: currentRun.updatedAt,
@@ -295,25 +312,7 @@ function useAuthoritativeAgentWorkspaceFacts(input: AuthoritativeInput): AgentWo
           }] : []),
       } : null,
     })
-    const pendingReferences = [
-      ...tabRuntime.manualReferenceImages.map((url) => {
-        const metadata = tabRuntime.uploadedReferenceAssetMeta[url]
-        return {
-          kind: 'image' as const,
-          url,
-          label: metadata?.name || '参考图片',
-          ...(metadata?.assetId ? { assetId: metadata.assetId } : {}),
-          ...(metadata?.assetRefId ? { assetRefId: metadata.assetRefId } : {}),
-        }
-      }),
-      ...(tabRuntime.manualReferenceVideos ?? []).map((item) => ({
-        kind: 'video' as const,
-        url: item.url,
-        label: item.label || '参考视频',
-        ...(item.thumbnailUrl ? { thumbnailUrl: item.thumbnailUrl } : {}),
-        ...(item.nodeId ? { nodeId: item.nodeId } : {}),
-      })),
-    ]
+    const pendingReferences = projectAgentWorkspacePendingReferences(tabRuntime)
 
     return {
       projects: input.projects,
@@ -428,7 +427,21 @@ export function useAuthoritativeAgentWorkspaceRuntime(
           return
         }
         if (command.type === 'chat.request.submit') {
+          const projectId = String(current.currentProject?.id || '').trim()
+          const beforeTabs = peekAiChatTabsState(projectId)
+          const beforeTab = beforeTabs?.tabs.find((tab) => tab.id === beforeTabs.activeTabId)
+          const beforeRunId = beforeTab?.sessionKey
+            ? useLiveChatRunStore.getState().runsBySessionKey[beforeTab.sessionKey]?.runId
+            : null
           await executeAgentWorkspaceChatCommand({ type: 'request.submit' })
+          const afterTabs = peekAiChatTabsState(projectId)
+          const afterTab = afterTabs?.tabs.find((tab) => tab.id === afterTabs.activeTabId)
+          const run = afterTab?.sessionKey
+            ? useLiveChatRunStore.getState().runsBySessionKey[afterTab.sessionKey]
+            : null
+          if (run?.status === 'succeeded' && run.runId !== beforeRunId) {
+            updateActiveProjectChatRuntime(projectId, clearSubmittedAgentWorkspaceReferences)
+          }
           return
         }
         if (command.type === 'chat.request.interrupt') {
@@ -441,6 +454,10 @@ export function useAuthoritativeAgentWorkspaceRuntime(
         }
         if (command.type === 'chat.reference.remove') {
           await executeAgentWorkspaceChatCommand({ type: 'reference.remove', url: command.url })
+          updateActiveProjectChatRuntime(
+            String(current.currentProject?.id || '').trim(),
+            (runtime) => removeAgentWorkspacePendingReference(runtime, command.url),
+          )
           return
         }
         if (command.type === 'chat.decision.answer') {

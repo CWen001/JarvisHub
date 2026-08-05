@@ -9,11 +9,30 @@ import type {
 } from './agentWorkspaceProjection'
 import type { AgentWorkspaceRuntimeSnapshot } from './agentWorkspaceRuntime'
 
+const runStatusLabel = {
+  running: '进行中',
+  succeeded: '已完成',
+  failed: '需要处理',
+  partial: '部分完成',
+} as const
+
+const todoStatusLabel = {
+  pending: '排队中',
+  in_progress: '进行中',
+  waiting: '等待输入',
+  blocked: '需要处理',
+  completed: '已完成',
+} as const
+
 function ProductExecutionRow({ view }: { view: AgentWorkspaceRuntimeSnapshot }): JSX.Element | null {
   const run = view.run
   const active = run.status === 'running'
+  const keepDetailVisible = active || run.status === 'failed' || run.status === 'partial'
   const [now, setNow] = React.useState(Date.now())
-  const [expanded, setExpanded] = React.useState(active)
+  const [expanded, setExpanded] = React.useState(keepDetailVisible)
+  React.useEffect(() => {
+    setExpanded(keepDetailVisible)
+  }, [keepDetailVisible, run.id, run.status])
   React.useEffect(() => {
     if (!active) return
     const id = window.setInterval(() => setNow(Date.now()), 1_000)
@@ -21,17 +40,42 @@ function ProductExecutionRow({ view }: { view: AgentWorkspaceRuntimeSnapshot }):
   }, [active])
   if (run.status === 'idle') return null
   const elapsed = run.startedAt ? Math.max(0, Math.floor((now - run.startedAt) / 1000)) : null
+  const items = run.todoItems ?? []
+  const completedCount = items.filter((item) => item.status === 'completed').length
+  const statusLabel = runStatusLabel[run.status]
   return (
     <section className={`product-execution-row is-${run.status}`} role="status" aria-label={run.label}>
       <button type="button" className="product-execution-row__summary" onClick={() => setExpanded((value) => !value)} aria-expanded={expanded}>
         <span className="product-execution-row__pulse" aria-hidden="true" />
         <strong>{run.label}</strong>
+        <span className="product-execution-row__summary-status">{statusLabel}</span>
+        {items.length ? <span className="product-execution-row__count">{completedCount}/{items.length}</span> : null}
         {elapsed !== null ? <time>{Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, '0')}</time> : null}
       </button>
-      {expanded && run.todoItems?.length ? (
-        <ul className="product-execution-row__items">
-          {run.todoItems.map((item, index) => <li key={`${item.content}:${index}`} data-status={item.status}>{item.content}</li>)}
-        </ul>
+      {expanded ? (
+        <div className="product-execution-row__details">
+          <div className="product-execution-row__main-item">
+            <span>当前任务</span>
+            <strong>{run.goal || run.label}</strong>
+            <small>{statusLabel}</small>
+          </div>
+          {items.length ? (
+            <>
+              <div className="product-execution-row__progress">
+                <progress aria-label="任务进度" max={items.length} value={completedCount} />
+                <span>{completedCount}/{items.length} 项完成</span>
+              </div>
+              <ul className="product-execution-row__items">
+                {items.map((item, index) => (
+                  <li key={`${item.content}:${index}`} data-status={item.status}>
+                    <span>{item.content}</span>
+                    <small>{todoStatusLabel[item.status]}</small>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : <p className="product-execution-row__coarse-activity">{run.label}</p>}
+        </div>
       ) : null}
     </section>
   )

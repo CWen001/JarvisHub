@@ -6,7 +6,9 @@ import type {
 } from './agentWorkspaceProjection'
 
 export type AgentWorkspaceArtifactDeliveryRunEvidence = Readonly<{
+  id?: string
   status: 'running' | 'succeeded' | 'failed'
+  goal?: string
   assistantMessageId?: string
   startedAt?: number
   updatedAt?: number
@@ -83,6 +85,8 @@ function runFact(
   const hasUsableArtifact = (target?.assets ?? []).some(stableTimelineAsset)
   const partial = target?.result === 'partial' || (evidence.status === 'failed' && hasUsableArtifact)
   const common = {
+    ...(text(evidence.id) ? { id: text(evidence.id) } : {}),
+    ...(text(evidence.goal) ? { goal: text(evidence.goal) } : {}),
     ...(evidence.startedAt !== undefined ? { startedAt: evidence.startedAt } : {}),
     ...(evidence.updatedAt !== undefined ? { updatedAt: evidence.updatedAt } : {}),
     ...(evidence.todoItems ? { todoItems: evidence.todoItems } : {}),
