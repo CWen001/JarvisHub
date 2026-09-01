@@ -226,12 +226,115 @@ function extractStructuredOutput(text: string): unknown | undefined {
   while ((match = pattern.exec(text)) !== null) {
     lastMatch = match[1];
   }
-  if (!lastMatch) return undefined;
   try {
-    return JSON.parse(lastMatch);
+    return JSON.parse(lastMatch ?? text.trim());
   } catch {
     return undefined;
   }
+}
+
+const MEDIA_RESULT_ARRAY_KEYS = ["dispatched", "completed", "pending", "failed", "blocked", "skipped"] as const;
+const MEDIA_COMPLETION_TOOLS = new Set([
+  "canvas_image_generate_to_canvas",
+  "canvas_image_wait_for_result",
+  "canvas_video_generate_to_canvas",
+  "canvas_video_wait_for_result",
+  "canvas_video_concat_to_canvas",
+]);
+
+function mediaResultNeedsContinuation(agentType: string, text: string): boolean {
+  if (agentType !== "media") return false;
+  const output = extractStructuredOutput(text);
+  if (!output || typeof output !== "object" || Array.isArray(output)) return true;
+  const result = output as Record<string, unknown>;
+  return typeof result.phase !== "string"
+    || typeof result.status !== "string"
+    || MEDIA_RESULT_ARRAY_KEYS.some((key) => !Array.isArray(result[key]));
+}
+
+function record(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : null;
+}
+
+function toolData(toolCall: ToolCallTrace): Record<string, unknown> | null {
+  const output = record(toolCall.outputJson);
+  return record(output?.data) ?? output;
+}
+
+function stringArray(value: unknown): string[] {
+  return Array.isArray(value)
+    ? value.map((item) => typeof item === "string" ? item.trim() : "").filter(Boolean)
+    : [];
+}
+
+function recoverPersistedMediaCompletion(
+  contractValue: unknown,
+  toolCalls: readonly ToolCallTrace[],
+): Record<string, unknown> | undefined {
+  const contract = record(contractValue);
+  if (!contract) return undefined;
+  const targetNodeIds = stringArray(contract.targetNodeIds);
+  const outputKeys = stringArray(contract.outputKeys);
+  const targets = targetNodeIds.length > 0 ? targetNodeIds : outputKeys;
+  if (targets.length === 0) return undefined;
+
+  const completed = targets.map((nodeId, targetIndex) => {
+    for (let index = 0; index < toolCalls.length; index += 1) {
+      const toolCall = toolCalls[index]!;
+      if (toolCall.status !== "succeeded" || !MEDIA_COMPLETION_TOOLS.has(toolCall.name)) continue;
+      const data = toolData(toolCall);
+      if (!data || readStringField(data, "nodeId") !== nodeId) continue;
+      const outputKey = readStringField(data, "outputKey")
+        ?? readStringField(toolCall.args, "outputKey")
+        ?? nodeId;
+      if (outputKeys.length > 0 && outputKey !== outputKeys[targetIndex]) continue;
+      const assetId = readStringField(data, "assetId");
+      const taskId = readStringField(data, "taskId");
+      if (!assetId || !taskId || data.status !== "success" || data.pending !== false) continue;
+
+      const persisted = toolCalls.slice(index + 1).some((laterCall) => {
+        if (laterCall.status !== "succeeded" || laterCall.name !== "canvas_flow_inspect") return false;
+        const nodes = toolData(laterCall)?.nodes;
+        return Array.isArray(nodes) && nodes.some((value) => {
+          const node = record(value);
+          return node?.nodeId === nodeId
+            && node.assetId === assetId
+            && node.taskId === taskId
+            && node.status === "success"
+            && node.persisted === true;
+        });
+      });
+      if (persisted) {
+        return { nodeId, assetId, outputKey, taskId, status: "success", persisted: true };
+      }
+    }
+    return null;
+  });
+  if (completed.some((item) => item === null)) return undefined;
+
+  return {
+    phase: readStringField(contract, "kind") ?? "media",
+    status: "completed",
+    dispatched: completed,
+    completed,
+    pending: [],
+    failed: [],
+    blocked: [],
+    skipped: [],
+  };
+}
+
+function settleMediaResult(
+  agentType: string,
+  text: string,
+  contract: unknown,
+  toolCalls: readonly ToolCallTrace[],
+): unknown | undefined {
+  const structured = extractStructuredOutput(text);
+  if (agentType !== "media" || !mediaResultNeedsContinuation(agentType, text)) return structured;
+  return recoverPersistedMediaCompletion(contract, toolCalls);
 }
 
 function renderTaskContractSystemFragment(meta: Record<string, unknown> | undefined): string {
@@ -376,10 +479,11 @@ export async function runSubagent(options: RunSubagentOptions): Promise<RunSubag
       timeoutMs: definition.timeoutMs,
       agentType: options.agentType,
     });
-    const finalText = await options.runner.run(userPrompt, options.cwd, {
+    const subagentToolCalls: ToolCallTrace[] = [];
+    const runOnce = (prompt: string, tools = allowedTools) => options.runner.run(prompt, options.cwd, {
       depth: agentDepth,
       systemMode: { kind: "provided", system: systemPrompt },
-      allowedTools,
+      allowedTools: tools,
       requiredSkills,
       history: ctx.history,
       toolContextMeta: ctx.toolContextMeta,
@@ -407,6 +511,7 @@ export async function runSubagent(options: RunSubagentOptions): Promise<RunSubag
         void eventSink?.({ type: "turn.completed", turn, ...scope });
       },
       onToolCall: (toolCall: ToolCallTrace) => {
+        subagentToolCalls.push(toolCall);
         const todoUpdate = parseRuntimeTodoUpdate(toolCall);
         if (todoUpdate) {
           void eventSink?.({ type: "todo.updated", todo: todoUpdate, ...scope });
@@ -418,9 +523,38 @@ export async function runSubagent(options: RunSubagentOptions): Promise<RunSubag
         TaskBoard.recordTool(subAgentId, toolCall.name);
         void eventSink?.({ type: "tool.completed", toolCall, ...scope });
       },
-    }).finally(() => abort.cleanup());
+    });
+    let finalText: string;
+    let structuredOutput: unknown | undefined;
+    try {
+      finalText = await runOnce(userPrompt);
+      structuredOutput = settleMediaResult(
+        options.agentType,
+        finalText,
+        ctx.toolContextMeta.subagentTaskContract,
+        subagentToolCalls,
+      );
+      if (options.agentType === "media" && structuredOutput === undefined) {
+        finalText = await runOnce(
+          "不要再调用任何工具。仅根据本轮已有工具结果返回角色定义要求的唯一 JSON 终态，并补齐所有数组字段。",
+          new Set<string>(),
+        );
+        structuredOutput = settleMediaResult(
+          options.agentType,
+          finalText,
+          ctx.toolContextMeta.subagentTaskContract,
+          subagentToolCalls,
+        );
+      }
+    } finally {
+      abort.cleanup();
+    }
+    if (options.agentType === "media" && structuredOutput === undefined) {
+      throw new Error("media sub-agent 未按终态契约返回结构化结果，已拒绝把说明性文本标记为成功。");
+    }
+    if (options.agentType === "media") finalText = JSON.stringify(structuredOutput);
     void eventSink?.({ type: "run.completed", result: finalText, ...scope });
-    const structuredOutput = extractStructuredOutput(finalText);
+    structuredOutput ??= extractStructuredOutput(finalText);
     return { subAgentId, agentType: options.agentType, finalText, ...(structuredOutput !== undefined ? { structuredOutput } : {}) };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
