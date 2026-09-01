@@ -19,16 +19,16 @@ A prior local Watch smoke verified:
 2. Project/Session navigation and Native Asset Center used native identities without parallel records.
 3. Professional Workspace opened the complete mounted Jarvis Canvas and returned to the same Product View context.
 4. `/skills` discovered `watch-design-kernel` without load errors.
-5. A historical live text-Provider turn exercised the former strategy-card interaction; ADR-0017 supersedes that interaction requirement.
+5. A historical live text-Provider turn exercised the former strategy-card interaction; ADR-0018 supersedes that interaction requirement.
 6. A Provider-backed generation persisted Canvas output and immutable `sourceEvidence`.
 
-Current acceptance requires an explicit Artifact request to proceed without a confirmation ceremony when the Skill can safely infer the direction; a genuinely blocking design decision produces one free-text native `ask_user` question. Every delivered Watch Concept Image receives one concise actual-image Critic review without automatic regeneration.
+Current acceptance requires one native Design Direction Turn before every Watch image-generation request unless the user explicitly waives it. The turn offers three concise clickable text directions by default, marks the first as recommended, accepts free text, and covers the whole user request rather than each Provider call. Local edits and retries receive narrower implementation-strength choices. Every delivered Watch Concept Image still receives one concise actual-image Critic review without automatic regeneration.
 
 ## Tablet acceptance state
 
 Offline acceptance verifies the self-contained Tablet package, 12 approved atoms across eight design areas, nine packaged Artifact targets, Concept Sketch BaseModel, Quality Benchmark, registry installation, Composer activation projection, Session selection persistence, and native builds. Live `/skills` discovery lists both Tablet and Watch with no load errors.
 
-A five-image Provider-backed Tablet acceptance is recorded in `docs/tablet-jvs/five-image-acceptance-2026-08-05.md`. It historically verified automatic native Tablet Skill recognition, the former strategy-card authorization flow, five successful persisted and fetchable PNG assets, native `generationContext`, and exact BaseModel/Benchmark/Catalog/selected-atom evidence; ADR-0017 supersedes only that interaction flow. Strict manual visual compliance was 4/5 because one outdoor direction read as a removable rugged case despite an explicit bare-enclosure prohibition. The first successful Canvas result also exposed a top-level delivery-reconciliation defect: public Chat returned no assets and `force_asset_generation_unmet` even though the native image node was successful and persisted.
+A five-image Provider-backed Tablet acceptance is recorded in `docs/tablet-jvs/five-image-acceptance-2026-08-05.md`. It historically verified automatic native Tablet Skill recognition, the former strategy-card authorization flow, five successful persisted and fetchable PNG assets, native `generationContext`, and exact BaseModel/Benchmark/Catalog/selected-atom evidence; ADR-0018 supersedes only that interaction flow. Strict manual visual compliance was 4/5 because one outdoor direction read as a removable rugged case despite an explicit bare-enclosure prohibition. The first successful Canvas result also exposed a top-level delivery-reconciliation defect: public Chat returned no assets and `force_asset_generation_unmet` even though the native image node was successful and persisted.
 
 ## Known demo limits
 

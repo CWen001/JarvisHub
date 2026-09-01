@@ -153,6 +153,54 @@
       "warningChangedLines": 80
     },
     {
+      "path": "apps/agents-cli/src/core/agent-loop.test.ts",
+      "classification": "upstream-patch",
+      "purpose": "Protect required Critic review after persisted vertical media",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "cd apps/agents-cli && node --loader ts-node/esm --test src/core/agent-loop.test.ts",
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "local-only",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/agents-cli/src/core/agent-loop.ts",
+      "classification": "upstream-patch",
+      "purpose": "Require native Critic review after persisted vertical media",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "cd apps/agents-cli && node --loader ts-node/esm --test src/core/agent-loop.test.ts",
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "local-only",
+      "warningChangedLines": 120
+    },
+    {
+      "path": "apps/agents-cli/src/core/tools/ask-user.test.ts",
+      "classification": "upstream-patch",
+      "purpose": "Protect recovery of native text choices sent as empty image cards",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "cd apps/agents-cli && node --loader ts-node/esm --test src/core/tools/ask-user.test.ts",
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "local-only",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/agents-cli/src/core/tools/ask-user.ts",
+      "classification": "upstream-patch",
+      "purpose": "Recover native text choices sent as empty image cards",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "cd apps/agents-cli && node --loader ts-node/esm --test src/core/tools/ask-user.test.ts",
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "local-only",
+      "warningChangedLines": 100
+    },
+    {
       "path": "apps/hono-api/src/modules/task/canvas-tools/catalog.ts",
       "classification": "integration-seam",
       "purpose": "Expose native Canvas tools used by Product execution",

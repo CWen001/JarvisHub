@@ -178,9 +178,9 @@ A Harness model may help rank or synthesize candidates, but the Kernel defines t
 
 ### 4. Design Interaction Protocol
 
-Human participation remains part of the design technology, but the professional user does not need a mandatory selection ceremony. The Watch Skill applies its approved knowledge and safe defaults internally, gives a concise direction summary, and treats an explicit Concept Image request as generation authorization once the brief is sufficient.
+Human participation remains part of the design technology, but the professional user does not need a strategy-card ceremony or questionnaire. Before every Watch image-generation request, the Watch Skill uses unchanged native `ask_user` for one Design Direction Turn unless the user explicitly asks to adopt the recommendation or proceed without discussion.
 
-The Skill uses the unchanged native `ask_user` only when one unresolved fact would materially change the product direction and cannot be responsibly inferred. The question is free text, not a strategy-card schema; detailed rationale, alternatives, conflicts, and trade-offs remain available through ordinary Chat when the professional user asks. Local edits and continuations grounded by native `generationContext` do not repeat the dialogue.
+One turn covers one user request rather than each Provider call. The Skill offers three concise text directions by default, marks the first as recommended, and accepts a clicked or free-text reply. New concepts receive coherent strategy and aesthetic bundles; local edits, derivatives, alternate views, and retries receive a narrower implementation-strength or trade-off choice. One answer normally authorizes Media immediately, and only a real conflict permits one additional question.
 
 After Media persists the Concept Image, the existing Jarvis Critic reads the actual pixels once against Skill-owned rules. The Agent delivers the image with a concise pass or reject judgment and visible evidence; rejection does not hide or regenerate the Artifact. No interaction state, quality state, or Watch-specific Interface is added outside the Skill.
 
@@ -297,10 +297,10 @@ The Product View reuses Jarvis's existing Asset Center capability and authoritat
 ## Native Design Dialogue flow
 
 ```text
-1. User submits a design brief.
-2. Jarvis loads the Watch Skill and applies its professional defaults.
-3. If one direction-changing fact cannot be safely inferred, Jarvis asks one free-text native ask_user question and waits.
-4. Otherwise the explicit Artifact request authorizes Media immediately.
+1. User submits a Watch image-generation request.
+2. Jarvis loads the Watch Skill and applies its professional defaults inside three concise directions by default.
+3. Jarvis asks one native ask_user Design Direction Turn and waits, unless the user explicitly waived it.
+4. A clicked or free-text answer authorizes Media without another confirmation; only a real conflict permits one additional question.
 5. Media loads the Skill references, writes the Prompt, generates, and persists the Concept Image with sourceEvidence.
 6. The existing Critic reads the actual image once using Skill-owned rules.
 7. Jarvis delivers the image and concise review through native Chat and Artifact projection.

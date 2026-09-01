@@ -1,7 +1,8 @@
 ---
-status: accepted
+status: superseded
 supersedes:
   - 0014-maintain-one-mainline-with-packaged-design-verticals
+superseded-by: 0018-require-one-native-design-direction-turn
 ---
 
 # Keep vertical design dialogue inside native Skills

@@ -24,9 +24,13 @@ const ledger = readJson("references/approval-ledger.json");
 assert(skill.includes("name: tablet-design-kernel"), "SKILL.md has the wrong Skill name");
 assert(skill.includes("sourceEvidence"), "SKILL.md must require native sourceEvidence provenance");
 assert(skill.includes("task_contract.userConstraints"), "SKILL.md must carry visible decisions through userConstraints");
-assert(skill.includes("Use safe professional defaults"), "SKILL.md must prefer safe defaults over routine questioning");
-assert(skill.includes("explicit artifact request"), "SKILL.md must treat explicit artifact intent as generation authorization");
-assert(skill.includes("non-blocking direction summary"), "SKILL.md must keep its inferred direction visible without a confirmation gate");
+assert(skill.includes("Use safe professional defaults"), "SKILL.md must preserve safe professional defaults inside each direction");
+assert(skill.includes("Design Direction Turn"), "SKILL.md must require the native Design Direction Turn");
+assert(skill.includes("every Tablet image-generation request"), "SKILL.md must apply the turn to every Tablet image-generation request");
+assert(skill.includes("three concise text options"), "SKILL.md must default to three concise text options");
+assert(skill.includes("ask_user.options") && skill.includes("valid image URLs"), "SKILL.md must put text choices in options and reject empty image cards");
+assert(skill.includes("first option") && skill.includes("recommended"), "SKILL.md must mark the first option as recommended");
+assert(skill.includes("free-text") && skill.includes("explicitly waives"), "SKILL.md must accept free text and an explicit semantic waiver");
 assert(skill.includes("one Critic review") && skill.includes("actual pixels"), "SKILL.md must require one actual-image Critic review");
 assert(skill.includes("2–3 visible evidence points") && skill.includes("No automatic retry"), "SKILL.md must bound review output and prohibit retry loops");
 for (const legacy of ["Professional Design Strategy Card", "按此策略生成", "调整策略", "all 3–6 complete Markdown cards", "strategyCards"]) {
@@ -37,9 +41,12 @@ assert(skill.includes("must not become a visual reference merely because it exis
 assert(!skill.includes('"outputKey": "tablet_concept_01"'), "SKILL.md must not prescribe one reusable Tablet outputKey");
 assert(!("recommended_card_count" in (manifest.design_dialogue ?? {})), "manifest must not prescribe dialogue card counts");
 
-for (const heading of ["When to ask", "Generation readiness", "Actual-image review"]) {
+for (const heading of ["Design Direction Turn", "Generation readiness", "Actual-image review"]) {
   assert(dialogue.includes(heading), `Design Dialogue is missing section: ${heading}`);
 }
+assert(dialogue.includes("one user request") && dialogue.includes("Provider call"), "Design Dialogue must scope one turn to one user request");
+assert(dialogue.includes("local edits") && dialogue.includes("implementation strength"), "Design Dialogue must narrow local-edit choices");
+assert(!dialogue.includes("without reopening dialogue"), "Design Dialogue still bypasses the turn for local work");
 
 const baseEvidence = `tablet-base-model:concept-sketch@${manifest.base_model.version}`;
 const qualityEvidence = `tablet-quality-benchmark@${manifest.quality_benchmark.version}`;

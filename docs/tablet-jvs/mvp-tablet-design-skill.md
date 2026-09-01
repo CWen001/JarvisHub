@@ -25,8 +25,9 @@ Excluded implementation concerns:
 Tablet request
 → Jarvis loads tablet-design-kernel
 → registered native Skill load selects the existing Composer Skill
-→ Tablet Skill applies professional defaults
-→ ask_user only if one direction-changing decision cannot be safely inferred
+→ Tablet Skill applies professional defaults inside task-appropriate directions
+→ one native ask_user Design Direction Turn per user generation request unless explicitly waived
+→ clicked or free-text direction answer authorizes Media without another confirmation
 → Media loads Tablet references and writes the provider-ready Prompt
 → canvas_image_generate_to_canvas
 → native wait, persistence, Canvas, assets, and Trace

@@ -1,14 +1,16 @@
 # Tablet Design Dialogue
 
-## When to ask
+## Design Direction Turn
 
-Start from the brief, Tablet Quality Benchmark, approved knowledge, and Studio Design Judgment. A brief is sufficient when it gives a coherent intent, plausible user/use situation, and one meaningful pressure from which a whole-product direction can be inferred. Use safe defaults for the remaining choices.
+Before every Tablet image-generation request reaches a Provider, run one native `ask_user` Design Direction Turn unless the user explicitly asks to use the recommendation or proceed without discussion. One turn covers one user request, including a same-direction batch; never ask once per Provider call.
 
-Ask one concise question only when a missing fact, conflict, unsafe claim, or unresolved choice would materially change product form and cannot be responsibly inferred. Use ordinary natural language; options are optional and free-text answers are valid. One answer should normally end the dialogue.
+Ask one concise, task-appropriate question with three concise text options in `ask_user.options` by default. Mark the first option as recommended. Never use `optionCards` without valid image URLs from user-authorized references or an explicit request to compare images. For a new concept, offer coherent bundles of product strategy, aesthetic language, 2–3 visible design moves, and one meaningful trade-off grounded by Studio Design Judgment and the Tablet Quality Benchmark. For local edits, derivative views, and retries, offer narrower implementation strength or trade-off choices instead of reopening the whole product direction. Use fewer options when fewer genuine alternatives exist.
+
+Accept a clicked option or a free-text reply. One answer normally ends the turn; ask once more only when the reply creates a real conflict, unsafe claim, or unresolved consequential choice. Text options are the default; never create empty or text-only image cards.
 
 ## Generation readiness
 
-An explicit request to create or revise a Tablet Concept Sketch authorizes generation when the brief is sufficient. The user's constraints and confirmed visible decisions remain binding while the BaseModel, Quality Benchmark, and professional knowledge resolve ordinary uncertainty. Local corrections, detail views, derivative scenes, alternate views, and continuations within the established direction remain ready without reopening dialogue.
+The initial request authorizes the Design Direction Turn. Its answer authorizes Provider execution while preserving the user's original constraints and confirmed visible decisions; an explicit semantic waiver authorizes immediate execution without a keyword list. Use safe professional defaults inside the accepted direction, not as a reason to bypass the turn.
 
 ## Actual-image review
 

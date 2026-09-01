@@ -20,11 +20,12 @@ Use this Skill for every smart-watch design image. Stay inside Jarvis's native w
 When this Skill is loaded by a caller that can use native `ask_user`:
 
 1. Load `references/design-dialogue.md`, `references/catalog.json`, and the smallest relevant domain resources.
-2. Use safe professional defaults whenever the brief supports a coherent direction. State one concise non-blocking direction summary before or during execution. An explicit artifact request authorizes generation once required facts and safety constraints are satisfied.
-3. Ask one concise natural-language question only when one unresolved decision would materially change the product direction and cannot be responsibly inferred. Use the unchanged `ask_user.question`; options are optional. Continue from the user's free-text or option reply without a confirmation loop.
-4. Put only user-stated constraints and user-confirmed visible decisions in Media's native `task_contract.userConstraints`. Keep atom IDs, Skill methods, and the final Prompt out of the handoff.
+2. Before every Watch image-generation request, run one native **Design Direction Turn** unless the user explicitly waives it by asking to use the recommendation or proceed without discussion. One turn covers one user request, including a same-direction batch; never ask once per Provider call.
+3. Use safe professional defaults inside each direction. Call unchanged native `ask_user` with one concise question and three concise text options by default; put them in `ask_user.options` and clearly mark the first option as recommended. Do not use `optionCards` unless every card has valid image URLs from user-authorized references or an explicit request to compare images. New concepts get coherent product-strategy and aesthetic bundles. Local edits, derivatives, alternate views, and retries get a narrower implementation-strength or trade-off choice. Use fewer options rather than inventing weak alternatives.
+4. Accept either a clicked option or a free-text reply and continue without another confirmation. Ask once more only when the reply creates a real conflict, unsafe claim, or unresolved consequential choice. Text choices are the default; never create empty or text-only image cards.
+5. The initial image request authorizes the Design Direction Turn; its answer or explicit waiver authorizes Provider execution. Put only user-stated constraints and user-confirmed visible decisions in Media's native `task_contract.userConstraints`. Keep atom IDs, Skill methods, and the final Prompt out of the handoff.
 
-Skip dialogue for sufficient briefs, local edits, derivative scenes, detail images, alternate views, and continuations grounded by native `generationContext`. A professional user can request deeper rationale in ordinary Chat.
+A professional user can request deeper rationale in ordinary Chat. Do not call this interaction “Grill” in user-facing copy.
 
 When loaded inside Media, do not initiate dialogue. Treat visible `userConstraints` as binding, independently select supporting knowledge, author the final Prompt, and return conflicts to Root.
 

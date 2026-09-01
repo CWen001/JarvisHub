@@ -748,6 +748,7 @@ export class AgentRunner {
                 toolCalls,
                 state,
                 availableToolNames: new Set(tools.map((tool) => tool.name)),
+                requireSkillCriticReview: isRootCanvasRun(options),
               })
             : null;
         const allowFinish = response.toolCalls.length === 0 && finishBlock === null;
@@ -2182,10 +2183,77 @@ function parseToolArgs(raw: string): { args: Record<string, unknown>; error?: st
   }
 }
 
+const CRITIC_REVIEW_MEDIA_KINDS = new Set([
+  "watch_concept_image",
+  "tablet_concept_sketch",
+]);
+
+const VERTICAL_SKILL_MEDIA_KINDS: Record<string, string> = {
+  "watch-design-kernel": "watch_concept_image",
+  "tablet-design-kernel": "tablet_concept_sketch",
+};
+
+export function readPendingRequiredCriticReviews(
+  toolCalls: readonly ToolCallTrace[],
+): Array<{ kind: string; nodeId: string }> {
+  const pending = new Map<string, string>();
+  let activeVerticalKind = "";
+  for (const toolCall of toolCalls) {
+    if (toolCall.name === "Skill" && toolCall.status === "succeeded") {
+      activeVerticalKind = VERTICAL_SKILL_MEDIA_KINDS[readRecordString(toolCall.args, "skill")] || activeVerticalKind;
+      continue;
+    }
+    if (toolCall.name !== "Agent") continue;
+    const subagentType = readRecordString(toolCall.args, "subagent_type");
+    const contract = isRecord(toolCall.args.task_contract) ? toolCall.args.task_contract : null;
+    const targetNodeIds = Array.isArray(contract?.targetNodeIds)
+      ? contract.targetNodeIds.map((value) => String(value ?? "").trim()).filter(Boolean)
+      : [];
+
+    if (subagentType === "critic") {
+      if (toolCall.status === "succeeded") {
+        for (const nodeId of targetNodeIds) pending.delete(nodeId);
+      }
+      continue;
+    }
+    const contractKind = readRecordString(contract, "kind");
+    const kind = CRITIC_REVIEW_MEDIA_KINDS.has(contractKind)
+      ? contractKind
+      : contractKind === "visualAsset" ? activeVerticalKind : "";
+    if (subagentType !== "media" || toolCall.status !== "succeeded" || !kind) continue;
+
+    const expectedIds = new Set(targetNodeIds);
+    if (Array.isArray(contract?.outputKeys)) {
+      for (const value of contract.outputKeys) {
+        const outputKey = String(value ?? "").trim();
+        if (outputKey) expectedIds.add(outputKey);
+      }
+    }
+    const envelope = isRecord(toolCall.outputJson) ? toolCall.outputJson : null;
+    const result = isRecord(envelope?.structuredOutput) ? envelope.structuredOutput : envelope;
+    if (!result || !Array.isArray(result.completed)) continue;
+    for (const value of result.completed) {
+      const completed = isRecord(value) ? value : null;
+      const nodeId = readRecordString(completed, "nodeId");
+      const outputKey = readRecordString(completed, "outputKey");
+      if (
+        nodeId
+        && (expectedIds.has(nodeId) || expectedIds.has(outputKey))
+        && completed?.status === "success"
+        && completed.persisted === true
+      ) {
+        pending.set(nodeId, kind);
+      }
+    }
+  }
+  return Array.from(pending, ([nodeId, kind]) => ({ kind, nodeId }));
+}
+
 function readFinishBlockDecision(input: {
   toolCalls: ToolCallTrace[];
   state?: ToolRuntimeState;
   availableToolNames?: ReadonlySet<string>;
+  requireSkillCriticReview?: boolean;
 }): FinishBlockDecision | null {
   const pendingCanonicalArtifacts = input.state?.canonicalTextArtifacts
     ? Array.from(input.state.canonicalTextArtifacts.keys())
@@ -2211,33 +2279,53 @@ function readFinishBlockDecision(input: {
     toolCalls: input.toolCalls,
     availableToolNames: input.availableToolNames,
   });
-  if (pendingMediaAttempts.length === 0) return null;
+  if (pendingMediaAttempts.length > 0) {
+    const waitableAttempts = pendingMediaAttempts.filter((item) => item.waitToolAvailable);
+    return {
+      reason: "pending_direct_media_generation",
+      message: [
+        "<runtime_completion_self_check>",
+        "本轮尚不能结束：存在已提交但尚未解析出最终 URL 的直接媒体生成任务。",
+        "pendingMedia:",
+        ...pendingMediaAttempts.map(
+          (item) =>
+            `- kind=${item.kind} nodeId=${item.nodeId} waitTool=${item.waitToolName} waitToolAvailable=${item.waitToolAvailable ? "true" : "false"}`,
+        ),
+        "requiredActions:",
+        ...(waitableAttempts.length > 0
+          ? [
+              "- 调用对应 wait tool 轮询并回填真实媒体 URL；不要声称该 wait tool 不可用。",
+              `- 当前可执行 wait tools: ${waitableAttempts
+                .map((item) => item.waitToolName)
+                .join(", ")}`,
+            ]
+          : [
+              "- 当前 tools 数组缺少对应 wait tool，必须基于该事实显式报告 blocked/needs-input，不能把 queued/running 当作完成。",
+            ]),
+        "</runtime_completion_self_check>",
+      ].join("\n"),
+    };
+  }
 
-  const waitableAttempts = pendingMediaAttempts.filter((item) => item.waitToolAvailable);
-  return {
-    reason: "pending_direct_media_generation",
-    message: [
-      "<runtime_completion_self_check>",
-      "本轮尚不能结束：存在已提交但尚未解析出最终 URL 的直接媒体生成任务。",
-      "pendingMedia:",
-      ...pendingMediaAttempts.map(
-        (item) =>
-          `- kind=${item.kind} nodeId=${item.nodeId} waitTool=${item.waitToolName} waitToolAvailable=${item.waitToolAvailable ? "true" : "false"}`,
-      ),
-      "requiredActions:",
-      ...(waitableAttempts.length > 0
-        ? [
-            "- 调用对应 wait tool 轮询并回填真实媒体 URL；不要声称该 wait tool 不可用。",
-            `- 当前可执行 wait tools: ${waitableAttempts
-              .map((item) => item.waitToolName)
-              .join(", ")}`,
-          ]
-        : [
-            "- 当前 tools 数组缺少对应 wait tool，必须基于该事实显式报告 blocked/needs-input，不能把 queued/running 当作完成。",
-          ]),
-      "</runtime_completion_self_check>",
-    ].join("\n"),
-  };
+  const pendingCriticReviews = input.requireSkillCriticReview && input.availableToolNames?.has("Agent")
+    ? readPendingRequiredCriticReviews(input.toolCalls)
+    : [];
+  if (pendingCriticReviews.length > 0) {
+    return {
+      reason: "pending_skill_critic_review",
+      message: [
+        "<runtime_completion_self_check>",
+        "本轮尚不能结束：新持久化的 Watch/Tablet Artifact 尚未完成 Skill 要求的同请求实际像素评审。",
+        "pendingCriticReviews:",
+        ...pendingCriticReviews.map((item) => `- kind=${item.kind} nodeId=${item.nodeId}`),
+        "requiredActions:",
+        "- 现在派发一次 critic，task_contract.targetNodeIds 必须覆盖上述节点，并让 Critic 读取 Canvas 真实像素。",
+        "- 最终交付素材及 Pass/Reject、2–3 条可见证据和一个下一步；Reject 不授权自动重试。",
+        "</runtime_completion_self_check>",
+      ].join("\n"),
+    };
+  }
+  return null;
 }
 
 type PendingMediaCompletionIssue = {

@@ -58,6 +58,22 @@ function readStringArray(value: unknown, limit: number): string[] {
   return out;
 }
 
+function readTextOnlyOptionCards(value: unknown, limit: number): string[] {
+  if (!Array.isArray(value)) return [];
+  const choices: string[] = [];
+  for (const item of value) {
+    if (!item || typeof item !== "object" || Array.isArray(item)) continue;
+    const rec = item as Record<string, unknown>;
+    if (readString(rec.imageUrl)) continue;
+    const valueText = readString(rec.value);
+    const title = readString(rec.title);
+    const choice = readString(rec.displayValue)
+      || (title && valueText && title !== valueText ? `${title}｜${valueText}` : valueText || title);
+    if (choice) choices.push(choice);
+  }
+  return readStringArray(choices, limit);
+}
+
 function readOptionCards(value: unknown, limit: number): AskUserOptionCard[] {
   if (!Array.isArray(value)) return [];
   const out: AskUserOptionCard[] = [];
@@ -173,8 +189,11 @@ export const askUserTool: ToolHandler = {
     if (!question) {
       throw new Error("ask_user: question is required (non-empty).");
     }
-    const options = readStringArray(args.options, 8);
     const optionCards = readOptionCards(args.optionCards, 8);
+    const options = readStringArray(args.options, 8);
+    if (options.length === 0 && optionCards.length === 0) {
+      options.push(...readTextOnlyOptionCards(args.optionCards, 8));
+    }
     const urgency = readUrgency(args.urgency);
     const reason = readString(args.reason);
     const contextSummary = readString(args.contextSummary);
