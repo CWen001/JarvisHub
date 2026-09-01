@@ -54,15 +54,15 @@ const viewModel = {
   }, {
     id: 'message-assistant',
     role: 'assistant' as const,
-    content: '### 推荐方向\n\n采用 **收藏品质** 的材料策略。',
+    content: '',
     timestamp: '01:18',
     phase: 'final' as const,
     result: 'result' as const,
     assets: [],
     decision: {
       toolCallId: 'ask-1',
-      question: '### 请选择策略\n\n这是 **推荐组合**。',
-      options: ['按此策略生成', '调整策略'],
+      question: '你更重视轻薄佩戴，还是运动防护？',
+      options: ['轻薄佩戴', '运动防护'],
       awaitingReply: true,
     },
   }],
@@ -155,8 +155,9 @@ describe('Agent Workspace Product View', () => {
     expect(screen.getAllByText('跑步腕表方向').length).toBeGreaterThan(0)
     expect(screen.getByText('GT Runner 概念图')).toBeTruthy()
     expect(screen.getAllByText('正在生成视觉成果').length).toBeGreaterThan(0)
-    expect(screen.getByRole('heading', { name: '请选择策略' })).toBeTruthy()
-    expect(screen.queryByText('### 请选择策略')).toBeNull()
+    expect(screen.getByText('你更重视轻薄佩戴，还是运动防护？')).toBeTruthy()
+    expect(screen.getByText('等待你的回复')).toBeTruthy()
+    expect(screen.queryByText('设计决策')).toBeNull()
     expect(screen.getByRole('button', { name: '添加参考图' })).toBeTruthy()
     expect(screen.getByRole('button', { name: '移除材料参考图' })).toBeTruthy()
     expect(screen.getByRole('combobox', { name: '选择技能' })).toBeTruthy()
@@ -174,8 +175,8 @@ describe('Agent Workspace Product View', () => {
 
     fireEvent.change(screen.getByRole('textbox'), { target: { value: '继续优化表带' } })
     expect(runtimeDispatch).toHaveBeenLastCalledWith({ type: 'chat.set-draft', text: '继续优化表带' })
-    fireEvent.click(screen.getByRole('button', { name: '按此策略生成' }))
-    expect(runtimeDispatch).toHaveBeenLastCalledWith({ type: 'decision.answer', option: '按此策略生成' })
+    fireEvent.click(screen.getByRole('button', { name: '轻薄佩戴' }))
+    expect(runtimeDispatch).toHaveBeenLastCalledWith({ type: 'decision.answer', option: '轻薄佩戴' })
     fireEvent.click(screen.getByRole('button', { name: '移除材料参考图' }))
     expect(runtimeDispatch).toHaveBeenLastCalledWith({ type: 'chat.remove-reference', url: 'https://cdn.example/reference.png' })
     fireEvent.change(screen.getByRole('combobox', { name: '选择技能' }), { target: { value: 'skill-1' } })

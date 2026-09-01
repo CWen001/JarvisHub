@@ -20,16 +20,20 @@ const ledger = readJson("references/approval-ledger.json");
 
 assert(skill.includes("name: watch-design-kernel"), "SKILL.md has the wrong skill name");
 assert(skill.includes("sourceEvidence"), "SKILL.md must require native sourceEvidence provenance");
-assert(skill.includes("按此策略生成") && skill.includes("调整策略"), "SKILL.md must use the two native Design Dialogue options");
-assert(skill.includes("task_contract.userConstraints"), "SKILL.md must carry accepted visible decisions through userConstraints");
-assert(skill.includes("question` itself must literally contain all 3–6 complete Markdown cards"), "SKILL.md must require cards inside the native ask_user question");
-assert(!skill.includes("strategyCards"), "SKILL.md must not extend the ask_user schema");
+assert(skill.includes("Use safe professional defaults"), "SKILL.md must prefer safe defaults over routine questioning");
+assert(skill.includes("explicit artifact request"), "SKILL.md must treat explicit artifact intent as generation authorization");
+assert(skill.includes("non-blocking direction summary"), "SKILL.md must keep its inferred direction visible without a confirmation gate");
+assert(skill.includes("one Critic review") && skill.includes("actual pixels"), "SKILL.md must require one actual-image Critic review");
+assert(skill.includes("2–3 visible evidence points") && skill.includes("No automatic retry"), "SKILL.md must bound review output and prohibit retry loops");
+for (const legacy of ["Professional Design Strategy Card", "按此策略生成", "调整策略", "all 3–6 complete Markdown cards", "strategyCards"]) {
+  assert(!skill.includes(legacy), `SKILL.md retains legacy dialogue contract: ${legacy}`);
+}
+assert(skill.includes("task_contract.userConstraints"), "SKILL.md must carry visible decisions through userConstraints");
 assert(skill.includes("new directional generation must allocate a fresh outputKey"), "SKILL.md must prevent historical outputKey collisions");
 assert(skill.includes("must not become a visual reference merely because it exists"), "SKILL.md must preserve explicit reference authority");
 assert(!skill.includes('"outputKey": "watch_concept_01"'), "SKILL.md must not prescribe one reusable Watch outputKey");
-assert(manifest.design_dialogue?.recommended_card_count?.minimum === 3, "Design Dialogue minimum card count must be 3");
-assert(manifest.design_dialogue?.recommended_card_count?.maximum === 6, "Design Dialogue maximum card count must be 6");
-for (const heading of ["When dialogue is required", "Professional Design Strategy Card", "Generation readiness"]) {
+assert(!("recommended_card_count" in (manifest.design_dialogue ?? {})), "manifest must not prescribe dialogue card counts");
+for (const heading of ["When to ask", "Generation readiness", "Actual-image review"]) {
   assert(designDialogue.includes(heading), `Design Dialogue is missing section: ${heading}`);
 }
 assert(

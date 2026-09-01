@@ -2,7 +2,7 @@
 
 Version: `2.0.0`
 
-This is the implicit, brand-neutral whole-product quality floor for every Tablet Concept. It is adapted from the accepted TypeScript-mainline `Tablet Design Quality V2`. It is not a selectable Knowledge Atom, a public score, an automatic Critic, a retry trigger, or permission to imitate a current product.
+This is the implicit, brand-neutral whole-product quality floor for every Tablet Concept. It is adapted from the accepted TypeScript-mainline `Tablet Design Quality V2`. It is not a selectable Knowledge Atom, a public score, a retry trigger, or permission to imitate a current product.
 
 ## Authority
 
@@ -47,4 +47,4 @@ The first visual projection is a single bare-product Hero with low information d
 
 ## Review policy
 
-Provider success means a usable visual result was produced; it does not establish professional approval. Do not automatically call Critic, score, reject, retry, regenerate, or silently alter the design. If the user explicitly requests review, use Jarvis's native Critic and discuss the visible product in ordinary design language without exposing this internal benchmark structure.
+Provider success means a usable visual result was produced; it does not establish professional approval. Every acceptance-backed Tablet Concept Sketch receives one post-generation actual-image review against this benchmark. Report Pass or Reject with 2–3 visible evidence points and one next step, without exposing benchmark internals. Preserve either result and leave regeneration to an explicit user request.

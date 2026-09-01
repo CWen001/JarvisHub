@@ -148,7 +148,7 @@ describe('Agent Workspace Projection', () => {
     [{ type: 'chat.interrupt' }, { type: 'chat.request.interrupt' }],
     [{ type: 'chat.attach-files', files: [] }, { type: 'chat.references.upload', files: [] }],
     [{ type: 'chat.remove-reference', url: 'https://cdn.example/ref.png' }, { type: 'chat.reference.remove', url: 'https://cdn.example/ref.png' }],
-    [{ type: 'decision.answer', option: '按此策略生成' }, { type: 'chat.decision.answer', option: '按此策略生成' }],
+    [{ type: 'decision.answer', option: '轻薄佩戴' }, { type: 'chat.decision.answer', option: '轻薄佩戴' }],
     [{ type: 'chat.select-skill', skill: { id: 'skill-1', key: 'watch', name: '手表设计' } }, { type: 'chat.skill.select', skill: { id: 'skill-1', key: 'watch', name: '手表设计' } }],
     [{ type: 'open-professional-workspace' }, { type: 'workspace.open-professional' }],
     [{ type: 'open-professional-workspace', nodeId: 'node-1' }, { type: 'workspace.open-professional', nodeId: 'node-1' }],

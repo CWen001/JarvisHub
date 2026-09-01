@@ -1,34 +1,15 @@
-# Watch Design Dialogue Protocol
+# Watch Design Dialogue
 
-This protocol governs professional decisions before a new watch identity or a material change of design direction. It is independent of any execution framework.
+## When to ask
 
-## When dialogue is required
+Start from the user's brief, approved knowledge, and professional judgment. Use safe defaults when they preserve a coherent Watch direction. Ask one concise question only when a missing fact, conflict, unsafe claim, or unresolved choice would materially change product identity and cannot be responsibly inferred.
 
-A dialogue is required for a new core product concept or a request that materially changes product identity, architecture, intended wearer, primary scenario, interaction hierarchy, or CMF direction.
-
-Do not repeat dialogue for a local correction, detail image, derivative scene, alternate view, or continuation already grounded by an accepted design direction and generation context. If the brief already states the relevant strategies explicitly, treat those statements as accepted decisions rather than asking again.
-
-## Candidate selection
-
-Select three to six mutually compatible approved knowledge moves that have visible consequences for the current brief. Rank relevance using activation signals, decision targets, avoid conditions, known constraints, and unresolved design tensions. Do not expose the full knowledge catalog by default.
-
-## Professional Design Strategy Card
-
-Each user-visible card contains:
-
-- **Strategy** — a concise professional move, never an internal record title alone.
-- **Why this direction** — why it is relevant to this brief and design state.
-- **Visible impact** — concrete consequences that should be observable in the artifact.
-- **Trade-off** — the principal cost, limit, incompatibility, or validation need.
-
-Internal atom identifiers, digests, approval fields, ranking scores, and storage metadata never appear in a card.
-
-## Recommended Strategy Composition
-
-Present the cards as one coherent recommended composition, not as silently active independent toggles. The professional user may accept the composition or request adjustment. Natural-language adjustment may remove, replace, strengthen, weaken, or reconcile a strategy. Return a visibly revised composition for acceptance; when replacement requires a choice, show only a small relevant candidate set.
-
-Acceptance both confirms the visible decisions and authorizes generation. A further dialogue turn is justified only by a missing required product fact, a substantive conflict, an incompatible requirement, an unsafe claim, or a direction-defining choice that cannot be responsibly inferred.
+Use ordinary natural language. Options are optional and should represent only real alternatives. Accept free-text answers. One answer should normally end the dialogue; ask again only if it exposes a new material conflict.
 
 ## Generation readiness
 
-Generation is ready when the accepted visible decisions establish a coherent product role and enough visible artifact requirements to proceed. Accepted decisions are binding: downstream interpretation may elaborate visual execution but may not silently reverse, omit, or substitute them. If execution discovers a conflict, return it for professional resolution.
+An explicit request to create or revise a Watch Concept Image authorizes generation when the brief is sufficient. The user's constraints and confirmed visible decisions remain binding while professional defaults resolve ordinary uncertainty. Local corrections, detail views, derivative scenes, alternate views, and continuations within the established direction remain ready without reopening dialogue.
+
+## Actual-image review
+
+Review every new Watch Concept Image once from its rendered pixels against this Skill's professional rules. Return Pass or Reject, 2–3 visible evidence points, and one next step. The image remains available with either verdict; further generation requires an explicit user request.

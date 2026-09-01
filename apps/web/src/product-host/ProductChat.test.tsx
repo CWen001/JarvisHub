@@ -99,6 +99,40 @@ describe('Product Chat Interaction Continuity', () => {
     expect(onIntent).toHaveBeenLastCalledWith({ type: 'chat.set-draft', text: '你' })
   })
 
+  it('renders Ask User Input as an ordinary full-length chat turn', () => {
+    const onIntent = vi.fn()
+    render(<MantineProvider><ProductChat view={{
+      ...base,
+      timeline: [{
+        id: 'ask-1',
+        role: 'assistant',
+        content: '',
+        timestamp: '01:01',
+        phase: 'final',
+        result: 'result',
+        assets: [],
+        decision: {
+          toolCallId: 'ask-1',
+          question: '你更重视轻薄佩戴，还是更强的运动防护？',
+          options: ['轻薄佩戴', '运动防护'],
+          awaitingReply: true,
+        },
+      }],
+      composer: { ...base.composer, sending: false },
+    }} onIntent={onIntent} /></MantineProvider>)
+
+    expect(screen.getByText('你更重视轻薄佩戴，还是更强的运动防护？')).toBeTruthy()
+    expect(screen.getByText('等待你的回复')).toBeTruthy()
+    expect(screen.queryByText('设计决策')).toBeNull()
+    expect(screen.queryByText('展开全部')).toBeNull()
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '优先轻薄，但保留基础防护' } })
+    expect(onIntent).toHaveBeenLastCalledWith({ type: 'chat.set-draft', text: '优先轻薄，但保留基础防护' })
+    fireEvent.click(screen.getByRole('button', { name: '发送' }))
+    expect(onIntent).toHaveBeenLastCalledWith({ type: 'chat.submit' })
+    fireEvent.click(screen.getByRole('button', { name: '轻薄佩戴' }))
+    expect(onIntent).toHaveBeenLastCalledWith({ type: 'decision.answer', option: '轻薄佩戴' })
+  })
+
   it('delivers a stable Artifact while truthfully labelling partial completion', () => {
     const onIntent = vi.fn()
     const partial: AgentWorkspaceRuntimeSnapshot = {

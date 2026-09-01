@@ -25,12 +25,13 @@ Excluded implementation concerns:
 Tablet request
 → Jarvis loads tablet-design-kernel
 → registered native Skill load selects the existing Composer Skill
-→ Tablet Directional Design Dialogue through ask_user
-→ accepted visible strategy becomes task_contract.userConstraints
+→ Tablet Skill applies professional defaults
+→ ask_user only if one direction-changing decision cannot be safely inferred
 → Media loads Tablet references and writes the provider-ready Prompt
 → canvas_image_generate_to_canvas
 → native wait, persistence, Canvas, assets, and Trace
-→ Agent Workspace projects the native Artifact
+→ existing Critic reviews the actual Concept Sketch once
+→ Agent Workspace projects the Artifact and concise review
 ```
 
 The first acceptance-backed executable target is `concept_sketch`. The package preserves professional guidance for the other eight targets without creating target-specific Runtime state.
@@ -46,7 +47,7 @@ tablet-knowledge-catalog@tablet-knowledge-2026-07
 tablet-atom:<atom_id>@sha256:<review_digest>
 ```
 
-Provider success does not imply professional approval and does not automatically invoke Critic.
+Provider success does not imply professional approval. After a Concept Sketch persists, the existing Critic reads the actual image once against Skill-owned rules; pass or reject is delivered without automatic regeneration or a new Artifact status.
 
 ## Verification
 

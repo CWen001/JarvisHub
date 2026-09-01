@@ -1,25 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { resolveCanvasSelectionPolicy, resolveChatRequestExecution } from './chatRequestPayload'
-
-describe('resolveChatRequestExecution', () => {
-  it('requires a delivered asset when the user accepts a generation strategy', () => {
-    expect(resolveChatRequestExecution({
-      isGenerationAuthorization: true,
-    })).toEqual({
-      mode: 'auto',
-      forceAssetGeneration: true,
-    })
-  })
-
-  it('keeps ordinary chat turns open to text-only delivery', () => {
-    expect(resolveChatRequestExecution({
-      isGenerationAuthorization: false,
-    })).toEqual({
-      mode: 'auto',
-      forceAssetGeneration: false,
-    })
-  })
-})
+import { resolveCanvasSelectionPolicy } from './chatRequestPayload'
 
 describe('resolveCanvasSelectionPolicy', () => {
   it('does not turn a hidden Professional Workspace selection into an Agent Workspace attachment', () => {

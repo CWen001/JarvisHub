@@ -56,9 +56,9 @@ _Avoid_: Changing main-task identity, Agent role as task name, Skill row, Tool c
 The user-facing state of a Jarvis run or Semantic Work Item, expressed as one of: queued, active, awaiting user input, recovering, partially completed, completed, failed, or cancelled. Each status communicates whether work is advancing, whether the user must act, and whether a usable result exists; status is never inferred from elapsed time or color alone.
 _Avoid_: Generic loading state, success-or-failure-only model, silent retry, ambiguous pause, color-only status
 
-**Product Decision Card**:
-The Product Timeline interaction for a professional decision or other required user input. While a run awaits input, its related Semantic Work Item carries the awaiting-user Actionable Execution Status and an adjacent Product Decision Card holds the question and actions. After the user answers, the card condenses to the accepted choice while the run resumes; the question is never buried inside execution detail or reduced to an ordinary assistant message.
-_Avoid_: Question inside task tree, raw `ask_user` trace, detached waiting status, disappearing answer, frontend-owned professional decision
+**Ask User Input**:
+The category-neutral, turn-stopping Chat interaction projected from Jarvis's native `ask_user` capability when the Agent cannot safely infer a materially consequential decision. The question remains an ordinary Markdown conversation turn, the related run visibly enters the awaiting-user Actionable Execution Status, and the user answers freely through the Product Chat Composer. Suggested replies are optional conveniences rather than a required selection program; the Product View preserves the pending and answered states without interpreting professional meaning.
+_Avoid_: Vertical-specific decision card, mandatory option buttons, frontend questionnaire, hidden waiting state, question inside task tree, raw Tool trace, frontend-owned professional decision
 
 **Product Chat Composer**:
 The compact, auto-growing request input in Agent Workspace, with bounded height and one consolidated action row for attachments, Skills, and sending. Its unsent text, selected Skill, and stable pending reference attachments follow the current Chat Session across the Reciprocal Workspace Switch, while focus, menus, sizing, scroll, and other presentation state remain local to each Workspace. It is a Product Chat Shell presentation and does not replace or restyle the native Chat retained in Professional Workspace.
@@ -121,8 +121,8 @@ The single native Jarvis package for the Watch Design Kernel. Its `references/` 
 _Avoid_: Duplicated knowledge source, generated mirror package, second Agent, custom Harness, Jarvis concepts inside professional references
 
 **Tablet Design Skill**:
-The self-contained native Jarvis package adapted from the `tablet_pi` TypeScript mainline. It owns the Tablet Concept Sketch BaseModel, Tablet Quality Benchmark, versioned professional Knowledge Corpus, Directional Design Dialogue, and downstream Artifact guidance while relying exclusively on Jarvis-native Skill, Media, Canvas, assets, Session, persistence, and Trace execution. Concept Sketch is its first acceptance-backed executable target.
-_Avoid_: Runtime dependency on `tablet_pi`, copied Pure Pi frontend, Tablet Session state machine, custom image Tool, automatic Critic
+The self-contained native Jarvis package adapted from the `tablet_pi` TypeScript mainline. It owns the Tablet Concept Sketch BaseModel, Tablet Quality Benchmark, versioned professional Knowledge Corpus, lightweight Design Dialogue, actual-image review rules, and downstream Artifact guidance while relying exclusively on Jarvis-native Skill, Media, Critic, Canvas, assets, Session, persistence, and Trace execution. Concept Sketch is its first acceptance-backed executable target.
+_Avoid_: Runtime dependency on `tablet_pi`, copied Pure Pi frontend, Tablet Session state machine, custom image Tool, custom Critic runtime
 
 **Knowledge Evidence**:
 The internal, persisted list of the BaseModel version and approved Knowledge Atom revision IDs actually used for one generation. The MVP records it through the native image Tool's existing `sourceEvidence` field, making automatic Agent selection inspectable without adding a user-confirmation workflow or new schema.
@@ -153,40 +153,24 @@ The native Jarvis work scope used directly as one coherent design direction insi
 _Avoid_: Design Direction entity, Kernel branch, frontend workspace record, cross-Flow Design State
 
 **Design Dialogue**:
-A Kernel-defined professional decision interaction that exposes relevant Professional Design Strategy Cards, their recommendation rationale, visible consequences, compatibility, conflicts, limits, and validation needs. In the Jarvis Adapter, the Recommended Strategy Composition is rendered through the existing `ask_user` Markdown question with only “generate with these strategies” and “adjust strategies” as native options; adjustment continues through normal Chat or another native `ask_user` turn. The Adapter does not extend the Tool schema, and the Product View neither parses nor persists professional state.
-_Avoid_: Generic clarification, consumer questionnaire, frontend wizard, raw Knowledge Atom picker, custom `strategyCards` Tool field
-
-**Professional Design Strategy Card**:
-A user-facing professional projection of a selected Knowledge Atom. It exposes the strategy, applicability, selection rationale, visible design consequences, compatibility and conflicts, trade-offs, validation needs, and recommendation strength without exposing internal IDs, digests, approval mechanics, or storage fields. A user's adopt, exclude, or adjust decision becomes Kernel-interpreted Design State rather than frontend-only selection state.
-_Avoid_: Raw Knowledge Atom record, inspiration tag, unexplained recommendation, frontend filter chip
-
-**Strategy Candidate Set**:
-A Kernel-selected, ranked set of Professional Design Strategy Cards relevant to the current brief and Design State. It presents a concise recommended subset first while allowing the professional user to expand into a broader relevant pool; unrelated knowledge remains outside the interaction unless the design context changes.
-_Avoid_: Entire knowledge catalog, opaque top result, fixed frontend menu, unbounded atom search
-
-**Recommended Strategy Composition**:
-The Kernel's proposed combination of the most relevant Professional Design Strategy Cards for the current design turn. It is presented as one confirmable direction rather than as a set of initially independent selection states. The professional user either accepts the composition as a whole or enters adjustment, where individual strategies and deeper evidence become available; only the accepted or adjusted result may influence the Kernel's Design State interpretation and the resulting Prompt.
-_Avoid_: Silently active recommendation, mandatory per-card triage, preselected frontend checkboxes, unconfirmed Prompt input
-
-**Strategy Adjustment**:
-A professional revision request against a Recommended Strategy Composition. The user may replace or remove a card through lightweight structured actions or describe a more nuanced change in natural language; both paths are interpreted by the Kernel through the same decision interface and return a revised composition for confirmation.
-_Avoid_: Frontend-authored design mutation, separate form workflow, silent card toggle, direct Prompt editing
+A lightweight professional conversation owned by the active Vertical Design Extension. The Agent applies the Skill's full professional knowledge and safe defaults internally, gives only a concise non-blocking direction summary, and uses one natural-language `ask_user` prompt only when an unresolved decision would materially change the design and cannot be responsibly inferred. Detailed rationale, alternatives, evidence, and trade-offs appear on the professional user's request or when needed to expose a real conflict, risk, or unverifiable claim. The Product View supplies only generic Ask User Input and never interprets professional meaning.
+_Avoid_: Separate interview engine, persisted decision tree, mandatory category question, mandatory strategy cards, fixed confirmation ceremony, proactive knowledge dump, frontend wizard, custom Tool schema
 
 **Generation Readiness**:
-A Kernel judgment that the accepted strategy composition and current Design State contain the minimum professional truth needed for the requested Artifact. Readiness normally follows one confirmation turn; another Design Dialogue is required only for a missing required design fact, a substantive strategy conflict, an incompatible user requirement, or a direction-changing decision that cannot be safely inferred.
-_Avoid_: Fixed questionnaire completion, asking about every uncertainty, provider availability, frontend step counter
+A Kernel judgment that the current brief and Design State contain enough coherent professional truth to produce the requested Artifact without silently inventing a direction-changing decision. It requires neither a questionnaire nor a confirmation turn; generation proceeds directly when no such unresolved decision remains.
+_Avoid_: Fixed questionnaire completion, mandatory strategy acceptance, asking about every uncertainty, provider availability, frontend step counter
 
 **Generation Authorization**:
-The user's explicit acceptance of a Recommended Strategy Composition and request to generate the Artifact in one action. The accepted visible design decisions become binding native user constraints for Media, while internal Knowledge Atom selection, Skill loading, Prompt authorship, and Tool execution remain autonomous Jarvis responsibilities. Authorization proceeds only if the Kernel establishes Generation Readiness.
-_Avoid_: Binding Atom IDs, Root-authored final Prompt, repeated confirmation, Media silently changing user decisions, frontend-owned readiness decision
+The user's explicit request to produce an Artifact, including ordinary product verbs such as design, make, generate, draw, render, or create a concept image. The initial request itself authorizes generation when Generation Readiness is established; if Ask User Input was necessary, a reply that resolves the question and asks to proceed also authorizes it. Exploratory requests such as discuss, analyze, suggest, or list directions authorize only conversation. Visible user constraints remain binding for Media, while professional knowledge selection, Skill loading, Prompt authorship, and Tool execution remain autonomous Jarvis responsibilities.
+_Avoid_: Repeated confirmation, magic option text, frontend keyword classifier, binding Atom IDs, Root-authored final Prompt, Media silently changing user decisions, frontend-owned authorization
 
 **Directional Generation**:
-A generation request that establishes or materially changes product identity or the design direction in the current Jarvis Flow. It requires a prior Recommended Strategy Composition unless the user has already specified the strategies explicitly. Local edits, derivative scenes, detail images, alternate views, and continuations adequately grounded by native `generationContext` do not repeat the knowledge-selection interaction.
-_Avoid_: Every media call, fixed first-turn gate, minor revision, derivative Artifact
+A generation request that establishes or materially changes product identity or the design direction in the current Jarvis Flow. It invokes Design Dialogue only when an unresolved direction-changing decision prevents Generation Readiness; otherwise the Agent proceeds from the user's authorized request. Local edits, derivative scenes, detail images, alternate views, and continuations adequately grounded by native `generationContext` normally proceed without reopening dialogue.
+_Avoid_: Every media call, fixed first-turn gate, mandatory strategy composition, minor revision, derivative Artifact
 
 **Artifact Review**:
-An optional Jarvis-native Critic evaluation of a generated Artifact against Kernel-owned quality rules. Ordinary Media completion does not imply or automatically trigger review; review runs only when explicitly requested by the user or required by a Kernel-delivered Skill quality gate. It appears as the normal output of that review turn rather than as a standing Artifact Card status or default Product View concept.
-_Avoid_: Mandatory review after every generation, unreviewed badge, fixed review button, Media self-review, inferred quality pass, frontend evaluator
+One concise evaluation by the existing Jarvis Critic of the actual persisted pixels against Skill-owned quality rules. Every newly generated Watch Concept Image and Tablet Concept Sketch receives this review in the same request after Media succeeds; the Agent delivers the image whether it passes or is rejected, alongside the judgment, two or three visible evidence points, and one suggested next step so the professional user can continue the discussion naturally. The result remains in native Chat, Critic output, and Trace: it creates no Artifact quality field, frontend state, retry loop, or automatic replacement. Later derivative or unsupported Artifact types follow their Skill-defined policy.
+_Avoid_: Prompt-only approval, full checklist by default, automatic retry loop, hidden or discarded rejection, Media self-review, frontend evaluator, custom vertical Critic runtime
 
 **Professional Workspace**:
 The complete upstream-native Jarvis Canvas revealed on explicit user request, with Chat retained and the current Flow and node selection preserved. Its structure, styling, behavior, and update path remain untouched by the Product View; only the Workspace Integration Seam may add the reciprocal Agent Workspace action.

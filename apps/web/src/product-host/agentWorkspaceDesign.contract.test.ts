@@ -46,12 +46,14 @@ describe('Agent Workspace Design System', () => {
     expect(css).toMatch(/\.project-context-rail__sessions\s+button\s*\{[^}]*min-height:\s*36px[^}]*font-size:\s*12px[^}]*font-weight:\s*400/)
   })
 
-  it('keeps decisions inside the sole Product-owned timeline scroll root', () => {
+  it('keeps Ask User Input inside the sole Product-owned timeline scroll root', () => {
     expect(css).toMatch(/\.product-chat-surface__scroll\s*\{[^}]*overflow:\s*auto/)
     expect(css).toMatch(/\.product-composer-shell\s*\{[^}]*position:\s*absolute/)
-    expect(productChatSource).toContain('className="product-decision-card"')
+    expect(productChatSource).toContain('className="product-timeline-entry__content product-ask-user-input"')
     expect(productChatSource).toContain('className="product-chat-surface__scroll"')
-    expect(productChatSource).toContain('展开全部')
+    expect(productChatSource).not.toContain('product-decision-card')
+    expect(productChatSource).not.toContain('展开全部')
+    expect(chatSource).not.toContain('按此策略生成')
   })
 
   it('uses a confidently sized crest-free Design School lockup at every Agent header size', () => {

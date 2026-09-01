@@ -15,20 +15,18 @@ Use this Skill for every smart-watch design image. Stay inside Jarvis's native w
 - Do not expose atom IDs, review digests, matching scores, approval fields, or raw resource content in user-facing copy.
 - The current knowledge approval covers internal development, testing, and learning only. Do not represent it as commercially cleared content.
 
-## Directional Design Dialogue
+## Lightweight Design Dialogue
 
-When this Skill is loaded by a caller that can use the native `ask_user` tool:
+When this Skill is loaded by a caller that can use native `ask_user`:
 
 1. Load `references/design-dialogue.md`, `references/catalog.json`, and the smallest relevant domain resources.
-2. For a new core concept or material direction change, select 3–6 compatible approved moves and project them as Markdown Professional Design Strategy Cards. Every card must show **Strategy**, **Why this direction**, **Visible impact**, and **Trade-off**. Never show internal IDs or approval metadata.
-3. Present one Recommended Strategy Composition through the unchanged `ask_user` schema. The `question` itself must literally contain all 3–6 complete Markdown cards; a short composition name or summary is not a substitute. Before calling the Tool, count 3–6 occurrences of each required card field (`**Strategy**`, `**Why this direction**`, `**Visible impact**`, `**Trade-off**`). The initial options must be exactly `按此策略生成` and `调整策略`; do not dispatch Media in the same turn because `ask_user` stops the turn.
-4. On `调整策略`, interpret natural language, show a visibly revised composition, and ask again. Show a small replacement candidate set only when replacement truly requires a choice.
-5. On `按此策略生成`, acceptance is also Generation Authorization. Put only the accepted visible decisions into Media's native `task_contract.userConstraints`. Do not pass atom IDs, a Skill name, Kernel method, or a Root-authored final Prompt.
-6. Ask another question only for a required missing product fact, substantive conflict, incompatible requirement, unsafe claim, or direction-defining decision that cannot be responsibly inferred.
+2. Use safe professional defaults whenever the brief supports a coherent direction. State one concise non-blocking direction summary before or during execution. An explicit artifact request authorizes generation once required facts and safety constraints are satisfied.
+3. Ask one concise natural-language question only when one unresolved decision would materially change the product direction and cannot be responsibly inferred. Use the unchanged `ask_user.question`; options are optional. Continue from the user's free-text or option reply without a confirmation loop.
+4. Put only user-stated constraints and user-confirmed visible decisions in Media's native `task_contract.userConstraints`. Keep atom IDs, Skill methods, and the final Prompt out of the handoff.
 
-Skip this dialogue for local edits, derivative scenes, detail images, alternate views, and continuations grounded by native `generationContext`. Also skip it when the user already stated the relevant strategies explicitly.
+Skip dialogue for sufficient briefs, local edits, derivative scenes, detail images, alternate views, and continuations grounded by native `generationContext`. A professional user can request deeper rationale in ordinary Chat.
 
-When loaded inside the Media sub-agent, do not initiate dialogue. Treat accepted visible `userConstraints` as binding, independently select supporting knowledge, author the final Prompt, and never silently reverse an accepted decision. Return conflicts to Root.
+When loaded inside Media, do not initiate dialogue. Treat visible `userConstraints` as binding, independently select supporting knowledge, author the final Prompt, and return conflicts to Root.
 
 ## Required progressive loading for generation
 
@@ -75,6 +73,10 @@ Example shape:
 ```
 
 After dispatch, follow the native Media Agent lifecycle: wait for `status=success` and `persisted=true`; do not claim completion from provider acceptance alone.
+
+## Actual-image review
+
+For every newly persisted Watch Concept Image, Root dispatches one Critic review in the same request. Critic loads this Skill and the relevant quality resources, reads the actual pixels from Canvas, and returns **Pass** or **Reject**, 2–3 visible evidence points, and one next step. Deliver the image with either verdict. No automatic retry; regenerate only when the user explicitly requests it.
 
 ## Prompt quality gate
 

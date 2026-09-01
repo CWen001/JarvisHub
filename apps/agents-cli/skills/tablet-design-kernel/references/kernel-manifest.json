@@ -26,8 +26,7 @@
     "source": "docs/specs/tablet-design-quality-v2.md"
   },
   "design_dialogue": {
-    "resource": "references/design-dialogue.md",
-    "recommended_card_count": { "minimum": 3, "maximum": 6 }
+    "resource": "references/design-dialogue.md"
   },
   "knowledge": {
     "catalog_version": "tablet-knowledge-2026-07",

@@ -54,8 +54,8 @@ Vertical 不应拥有：
 - 最低输入事实与 Generation Readiness；
 - BaseModel 的不可妥协约束；
 - 可选择的 Knowledge Atom 或专业策略；
-- 用户必须看见并确认的 Design Dialogue；
-- 质量如何评价；
+- 哪些关键决定可使用专业默认值，哪些确实需要 `ask_user`；
+- 真实 Artifact 如何由 Critic 简短评价；
 - 一次生成需要记录哪些 Knowledge Evidence。
 
 这些属于 Design Authority。不要把“由哪个 Agent 调用哪个 Tool”写成专业真理。
@@ -81,7 +81,8 @@ Package 通过 Jarvis 已有能力完成工作：
 - 原生 `Skill` Tool 加载 Package；
 - Jarvis Agent / Sub-agent 进行推理和委派；
 - 原生 Media 与 Canvas Tool 生成并持久化 Artifact；
-- 原生 `ask_user` 承载 Design Dialogue；
+- 原生 `ask_user` 仅承载无法安全推断的关键问题；
+- 原生 Critic 按 Skill 规则检查实际 Artifact；
 - 原生 Session 保持上下文；
 - 原生 `sourceEvidence` 记录实际使用的专业证据。
 
@@ -143,12 +144,12 @@ Package 通过 Jarvis 已有能力完成工作：
 
 ### 交互与执行
 
-- Directional Generation 在需要时先给出专业策略组合；
-- Design Dialogue 只追问真正阻碍 Generation Readiness 的事实；
-- 用户确认后，约束进入可观察的生成输入；
-- local revision 或 derivative view 不机械重复完整对话；
-- Jarvis 原生 Agent、Media、Canvas、Session 和 Trace 完成执行；
-- 没有 Vertical-owned lifecycle 或 durable state。
+- 明确的 Artifact 请求在 Generation Readiness 成立时直接执行；
+- Design Dialogue 只用一个自然语言问题追问无法安全推断、且会改变方向的事实；
+- 专业默认值和用户明确约束进入可观察的生成输入；
+- local revision 或 derivative view 不机械重复对话；
+- Jarvis 原生 Agent、Media、Critic、Canvas、Session 和 Trace 完成执行；
+- 没有 Vertical-owned lifecycle、decision tree 或 durable state。
 
 ### Artifact 与 evidence
 
@@ -156,7 +157,8 @@ Package 通过 Jarvis 已有能力完成工作：
 - 产物成功持久化为稳定 Canvas node / asset；
 - Public Chat 或 Agent Workspace 能投影同一权威 Artifact；
 - `sourceEvidence` 精确记录实际使用的 BaseModel、catalog/benchmark 和 selected knowledge revisions；
-- 质量验收既检查技术成功，也检查专业要求；技术成功不能替代专业通过。
+- 首个 acceptance-backed Artifact 由现有 Critic 检查真实媒体；通过或拒绝都连同简短可见证据交付，且不自动重试；
+- 技术成功不能替代专业通过。
 
 ### 架构兼容性
 

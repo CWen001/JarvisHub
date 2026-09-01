@@ -117,35 +117,31 @@ function ProductArtifact({
   )
 }
 
-function ProductDecision({
+function AskUserInput({
   entry,
   onIntent,
 }: {
   entry: AgentWorkspaceTimelineEntryFact
   onIntent: (intent: AgentWorkspaceIntent) => void
 }): JSX.Element | null {
-  const decision = entry.decision
-  const [expanded, setExpanded] = React.useState(false)
-  if (!decision) return null
+  const askUser = entry.decision
+  if (!askUser) return null
   return (
-    <section className="product-decision-card" aria-label="设计决策">
-      <header><span>设计决策</span><strong>{decision.awaitingReply ? '等待你的选择' : '已确认'}</strong></header>
-      <div className={expanded ? 'product-decision-card__content is-expanded' : 'product-decision-card__content'}>
-        <MarkdownContent markdownText={decision.question} variant="chat" />
-      </div>
-      <button type="button" className="product-decision-card__expand" onClick={() => setExpanded((value) => !value)}>
-        {expanded ? '收起详细内容' : '展开全部'}
-      </button>
-      {decision.awaitingReply ? (
-        <div className="product-decision-card__actions" role="group" aria-label="设计决策选项">
-          {decision.options.map((option) => (
+    <div className="product-timeline-entry__content product-ask-user-input" aria-label="需要你的回复">
+      <MarkdownContent markdownText={askUser.question} variant="chat" />
+      <p className="product-ask-user-input__status">
+        {askUser.awaitingReply ? '等待你的回复' : askUser.selectedOption ? `你的回复：${askUser.selectedOption}` : '已回复'}
+      </p>
+      {askUser.awaitingReply && askUser.options.length ? (
+        <div className="product-ask-user-input__options" role="group" aria-label="快捷回复">
+          {askUser.options.map((option) => (
             <button key={option} type="button" onClick={() => onIntent({ type: 'decision.answer', option })}>
               <MarkdownContent markdownText={option} variant="chat" />
             </button>
           ))}
         </div>
-      ) : decision.selectedOption ? <p>你的选择：{decision.selectedOption}</p> : null}
-    </section>
+      ) : null}
+    </div>
   )
 }
 
@@ -159,9 +155,9 @@ function ProductTimelineEntry({
   const user = entry.role === 'user'
   if (!user && entry.phase === 'thinking' && !entry.content && !entry.decision && !entry.assets?.length) return null
   return (
-    <article className={`product-timeline-entry product-timeline-entry--${user ? 'user' : 'assistant'}`} data-entry-kind={entry.decision ? 'decision' : entry.result || 'message'}>
+    <article className={`product-timeline-entry product-timeline-entry--${user ? 'user' : 'assistant'}`} data-entry-kind={entry.decision ? 'ask-user' : entry.result || 'message'}>
       <header className="product-timeline-entry__meta"><strong>{user ? '你' : '设计顾问'}</strong><time>{entry.timestamp}</time></header>
-      <ProductDecision entry={entry} onIntent={onIntent} />
+      <AskUserInput entry={entry} onIntent={onIntent} />
       {!entry.decision && entry.content ? (
         <div className="product-timeline-entry__content">
           {user ? <p>{entry.content}</p> : <MarkdownContent markdownText={entry.content} variant="chat" />}

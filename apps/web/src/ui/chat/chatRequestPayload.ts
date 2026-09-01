@@ -28,11 +28,6 @@ type SelectedImageAssetCandidate = {
   name?: string
 }
 
-type ChatRequestExecution = {
-  mode: 'auto'
-  forceAssetGeneration: boolean
-}
-
 export type ChatSurface = 'native' | 'agent-workspace'
 
 export function resolveCanvasSelectionPolicy(input: {
@@ -137,13 +132,4 @@ export function selectChatRuntimeSkillsForMenu<T extends ChatRuntimeSkillMenuIte
 export function buildRequiredSkillsForChat(skill: ChatSelectedRuntimeSkill | null | undefined): string[] {
   const key = typeof skill?.key === 'string' ? skill.key.trim() : ''
   return key ? [key] : []
-}
-
-export function resolveChatRequestExecution(input: {
-  isGenerationAuthorization: boolean
-}): ChatRequestExecution {
-  return {
-    mode: 'auto',
-    forceAssetGeneration: input.isGenerationAuthorization,
-  }
 }

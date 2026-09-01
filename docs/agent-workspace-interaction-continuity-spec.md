@@ -6,7 +6,7 @@ Accepted product specification. This document refines ADR-0013 without changing 
 
 ## Goal
 
-Agent Workspace is the complete primary work surface for a professional design turn. It may simplify presentation, but it must preserve **Interaction Continuity**: immediate request acknowledgement, truthful visible execution, explicit reference media, professional decisions, and timely Artifact delivery without requiring a switch to Professional Workspace.
+Agent Workspace is the complete primary work surface for a professional design turn. It may simplify presentation, but it must preserve **Interaction Continuity**: immediate request acknowledgement, truthful visible execution, explicit reference media, material user input, and timely Artifact delivery without requiring a switch to Professional Workspace.
 
 Agent Workspace and Professional Workspace share Jarvis-owned commands, facts, persistence, and execution. They do not share presentation DOM or visual systems.
 
@@ -16,7 +16,7 @@ Agent Workspace and Professional Workspace share Jarvis-owned commands, facts, p
 - Agent Workspace owns its complete Product View behind one deep **Agent Workspace Runtime** Module.
 - Professional Workspace remains upstream-native and visually isolated.
 - Agent Workspace must not mount, wrap, hide, or restyle Professional Workspace's `AiChatDialog` presentation.
-- The Product View owns no durable conversation, run, attachment, asset, Artifact, decision, or lifecycle fact.
+- The Product View owns no durable conversation, run, attachment, asset, Artifact, user-input, or lifecycle fact.
 - Stable same-turn identities—not latest-Canvas or URL inference—connect a result to its conversation turn.
 - Agent Workspace uses `apps/web/src/product-host/DESIGN.md`; its tokens do not affect Professional Workspace.
 
@@ -41,7 +41,7 @@ The Interface remains the only surface used by Agent Workspace Views and their t
 The Runtime projects one disposable `AgentWorkspaceSnapshot` containing:
 
 - Current Project Context and Project/Flow/Session navigation;
-- Product Timeline entries for Conversation, Decision, Execution, Artifact, and Notice;
+- Product Timeline entries for Conversation, Ask User Input, Execution, Artifact, and Notice;
 - Product Chat Composer draft, selected Skill, pending references, upload state, send state, and interruption availability;
 - Product Asset Panel state;
 - temporary panel and preview inputs that are derived from authoritative identities;
@@ -57,7 +57,7 @@ The single `dispatch` entry point accepts Product intents for:
 - draft editing and Skill selection;
 - local file upload, paste, drag/drop, Asset reference, Artifact reference, and pending-reference removal;
 - request submission and interruption;
-- decision answering;
+- Ask User Input answering;
 - Artifact continuation, preview, download, and exact Professional Workspace navigation;
 - Product Asset Panel actions.
 
@@ -134,18 +134,11 @@ A usable persisted Artifact takes precedence over a later generic turn error:
 - state precisely what succeeded and what did not;
 - never describe an already usable image as a generation failure.
 
-### Markdown and long decisions
+### Markdown and Ask User Input
 
-Model-, Tool-, Notice-, and Decision-authored Markdown uses one safe Product View renderer. It supports headings, paragraphs, lists, emphasis, block quotes, tables, links, and code. Raw HTML is disabled and links are sanitized. User messages remain plain text.
+Model-, Tool-, Notice-, and `ask_user`-authored Markdown uses one safe Product View renderer. It supports headings, paragraphs, lists, emphasis, block quotes, tables, links, and code. Raw HTML is disabled and links are sanitized. User messages remain plain text.
 
-For long Product Decision Cards:
-
-- the recommendation and required question remain immediately visible;
-- each strategy shows its title, rationale, and key visible consequence;
-- supporting trade-offs and validation detail may be expanded per strategy;
-- `展开全部` reveals the complete source without truncation;
-- actions remain easy to reach at the bottom of the card;
-- disclosure is generic presentation behavior and must not create or persist professional strategy state.
+A pending `ask_user` question appears as an ordinary conversation turn with a visible awaiting-user status. The user answers through the Product Chat Composer; suggested replies remain optional generic conveniences, not a vertical decision program. The Product View neither parses professional meaning nor persists separate decision state.
 
 ## Brand header
 
@@ -158,7 +151,7 @@ Implement one end-to-end vertical slice rather than unrelated UI patches:
 1. text and explicit reference input;
 2. immediate acknowledgement;
 3. truthful live execution;
-4. professional decision and answer;
+4. optional free-text Ask User Input only when execution is genuinely blocked;
 5. resumed execution;
 6. provider result and saving phase;
 7. stable Artifact delivery in both Workspaces;
@@ -171,7 +164,7 @@ Unrelated visual redesign is outside this slice.
 
 1. Expand the Agent Workspace Runtime Snapshot and Intent Interface while retaining its three external entry points.
 2. Implement production and in-memory Runtime Adapters over existing Jarvis authority; add only a minimal headless command Integration Seam where authority is not already reachable.
-3. Build Product-owned Timeline, Composer, Decision, Execution, Artifact, Markdown, and reference Views against the Runtime Interface.
+3. Build Product-owned Timeline, Composer, Ask User Input, Execution, Artifact, Markdown, and reference Views against the Runtime Interface.
 4. Switch the Agent product surface to those Views while preserving the native execution implementation behind the headless seam.
 5. Delete Agent-specific native presentation branches and Product CSS coupling; retain native Chat presentation only for Professional Workspace.
 6. Replace shallow implementation-detail tests with behavior tests at the Runtime Interface and Product View seams.
@@ -189,8 +182,8 @@ Automated, provider-free acceptance covers:
 - internal recovery after the target without a false user-facing failure;
 - usable Artifact plus downstream failure rendered as partial completion;
 - authoritative generation failure rendered without a false Artifact;
-- safe Markdown rendering and long Decision disclosure;
-- refresh reconstruction of messages, decisions, execution, and Artifacts;
+- safe full-length Ask User Input Markdown rendering;
+- refresh reconstruction of messages, pending and answered Ask User Input, execution, and Artifacts;
 - Agent ↔ Professional round-trip preserving Project, Flow, Session, run, draft, Skill, and pending stable references;
 - proof that the Agent surface does not render or depend on `AiChatDialog` presentation DOM;
 - proof that Professional Workspace structure, style, behavior, and native Chat remain unchanged.

@@ -273,18 +273,10 @@
 .product-timeline-entry__notice { margin-top: 12px; padding: 10px 12px; display: flex; justify-content: space-between; gap: 8px; border-left: 2px solid var(--pds-warning); background: var(--pds-surface); color: var(--pds-secondary); font-size: 13px; }
 .product-timeline-entry__notice.is-failed { border-left-color: var(--pds-error); color: var(--pds-error); }
 .product-timeline-entry__artifacts { margin-top: 16px; display: grid; gap: 12px; }
-.product-timeline-decision-history { margin-bottom: 14px; padding: 12px 14px; border-left: 2px solid var(--pds-primary); background: var(--pds-surface); }
-.product-timeline-decision-history > span { color: var(--pds-muted); font-size: 11px; font-weight: 600; }
-.product-timeline-decision-history p { margin: 6px 0 10px; font-size: 14px; font-weight: 600; }
-.product-timeline-decision-history div { display: flex; gap: 8px; color: var(--pds-secondary); font-size: 13px; }
-.product-decision-card { margin-top: 4px; padding: 14px; border-left: 2px solid var(--pds-primary); background: var(--pds-surface); }
-.product-decision-card > header { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 10px; color: var(--pds-secondary); font-size: 12px; }
-.product-decision-card__content { position: relative; max-height: 250px; overflow: hidden; }
-.product-decision-card__content.is-expanded { max-height: none; }
-.product-decision-card__expand { min-height: 36px; margin-top: 6px; border: 0; background: transparent; color: var(--pds-focus); font-weight: 600; }
-.product-decision-card__actions { display: grid; gap: 8px; margin-top: 12px; }
-.product-decision-card__actions > button { min-height: 44px; padding: 10px 12px; border: 1px solid var(--pds-border-strong); border-radius: 4px; background: var(--pds-canvas); color: var(--pds-primary); text-align: left; }
-.product-decision-card__actions > button:hover { background: var(--pds-surface-hover); }
+.product-ask-user-input__status { margin: 10px 0 0; color: var(--pds-muted); font-size: 12px; }
+.product-ask-user-input__options { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.product-ask-user-input__options > button { min-height: 40px; padding: 8px 12px; border: 1px solid var(--pds-border-strong); border-radius: 4px; background: var(--pds-canvas); color: var(--pds-primary); text-align: left; }
+.product-ask-user-input__options > button:hover { background: var(--pds-surface-hover); }
 .product-artifact-card { overflow: hidden; border: 1px solid var(--pds-border-strong); border-radius: 6px; background: var(--pds-canvas); }
 .product-artifact-card > img, .product-artifact-card > video { width: 100%; max-height: 68vh; display: block; object-fit: contain; background: var(--pds-surface); }
 .product-artifact-card__body { padding: 12px 14px; }

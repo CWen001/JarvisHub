@@ -24,13 +24,13 @@ describe('Native Chat Workspace Adapter', () => {
     await execute({ type: 'draft.set', text: '设计一款平板' })
     await execute({ type: 'request.submit' })
     await execute({ type: 'request.interrupt' })
-    await execute({ type: 'decision.answer', option: '按此策略生成' })
+    await execute({ type: 'decision.answer', option: '轻薄佩戴' })
     await execute({ type: 'skill.select', skill: { id: 'tablet', key: 'tablet-design-kernel', name: 'Tablet' } })
 
     expect(native.setDraft).toHaveBeenCalledWith('设计一款平板')
     expect(native.submit).toHaveBeenCalledOnce()
     expect(native.interrupt).toHaveBeenCalledOnce()
-    expect(native.answerDecision).toHaveBeenCalledWith('按此策略生成')
+    expect(native.answerDecision).toHaveBeenCalledWith('轻薄佩戴')
     expect(native.selectSkill).toHaveBeenCalledWith({ id: 'tablet', key: 'tablet-design-kernel', name: 'Tablet' })
   })
 

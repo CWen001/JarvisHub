@@ -178,48 +178,11 @@ A Harness model may help rank or synthesize candidates, but the Kernel defines t
 
 ### 4. Design Interaction Protocol
 
-Human participation is part of the design technology, not a frontend embellishment.
+Human participation remains part of the design technology, but the professional user does not need a mandatory selection ceremony. The Watch Skill applies its approved knowledge and safe defaults internally, gives a concise direction summary, and treats an explicit Concept Image request as generation authorization once the brief is sufficient.
 
-A framework-independent Design Dialogue presents a selected set of Professional Design Strategy Cards to the professional user:
+The Skill uses the unchanged native `ask_user` only when one unresolved fact would materially change the product direction and cannot be responsibly inferred. The question is free text, not a strategy-card schema; detailed rationale, alternatives, conflicts, and trade-offs remain available through ordinary Chat when the professional user asks. Local edits and continuations grounded by native `generationContext` do not repeat the dialogue.
 
-```text
-Design Dialogue
-├── current interpretation
-├── relevant Professional Design Strategy Cards
-│   ├── design strategy
-│   ├── applicability and selection rationale
-│   ├── visible design consequences
-│   ├── compatibility and conflicts
-│   ├── trade-offs and limits
-│   ├── validation needs
-│   └── recommendation strength
-├── adopt / exclude / adjust decisions
-└── continuation policy
-```
-
-A Professional Design Strategy Card is a user-facing projection of a Knowledge Atom, not its raw persistence record. Internal IDs, digests, approval mechanics, and storage fields remain hidden, while professional content and consequences remain inspectable.
-
-The Kernel organizes cards as a layered Strategy Candidate Set. The default interaction presents a Recommended Strategy Composition of approximately three to six highly relevant cards as one professional proposal. The initial interaction has only two paths: use “generate with these strategies” to accept the composition and authorize generation in one action, or adjust it. It does not require per-card status management or a second redundant generation confirmation.
-
-Only adjustment progressively reveals deeper information and a simple dual input channel. Each card offers lightweight replace and remove actions; nuanced changes are expressed in natural language through Chat. Both channels enter the same Kernel decision interface rather than creating separate frontend and conversational workflows. The Kernel returns a revised Recommended Strategy Composition for confirmation, making the interpreted change visible before it becomes Design State.
-
-During adjustment, the professional user may expand into a broader pool that is still relevant to the current brief and Design State and inspect compatibility, conflicts, and validation needs. The complete knowledge catalog is not dumped into each interaction, and unrelated knowledge remains outside the candidate set until the design context changes. Neither the recommended composition nor any card silently becomes Design State or Prompt input before explicit acceptance.
-
-The Kernel determines:
-
-- which strategies enter the broader relevant candidate pool;
-- which approximately three to six strategies appear in the initial recommended subset;
-- why each strategy was selected and how strongly it is recommended;
-- what each strategy changes visibly;
-- compatibility, conflicts, limits, and validation needs;
-- how adopt, exclude, and adjust decisions evolve Design State;
-- whether the accepted composition establishes Generation Readiness.
-
-Generation Readiness follows a minimum-necessary-turn rule. Normally, one accepted Recommended Strategy Composition permits generation. The Kernel requests another Design Dialogue only when a required Product Schema fact is missing, selected strategies have a substantive conflict, the user's requirements are incompatible, or an unresolved decision would materially change the product direction and cannot be safely inferred. Ordinary uncertainty does not justify another question, and there is no fixed questionnaire or frontend step count.
-
-The strategy interaction is required only for Directional Generation: a new core product concept or a request that materially changes product identity or direction. Local edits, derivative scenes, detail images, alternate views, and continuations adequately grounded by native `generationContext` proceed through Jarvis's normal flow without repeating strategy selection. Explicit user strategy choices also remove the need to ask the user to select the same direction again.
-
-The Jarvis Adapter maps this without extending the native `ask_user` Tool schema. The Recommended Strategy Composition appears in the existing Markdown question body; the initial native text options are only “generate with these strategies” and “adjust strategies.” Natural-language adjustment uses normal Chat input, while replacements can be returned through another native `ask_user` turn. Product View styling may improve the existing Markdown and options but does not parse them into professional state. `ask_user` owns turn stopping, persistence, and recovery; it does not own the strategy content or decision semantics.
+After Media persists the Concept Image, the existing Jarvis Critic reads the actual pixels once against Skill-owned rules. The Agent delivers the image with a concise pass or reject judgment and visible evidence; rejection does not hide or regenerate the Artifact. No interaction state, quality state, or Watch-specific Interface is added outside the Skill.
 
 ### 5. Artifact BaseModels
 
@@ -333,22 +296,17 @@ The Product View reuses Jarvis's existing Asset Center capability and authoritat
 
 ## Native Design Dialogue flow
 
-The intended interaction is participatory while still using native Jarvis execution:
-
 ```text
 1. User submits a design brief.
-2. Jarvis asks the Kernel, through the Adapter, for the current Design Dialogue.
-3. Kernel selection semantics produce relevant Professional Design Strategy Cards with rationale, consequences, conflicts, limits, validation needs, and recommendation strength.
-4. Adapter maps the Dialogue to native `ask_user` option cards or an equivalent native interaction primitive.
-5. Product View renders the Recommended Strategy Composition before generation, with only “generate with these strategies” and “adjust strategies” as the initial actions.
-6. The first action simultaneously accepts the composition and grants Generation Authorization; the second enters progressive adjustment of individual strategies and deeper evidence.
-7. Jarvis persists the reply in the native Chat session.
-8. Kernel semantics interpret only the accepted or adjusted result into the current-turn Design State and evaluate Generation Readiness under the minimum-necessary-turn rule; the Adapter creates no standalone state object.
-9. If a hard unresolved issue remains, Generation Authorization does not bypass it: the Kernel returns one new confirmable composition or focused Design Dialogue. Otherwise Jarvis dispatches native Media execution immediately without another confirmation step.
-10. The Adapter conveys the user's accepted visible design decisions as native user constraints, not as Knowledge Atom IDs, a prescribed Skill name, or a final Prompt. Media remains autonomous in Skill loading, eligible knowledge selection, Prompt authorship, and Tool execution, but it may not silently reverse the user's confirmed design decisions. Actual knowledge revisions used by Media remain observable through native `sourceEvidence`.
+2. Jarvis loads the Watch Skill and applies its professional defaults.
+3. If one direction-changing fact cannot be safely inferred, Jarvis asks one free-text native ask_user question and waits.
+4. Otherwise the explicit Artifact request authorizes Media immediately.
+5. Media loads the Skill references, writes the Prompt, generates, and persists the Concept Image with sourceEvidence.
+6. The existing Critic reads the actual image once using Skill-owned rules.
+7. Jarvis delivers the image and concise review through native Chat and Artifact projection.
 ```
 
-This is not a fixed frontend wizard. The conversation may close in one turn through an accepted recommendation or continue through additional alignment turns. The user explicitly authorizes generation; the frontend does not maintain a step counter.
+The Product View owns no professional decision semantics, and rejection creates neither an automatic retry nor a new Artifact status.
 
 ## Current Native Skill MVP
 
@@ -395,12 +353,13 @@ Within one native Jarvis Project and Flow, the user can:
 
 1. resume the most recent Project and Chat Session;
 2. submit a Directional Generation request;
-3. inspect and confirm a Recommended Strategy Composition through native `ask_user`;
+3. answer one free-text native `ask_user` question only when a material decision cannot be safely inferred;
 4. receive an Artifact through native Media execution;
-5. view it through the lightweight Native Artifact Projection;
-6. attach that Artifact or a Native Asset Center item as a native Chat reference;
-7. enter the complete Professional Workspace and find the same Flow nodes and assets;
-8. return to the Product View without losing Project, Flow, Session, or selection context.
+5. inspect the concise actual-image Critic review;
+6. view the Artifact through the lightweight Native Artifact Projection;
+7. attach that Artifact or a Native Asset Center item as a native Chat reference;
+8. enter the complete Professional Workspace and find the same Flow nodes and assets;
+9. return to the Product View without losing Project, Flow, Session, or selection context.
 
 ### Architectural constraints
 

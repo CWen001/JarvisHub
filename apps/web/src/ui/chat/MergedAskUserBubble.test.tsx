@@ -1,11 +1,12 @@
 // @vitest-environment jsdom
 
 import { MantineProvider } from '@mantine/core'
-import { render } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { useRFStore } from '../../canvas/store'
 import { MergedAskUserBubble, type ChatMessage } from './AiChatDialog'
+import { AskUserPendingCard } from './AskUserPendingCard'
 
 beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {
@@ -36,7 +37,38 @@ function message(input: Partial<ChatMessage> & Pick<ChatMessage, 'id' | 'role'>)
   }
 }
 
-describe('MergedAskUserBubble', () => {
+describe('Ask User compatibility', () => {
+  it('keeps generic image option cards selectable', () => {
+    const onSelectOption = vi.fn()
+    const onSubmitOption = vi.fn()
+    render(
+      <MantineProvider>
+        <AskUserPendingCard
+          pendingAskUser={{
+            sourceMessageId: 'ask-1',
+            toolCallId: 'ask-tool-1',
+            question: '选择参考图',
+            options: [],
+            optionCards: [{ value: 'reference-b', imageUrl: 'https://cdn.example/b.png', title: '方向 B' }],
+            urgency: 'blocker',
+            askedAt: null,
+            awaitingReply: true,
+            selectedOption: '',
+          }}
+          layout="expanded"
+          canContinue={false}
+          onSelectOption={onSelectOption}
+          onSubmitOption={onSubmitOption}
+          onContinue={vi.fn()}
+        />
+      </MantineProvider>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'A. 方向 B' }))
+    expect(onSelectOption).toHaveBeenCalledWith('reference-b')
+    expect(onSubmitOption).toHaveBeenCalledWith('reference-b')
+  })
+
   it('shows a successful persisted Artifact recovered from the continuation Tool snapshot', () => {
     useRFStore.setState({
       nodes: [{
