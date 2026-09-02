@@ -29,6 +29,10 @@ A professional user can request deeper rationale in ordinary Chat. Do not call t
 
 When loaded inside Media, do not initiate dialogue. Treat visible `userConstraints` as binding, independently select supporting knowledge, author the final Prompt, and return conflicts to Root.
 
+## Non-Jarvis host fallback
+
+When the host has no native `ask_user`, present the same Design Direction Turn as one Markdown question with numbered options, then stop for the user's reply. When the host has no Canvas or image Provider, complete the professional work as a portable generation packet: accepted direction, provider-ready Prompt, exact `sourceEvidence`, and the quality-gate verdict; state plainly that no image was generated. If the user supplies an image directly, review its visible pixels and return Pass or Reject, 2–3 visible evidence points, and one next step without claiming Canvas persistence.
+
 ## Required progressive loading for generation
 
 1. Load `references/concept-image-base-model.md`. It is mandatory for every generated watch image.

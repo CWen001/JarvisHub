@@ -3,6 +3,10 @@
   "upstreamRef": "upstream/main",
   "productOwnedRoots": [
     {
+      "path": ".pi/**",
+      "owner": "Pi project integration"
+    },
+    {
       "path": "CONTEXT.md",
       "owner": "Domain model"
     },

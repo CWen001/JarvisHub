@@ -1,0 +1,7 @@
+{
+  "enableSkillCommands": true,
+  "skills": [
+    "../apps/agents-cli/skills/watch-design-kernel",
+    "../apps/agents-cli/skills/tablet-design-kernel"
+  ]
+}
