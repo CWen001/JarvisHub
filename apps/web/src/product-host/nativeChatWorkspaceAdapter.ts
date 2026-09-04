@@ -2,9 +2,9 @@ import React from 'react'
 import type { ChatSelectableSkill, ChatTabRuntimeState } from '../ui/chat/chatRuntimeStore'
 import { readAiChatTabsState, selectAiChatTab, writeAiChatTabsState } from '../ui/chat/chatTabs'
 import {
-  registerAgentWorkspaceChatIntegration,
-  type AgentWorkspaceChatIntegrationCommand,
-} from './agentWorkspaceChatIntegration'
+  attachNativeChatAuthority,
+  type NativeChatCommand,
+} from '../ui/chat/nativeChatAuthority'
 import { notifyNativeChatNavigationChanged } from './nativeChatNavigation'
 export { notifyNativeChatNavigationChanged } from './nativeChatNavigation'
 export { resolveLoadedVerticalSkill } from './verticalSkillActivation'
@@ -15,12 +15,12 @@ export type NativeChatWorkspaceAuthority = Readonly<{
   interrupt: () => void
   uploadReferences: (files: readonly File[]) => void | Promise<void>
   addReference: (
-    reference: Extract<AgentWorkspaceChatIntegrationCommand, { type: 'reference.add' }>['reference'],
+    reference: Extract<NativeChatCommand, { type: 'reference.add' }>['reference'],
     continuation?: 'reference' | 'modify',
   ) => void | Promise<void>
   removeReference: (url: string) => void | Promise<void>
   answerDecision: (option: string) => void | Promise<void>
-  selectSkill: (skill: Extract<AgentWorkspaceChatIntegrationCommand, { type: 'skill.select' }>['skill']) => void
+  selectSkill: (skill: Extract<NativeChatCommand, { type: 'skill.select' }>['skill']) => void
   createSession: (projectId: string) => void
   selectSession: (projectId: string, sessionId: string) => void
 }>
@@ -113,7 +113,7 @@ export function createNativeChatWorkspaceAuthority(
 
 export function createNativeChatWorkspaceCommandExecutor(
   authority: NativeChatWorkspaceAuthority,
-): (command: AgentWorkspaceChatIntegrationCommand) => Promise<void> {
+): (command: NativeChatCommand) => Promise<void> {
   return async (command) => {
     switch (command.type) {
       case 'draft.set':
@@ -229,7 +229,7 @@ export function useNativeChatWorkspaceAdapter(input: Readonly<{
 
   React.useEffect(() => {
     if (!input.enabled) return
-    return registerAgentWorkspaceChatIntegration({
+    return attachNativeChatAuthority({
       execute: (command) => createNativeChatWorkspaceCommandExecutor(authorityRef.current)(command),
     })
   }, [input.enabled])
