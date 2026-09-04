@@ -57,26 +57,33 @@ const completedWatch = {
 test("requires one Critic after the generic media contract emitted by a loaded vertical Skill", () => {
   assert.deepEqual(
     readPendingRequiredCriticReviews([
-      skillCall("watch-design-kernel"),
+      skillCall("phone-design-kernel"),
       agentCall("media", "visualAsset", [], {
         status: "completed",
-        completed: [{ nodeId: "watch-live-01", status: "success", persisted: true }],
-      }, ["watch-live-01"]),
+        completed: [{ nodeId: "phone-live-01", status: "success", persisted: true }],
+      }, ["phone-live-01"]),
     ]),
-    [{ kind: "watch_concept_image", nodeId: "watch-live-01" }],
+    [{ kind: "phone_concept_image", nodeId: "phone-live-01" }],
   );
 });
 
-test("requires one Critic after a persisted Watch or Tablet artifact", () => {
+test("requires one Critic after a persisted Watch, Tablet, or Phone artifact", () => {
   assert.deepEqual(
     readPendingRequiredCriticReviews([
       agentCall("media", "watch_concept_image", ["watch-01"], completedWatch),
+      agentCall("media", "phone_concept_image", ["phone-01"], {
+        status: "completed",
+        completed: [{ nodeId: "phone-01", status: "success", persisted: true }],
+      }),
       agentCall("media", "unrelated_image", ["other-01"], {
         status: "completed",
         completed: [{ nodeId: "other-01", status: "success", persisted: true }],
       }),
     ]),
-    [{ kind: "watch_concept_image", nodeId: "watch-01" }],
+    [
+      { kind: "watch_concept_image", nodeId: "watch-01" },
+      { kind: "phone_concept_image", nodeId: "phone-01" },
+    ],
   );
 });
 

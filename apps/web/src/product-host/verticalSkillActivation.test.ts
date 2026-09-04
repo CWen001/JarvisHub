@@ -4,6 +4,7 @@ import { resolveLoadedVerticalSkill } from './verticalSkillActivation'
 const skills = [
   { id: 'watch', key: 'watch-design-kernel', name: 'Watch Design Kernel' },
   { id: 'tablet', key: 'tablet-design-kernel', name: 'Tablet Design Kernel' },
+  { id: 'phone', key: 'phone-design-kernel', name: 'Phone Design Kernel' },
   { id: 'research', key: 'research', name: 'Research' },
 ]
 const startedAt = '2026-08-04T00:00:00Z'
@@ -16,8 +17,8 @@ describe('vertical Skill activation', () => {
       phase: 'completed',
       status: 'succeeded',
       startedAt,
-      input: { skill: 'tablet-design-kernel' },
-    }, skills)).toEqual(skills[1])
+      input: { skill: 'phone-design-kernel' },
+    }, skills)).toEqual(skills[2])
   })
 
   it('ignores ordinary Skills and unsuccessful or incomplete loads', () => {

@@ -28,14 +28,15 @@ describe('Vertical Product Host contract', () => {
 
   it('installs all registered verticals through native Skill discovery', async () => {
     const installation = await installVerticalProductHost(installedVerticalSkills, {
-      discoverSkills: discoveryWith('tablet-design-kernel', 'watch-design-kernel', 'research'),
+      discoverSkills: discoveryWith('tablet-design-kernel', 'phone-design-kernel', 'watch-design-kernel', 'research'),
     })
 
     expect(installation).toEqual({
-      skillKeys: ['watch-design-kernel', 'tablet-design-kernel'],
+      skillKeys: ['watch-design-kernel', 'tablet-design-kernel', 'phone-design-kernel'],
       skills: [
         { key: 'watch-design-kernel', name: 'watch-design-kernel' },
         { key: 'tablet-design-kernel', name: 'tablet-design-kernel' },
+        { key: 'phone-design-kernel', name: 'phone-design-kernel' },
       ],
     })
   })
@@ -45,13 +46,16 @@ describe('Vertical Product Host contract', () => {
       { key: 'research', name: 'Research' },
       { key: 'tablet-design-kernel', name: 'Tablet Design Kernel' },
       { key: 'watch-design-kernel', name: 'Watch Design Kernel' },
+      { key: 'phone-design-kernel', name: 'Phone Design Kernel' },
     ]
     expect(selectRegisteredVerticalSkills(skills, installedVerticalSkills)).toEqual([
       skills[2],
       skills[1],
+      skills[3],
     ])
     expect(isRegisteredVerticalSkillKey('research', installedVerticalSkills)).toBe(false)
     expect(isRegisteredVerticalSkillKey('tablet-design-kernel', installedVerticalSkills)).toBe(true)
+    expect(isRegisteredVerticalSkillKey('phone-design-kernel', installedVerticalSkills)).toBe(true)
   })
 
   it('fails explicitly when a registered Skill is absent or discovery has load errors', async () => {

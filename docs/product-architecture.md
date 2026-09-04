@@ -75,7 +75,7 @@ Seam 是可以低成本插入、替换或移除行为的位置。它的价值不
 
 ## 2. 系统地图：共同枝干与平行垂类
 
-可以把系统理解为一棵树：Jarvis Core 是稳定根系，Agent Workspace 和 Product Host 是共享枝干，Watch、Tablet 等 Vertical Design Extensions 是平行分支。分支携带不同专业知识，但不各自复制根系和枝干。
+可以把系统理解为一棵树：Jarvis Core 是稳定根系，Agent Workspace 和 Product Host 是共享枝干，Watch、Tablet、Phone 等 Vertical Design Extensions 是平行分支。分支携带不同专业知识，但不各自复制根系和枝干。
 
 ```mermaid
 flowchart TB
@@ -95,12 +95,14 @@ flowchart TB
   subgraph V[Parallel Vertical Design Extensions]
     WS[Watch native Skill Package]
     TS[Tablet native Skill Package]
+    PS[Phone native Skill Package]
     FK[Future Vertical Skill Package]
   end
 
   subgraph K[Portable Design Authority]
     WK[Watch Design Kernel]
     TK[Tablet Design Kernel]
+    PK[Phone Design Kernel]
     FPK[Future Design Kernel]
   end
 
@@ -111,12 +113,15 @@ flowchart TB
   PW --> JC
   PH --> WS
   PH --> TS
+  PH --> PS
   PH --> FK
   WS --> WK
   TS --> TK
+  PS --> PK
   FK --> FPK
   WS --> JC
   TS --> JC
+  PS --> JC
 ```
 
 图中是责任关系，不是部署拓扑。当前 Demo 可以在同一服务和同一界面中装载多个 Vertical Package；未来客户权限、租户和部署隔离尚未决定。
@@ -127,11 +132,11 @@ flowchart TB
 
 1. **Jarvis foundation**：Jarvis Core 与 Professional Workspace。它拥有执行和持久化，Product 不复制它。
 2. **Shared Product infrastructure**：Agent Workspace Runtime、Product View、公共 Adapter、Vertical Product Host 和 Upstream Compatibility Surface。它必须与品类无关。
-3. **Vertical professional branch**：Watch、Tablet 及未来垂类各自的 Skill Package 和 Portable Design Kernel。它只提供专业内容和约束。
+3. **Vertical professional branch**：Watch、Tablet、Phone 及未来垂类各自的 Skill Package 和 Portable Design Kernel。它只提供专业内容和约束。
 
 判断一项新能力放在哪里，先问：
 
-- 没有 Watch 或 Tablet，这项能力是否仍成立？成立则更可能属于 Shared Product Trunk。
+- 没有任何具体 Vertical，这项能力是否仍成立？成立则更可能属于 Shared Product Trunk。
 - 它定义的是专业设计真理，还是怎样执行工作？前者属于 Kernel，后者应复用 Jarvis。
 - 第二个垂类需要复制代码才能使用吗？如果需要，可能漏掉了共享基础设施 Seam。
 - 删除某个 Vertical Package 后，Jarvis 和 Agent Workspace 是否仍能通用运行？必须能。
@@ -161,12 +166,19 @@ stateDiagram-v2
   [*] --> General
   General --> Watch: 成功加载已注册 Watch Skill
   General --> Tablet: 成功加载已注册 Tablet Skill
+  General --> Phone: 成功加载已注册 Phone Skill
   Watch --> Tablet: 成功加载 Tablet Skill
+  Watch --> Phone: 成功加载 Phone Skill
   Tablet --> Watch: 成功加载 Watch Skill
+  Tablet --> Phone: 成功加载 Phone Skill
+  Phone --> Watch: 成功加载 Watch Skill
+  Phone --> Tablet: 成功加载 Tablet Skill
   Watch --> General: 用户关闭选择
   Tablet --> General: 用户关闭选择
+  Phone --> General: 用户关闭选择
   General --> Watch: 用户手动选择 Watch
   General --> Tablet: 用户手动选择 Tablet
+  General --> Phone: 用户手动选择 Phone
 ```
 
 只有同时满足以下条件，自动识别才成立：
@@ -246,7 +258,7 @@ Public Chat Delivery Adapter：
 
 ### 共享基础设施必须由真实复用证明
 
-不要先设计一个万能 Vertical plugin SDK。先让 Watch 和 Tablet 以平行 Package 工作；只有两者确实重复、且重复内容与专业领域无关时，才把它提升到 Shared Product Trunk。
+不要先设计一个万能 Vertical plugin SDK。先让 Watch、Tablet 和 Phone 以平行 Package 工作；只有多个真实 Vertical 确实重复、且重复内容与专业领域无关时，才把它提升到 Shared Product Trunk。
 
 应提升的例子：Skill discovery、互斥选择、通用 Artifact projection。
 
@@ -283,7 +295,7 @@ ADR-0002 的“每个产品 fork 一个垂类”已经被 ADR-0014 取代。历�
 
 ### 已实现并受测试保护
 
-- Watch 与 Tablet 作为两个原生 Vertical Skill Package 安装；
+- Watch、Tablet 与 Phone 作为三个原生 Vertical Skill Package 安装；
 - compile-time registry 与启动 discovery 校验；
 - 成功原生 Skill load 驱动互斥选择；
 - Agent Workspace 通过一个深 Runtime 投影 Jarvis facts 并 dispatch intents；

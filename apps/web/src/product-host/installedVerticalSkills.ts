@@ -3,4 +3,5 @@
 export const installedVerticalSkills = Object.freeze([
   'watch-design-kernel',
   'tablet-design-kernel',
+  'phone-design-kernel',
 ] as const)

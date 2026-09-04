@@ -1,0 +1,37 @@
+{
+  "name": "phone-design-kernel",
+  "version": "1.4.0",
+  "status": "learning",
+  "source": {
+    "repository": "wen-skills",
+    "revision": "62a9414942c6270235cda75ec44ea76f1cc6ff5b",
+    "path": "skills/design/phone-design-kernel",
+    "status": "source-faithful vendored snapshot with no build-time or runtime dependency"
+  },
+  "baseline": {
+    "year": 2026,
+    "version": "0.1.0",
+    "resource": "references/contemporary-baseline.md"
+  },
+  "base_contract": {
+    "version": "0.1.3",
+    "resource": "references/phone-base-contract.md"
+  },
+  "design_judgment_schema": {
+    "version": "1.4.0",
+    "resource": "references/design-judgment-schema.md"
+  },
+  "design_judgment_model": {
+    "version": "1.4.0",
+    "resource": "references/phone-design-judgment.schema.json"
+  },
+  "design_dialogue": {
+    "version": "1.4.0",
+    "resource": "references/design-dialogue.md"
+  },
+  "sources": "references/sources.md",
+  "default_form": "mainstream-slab-smartphone",
+  "default_artifact": "phone-dual-view-hero",
+  "runtime": "provider-neutral",
+  "usage_scope": "internal design learning and cross-agent use"
+}

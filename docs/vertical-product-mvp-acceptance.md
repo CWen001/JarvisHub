@@ -2,13 +2,13 @@
 
 ## Automated acceptance
 
-- The Product Host validates the ordered native registry containing `watch-design-kernel` and `tablet-design-kernel`.
+- The Product Host validates the ordered native registry containing `watch-design-kernel`, `tablet-design-kernel`, and `phone-design-kernel`.
 - Registry contracts prove that ordinary Skills do not participate in vertical mutual exclusion.
 - Completed successful native vertical `Skill` loads project into the existing Composer selection; unsuccessful, incomplete, and ordinary Skill loads do not.
 - Session-scope contracts preserve the selected vertical across local refresh/reopen without binding another Project.
-- The journey covers native Project/Session resume, generic Artifact projection, Asset-to-Chat reference identity, and full native Canvas round-trip context for both registered verticals.
+- The journey covers native Project/Session resume, generic Artifact projection, Asset-to-Chat reference identity, and full native Canvas round-trip context for all registered verticals.
 - Web tests never call a text or image Provider.
-- Watch and Tablet Kernel validators check package integrity, immutable knowledge evidence, BaseModel completeness, and the absence of the retired fixed strategy-card contract.
+- Watch, Tablet, and Phone Kernel validators check package integrity, versioned professional evidence, Artifact requirements, and Design Dialogue contracts.
 - `NativeJarvisApp` imports no Product registry or vertical package; Professional Workspace remains a separate deletion-safe entry.
 
 ## Manual Watch smoke
@@ -29,6 +29,10 @@ Current acceptance requires one native Design Direction Turn before every Watch 
 Offline acceptance verifies the self-contained Tablet package, 12 approved atoms across eight design areas, nine packaged Artifact targets, Concept Sketch BaseModel, Quality Benchmark, registry installation, Composer activation projection, Session selection persistence, and native builds. Live `/skills` discovery lists both Tablet and Watch with no load errors.
 
 A five-image Provider-backed Tablet acceptance is recorded in `docs/tablet-jvs/five-image-acceptance-2026-08-05.md`. It historically verified automatic native Tablet Skill recognition, the former strategy-card authorization flow, five successful persisted and fetchable PNG assets, native `generationContext`, and exact BaseModel/Benchmark/Catalog/selected-atom evidence; ADR-0018 supersedes only that interaction flow. Strict manual visual compliance was 4/5 because one outdoor direction read as a removable rugged case despite an explicit bare-enclosure prohibition. The first successful Canvas result also exposed a top-level delivery-reconciliation defect: public Chat returned no assets and `force_asset_generation_unmet` even though the native image node was successful and persisted.
+
+## Phone acceptance state
+
+Phone is installed as a self-contained snapshot of `wen-skills` Phone Design Kernel 1.4.0 with no build-time or runtime dependency on that repository. Offline acceptance covers package validation, native discovery, mutually exclusive Composer activation, `phone_concept_image` Critic gating, and native builds. Live acceptance requires two persisted Phone Concept Images from one brief, a local edit of one retained image, and one actual-image Critic review for every resulting Artifact without hiding or automatic regeneration.
 
 ## Known demo limits
 

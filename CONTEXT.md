@@ -124,6 +124,10 @@ _Avoid_: Duplicated knowledge source, generated mirror package, second Agent, cu
 The self-contained native Jarvis package adapted from the `tablet_pi` TypeScript mainline. It owns the Tablet Concept Sketch BaseModel, Tablet Quality Benchmark, versioned professional Knowledge Corpus, lightweight Design Dialogue, actual-image review rules, and downstream Artifact guidance while relying exclusively on Jarvis-native Skill, Media, Critic, Canvas, assets, Session, persistence, and Trace execution. Concept Sketch is its first acceptance-backed executable target.
 _Avoid_: Runtime dependency on `tablet_pi`, copied Pure Pi frontend, Tablet Session state machine, custom image Tool, custom Critic runtime
 
+**Phone Design Skill**:
+The self-contained native Jarvis package vendored from `wen-skills` Phone Design Kernel 1.4.0. It owns the 2026 maturity baseline, nested Design Judgment Schema, topology-originality rule, Design Dialogue, Phone Dual-View Hero requirements, and actual-image review criteria while relying exclusively on Jarvis-native execution and persistence.
+_Avoid_: Runtime dependency on wen-skills, Phone-specific Runtime, copied Product View, competitor-signature prompt pack
+
 **Knowledge Evidence**:
 The internal, persisted list of the BaseModel version and approved Knowledge Atom revision IDs actually used for one generation. The MVP records it through the native image Tool's existing `sourceEvidence` field, making automatic Agent selection inspectable without adding a user-confirmation workflow or new schema.
 _Avoid_: User-facing atom IDs, hidden knowledge selection, new provenance database
@@ -157,15 +161,15 @@ A lightweight professional conversation owned by the active Vertical Design Exte
 _Avoid_: Separate interview engine, persisted decision tree, mandatory category question, strategy-card workflow, fixed confirmation ceremony, proactive knowledge dump, frontend wizard, custom Tool schema
 
 **Design Direction Turn**:
-The default-required, user-waivable professional turn before each Watch or Tablet image-generation request reaches a Provider. The Agent asks one task-appropriate question with three concise clickable directions by default, marks its recommendation, and continues after one clicked or free-text reply; a second question is permitted only for a real conflict, while an explicit request to use the recommendation or generate without discussion waives the turn.
+The default-required, user-waivable professional turn before each Watch, Tablet, or Phone image-generation request reaches a Provider. The Agent asks one task-appropriate question with three concise clickable directions by default, marks its recommendation, and continues after one clicked or free-text reply; a second question is permitted only for a real conflict, while an explicit request to use the recommendation or generate without discussion waives the turn.
 _Avoid_: Grill in user-facing copy, one turn per Provider call, multi-step questionnaire, independent style configurator, mandatory image search, repeated confirmation, keyword allowlist
 
 **Generation Readiness**:
-A Kernel judgment that the current brief and accepted Design State contain enough coherent professional truth to produce the requested Artifact without silently inventing a consequential decision. For Watch and Tablet image generation it also requires a completed or explicitly waived Design Direction Turn; it does not require a questionnaire, fixed step count, or exhaustive uncertainty review.
+A Kernel judgment that the current brief and accepted Design State contain enough coherent professional truth to produce the requested Artifact without silently inventing a consequential decision. For Watch, Tablet, and Phone image generation it also requires a completed or explicitly waived Design Direction Turn; it does not require a questionnaire, fixed step count, or exhaustive uncertainty review.
 _Avoid_: Fixed questionnaire completion, asking about every uncertainty, provider availability, frontend step counter, hidden generation without direction alignment
 
 **Generation Authorization**:
-The user's explicit request to produce an Artifact, including ordinary product verbs such as design, make, generate, draw, render, or create a concept image. For Watch and Tablet, the request authorizes the Design Direction Turn and the reply authorizes Provider execution; an explicit instruction to use the recommendation or proceed without discussion authorizes immediate execution. Exploratory requests authorize only conversation, visible user constraints remain binding for Media, and professional knowledge selection, Skill loading, Prompt authorship, and Tool execution remain autonomous Jarvis responsibilities.
+The user's explicit request to produce an Artifact, including ordinary product verbs such as design, make, generate, draw, render, or create a concept image. For Watch, Tablet, and Phone, the request authorizes the Design Direction Turn and the reply authorizes Provider execution; an explicit instruction to use the recommendation or proceed without discussion authorizes immediate execution. Exploratory requests authorize only conversation, visible user constraints remain binding for Media, and professional knowledge selection, Skill loading, Prompt authorship, and Tool execution remain autonomous Jarvis responsibilities.
 _Avoid_: Repeated confirmation, magic option text, frontend keyword classifier, binding Atom IDs, Root-authored final Prompt, Media silently changing user decisions, frontend-owned authorization
 
 **Directional Generation**:
@@ -173,7 +177,7 @@ A generation request that establishes or materially changes product identity or 
 _Avoid_: Every Provider call, fixed strategy composition, treating a minor revision as a new Flow, repeating the complete design interview
 
 **Artifact Review**:
-One concise evaluation by the existing Jarvis Critic of the actual persisted pixels against Skill-owned quality rules. Every newly generated Watch Concept Image and Tablet Concept Sketch receives this review in the same request after Media succeeds; the Agent delivers the image whether it passes or is rejected, alongside the judgment, two or three visible evidence points, and one suggested next step so the professional user can continue the discussion naturally. The result remains in native Chat, Critic output, and Trace: it creates no Artifact quality field, frontend state, retry loop, or automatic replacement. Later derivative or unsupported Artifact types follow their Skill-defined policy.
+One concise evaluation by the existing Jarvis Critic of the actual persisted pixels against Skill-owned quality rules. Every newly generated Watch Concept Image, Tablet Concept Sketch, and Phone Concept Image receives this review in the same request after Media succeeds; the Agent delivers the image whether it passes or is rejected, alongside the judgment, two or three visible evidence points, and one suggested next step so the professional user can continue the discussion naturally. The result remains in native Chat, Critic output, and Trace: it creates no Artifact quality field, frontend state, retry loop, or automatic replacement. Later derivative or unsupported Artifact types follow their Skill-defined policy.
 _Avoid_: Prompt-only approval, full checklist by default, automatic retry loop, hidden or discarded rejection, Media self-review, frontend evaluator, custom vertical Critic runtime
 
 **Professional Workspace**:

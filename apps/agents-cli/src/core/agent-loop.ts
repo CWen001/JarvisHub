@@ -2186,11 +2186,13 @@ function parseToolArgs(raw: string): { args: Record<string, unknown>; error?: st
 const CRITIC_REVIEW_MEDIA_KINDS = new Set([
   "watch_concept_image",
   "tablet_concept_sketch",
+  "phone_concept_image",
 ]);
 
 const VERTICAL_SKILL_MEDIA_KINDS: Record<string, string> = {
   "watch-design-kernel": "watch_concept_image",
   "tablet-design-kernel": "tablet_concept_sketch",
+  "phone-design-kernel": "phone_concept_image",
 };
 
 export function readPendingRequiredCriticReviews(

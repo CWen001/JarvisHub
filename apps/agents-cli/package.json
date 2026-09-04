@@ -17,6 +17,7 @@
     "validate:agent-defs": "node scripts/validate-agent-defs.mjs",
     "validate:watch-skill": "node skills/watch-design-kernel/scripts/validate-kernel.mjs",
     "validate:tablet-skill": "node skills/tablet-design-kernel/scripts/validate-kernel.mjs",
+    "validate:phone-skill": "node skills/phone-design-kernel/scripts/validate-kernel.mjs",
     "watch": "node scripts/watch.mjs",
     "start": "node dist/cli/index.js",
     "postbuild": "node scripts/sync-global-config.mjs",

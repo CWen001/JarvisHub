@@ -71,6 +71,10 @@
       "owner": "Tablet Vertical Skill Package"
     },
     {
+      "path": "apps/agents-cli/skills/phone-design-kernel/**",
+      "owner": "Phone Vertical Skill Package"
+    },
+    {
       "path": "scripts/upstream-compatibility/**",
       "owner": "Upstream Compatibility Surface"
     },
@@ -777,6 +781,7 @@
     "pnpm --filter agents validate:agent-defs",
     "pnpm --filter agents validate:watch-skill",
     "pnpm --filter agents validate:tablet-skill",
+    "pnpm --filter agents validate:phone-skill",
     "pnpm --filter agents build"
   ]
 }
