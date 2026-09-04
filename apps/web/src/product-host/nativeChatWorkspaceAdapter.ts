@@ -1,9 +1,9 @@
 import React from 'react'
 import type { ChatSelectableSkill, ChatTabRuntimeState } from '../ui/chat/chatRuntimeStore'
 import { readAiChatTabsState, selectAiChatTab, writeAiChatTabsState } from '../ui/chat/chatTabs'
-import {
-  attachNativeChatAuthority,
-  type NativeChatCommand,
+import type {
+  NativeChatAuthority,
+  NativeChatCommand,
 } from '../ui/chat/nativeChatAuthority'
 import { notifyNativeChatNavigationChanged } from './nativeChatNavigation'
 export { notifyNativeChatNavigationChanged } from './nativeChatNavigation'
@@ -220,13 +220,14 @@ export function useNativeArtifactWorkspaceAdapter(input: Readonly<{
   }, [])
 }
 
-export function useNativeChatWorkspaceAdapter(input: Readonly<{
-  authority: NativeChatWorkspaceAuthority
-}>): void {
-  const authorityRef = React.useRef(input.authority)
-  authorityRef.current = input.authority
-
-  React.useEffect(() => attachNativeChatAuthority({
+export function useNativeChatAuthorityAdapter(
+  authority: NativeChatWorkspaceAuthority,
+): NativeChatAuthority {
+  const authorityRef = React.useRef(authority)
+  authorityRef.current = authority
+  const sharedAuthorityRef = React.useRef<NativeChatAuthority | null>(null)
+  sharedAuthorityRef.current ??= Object.freeze({
     execute: (command) => createNativeChatWorkspaceCommandExecutor(authorityRef.current)(command),
-  }), [])
+  })
+  return sharedAuthorityRef.current
 }

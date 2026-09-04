@@ -20,9 +20,8 @@ import {
   type AgentWorkspaceRuntimeAdapter,
 } from './agentWorkspaceRuntime'
 import {
-  executeNativeChatCommand,
-  isNativeChatAuthorityReady,
-  subscribeNativeChatAuthority,
+  useNativeChatAuthority,
+  type NativeChatCommand,
 } from '../ui/chat/nativeChatAuthority'
 import { reconcileArtifactDelivery } from './artifactDeliveryReconciliation'
 import { installedVerticalSkills } from './installedVerticalSkills'
@@ -189,11 +188,7 @@ function useAuthoritativeAgentWorkspaceFacts(input: AuthoritativeInput): AgentWo
   const nodes = useRFStore((state) => state.nodes)
   const runsBySessionKey = useLiveChatRunStore((state) => state.runsBySessionKey)
   const tabRuntimeById = useAiChatRuntimeStore((state) => state.tabRuntimeById)
-  const chatReady = React.useSyncExternalStore(
-    subscribeNativeChatAuthority,
-    isNativeChatAuthorityReady,
-    isNativeChatAuthorityReady,
-  )
+  const chatReady = useNativeChatAuthority() !== null
   const shouldRefreshAssetsContinuously = Object.values(runsBySessionKey).some((run) => run.status === 'running')
   const [serverAssets, setServerAssets] = React.useState<ServerAssetDto[]>([])
   const [runtimeSkills, setRuntimeSkills] = React.useState<RuntimeAgentSkillDto[]>([])
@@ -366,10 +361,17 @@ export function useAuthoritativeAgentWorkspaceRuntime(
   input: AuthoritativeInput & ProductionAgentWorkspaceCommands,
 ): AgentWorkspaceRuntime {
   const facts = useAuthoritativeAgentWorkspaceFacts(input)
+  const authority = useNativeChatAuthority()
   const factsRef = React.useRef<AgentWorkspaceFacts>(facts)
   const commandRef = React.useRef(input)
+  const authorityRef = React.useRef(authority)
   factsRef.current = facts
   commandRef.current = input
+  authorityRef.current = authority
+  const executeNativeChatCommand = async (command: NativeChatCommand) => {
+    if (!authorityRef.current) throw new Error('Agent 对话能力尚未就绪')
+    await authorityRef.current.execute(command)
+  }
 
   const listenersRef = React.useRef(new Set<() => void>())
   const runtimeRef = React.useRef<AgentWorkspaceRuntime | null>(null)

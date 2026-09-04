@@ -1,3 +1,5 @@
+import React from 'react'
+
 export type NativeChatCommand =
   | Readonly<{ type: 'draft.set'; text: string }>
   | Readonly<{ type: 'request.submit' }>
@@ -26,30 +28,18 @@ export type NativeChatAuthority = Readonly<{
   execute: (command: NativeChatCommand) => void | Promise<void>
 }>
 
-let activeAuthority: NativeChatAuthority | null = null
-const listeners = new Set<() => void>()
+const NativeChatAuthorityContext = React.createContext<NativeChatAuthority | null>(null)
 
-export function attachNativeChatAuthority(authority: NativeChatAuthority): () => void {
-  if (activeAuthority) throw new Error('Native Chat Authority 已经挂载')
-  activeAuthority = authority
-  for (const listener of listeners) listener()
-  return () => {
-    if (activeAuthority !== authority) return
-    activeAuthority = null
-    for (const listener of listeners) listener()
+export function NativeChatAuthorityProvider({
+  authority,
+  children,
+}: React.PropsWithChildren<{ authority: NativeChatAuthority }>): JSX.Element {
+  if (React.useContext(NativeChatAuthorityContext)) {
+    throw new Error('Native Chat Authority 已经挂载')
   }
+  return React.createElement(NativeChatAuthorityContext.Provider, { value: authority }, children)
 }
 
-export async function executeNativeChatCommand(command: NativeChatCommand): Promise<void> {
-  if (!activeAuthority) throw new Error('Agent 对话能力尚未就绪')
-  await activeAuthority.execute(command)
-}
-
-export function subscribeNativeChatAuthority(listener: () => void): () => void {
-  listeners.add(listener)
-  return () => listeners.delete(listener)
-}
-
-export function isNativeChatAuthorityReady(): boolean {
-  return activeAuthority !== null
+export function useNativeChatAuthority(): NativeChatAuthority | null {
+  return React.useContext(NativeChatAuthorityContext)
 }

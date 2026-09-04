@@ -406,7 +406,7 @@
       "purpose": "Mount one shared Native Chat Authority with an optional native presentation adapter",
       "adapter": "Native Chat Adapter",
       "tests": [
-        "pnpm --filter @jarvishub/web exec vitest run src/ui/chat/nativeChatAuthority.test.ts src/product-host/nativeChatWorkspaceAdapter.test.ts src/product-host/nativeChatCompatibility.contract.test.ts",
+        "pnpm --filter @jarvishub/web exec vitest run src/ui/chat/nativeChatAuthority.test.tsx src/product-host/nativeChatWorkspaceAdapter.test.ts src/product-host/nativeChatCompatibility.contract.test.ts",
         "pnpm --filter @jarvishub/web build",
         "pnpm --filter @jarvishub/web build:native"
       ],
@@ -593,12 +593,12 @@
       "warningChangedLines": 80
     },
     {
-      "path": "apps/web/src/ui/chat/nativeChatAuthority.test.ts",
+      "path": "apps/web/src/ui/chat/nativeChatAuthority.test.tsx",
       "classification": "integration-seam",
       "purpose": "Protect the single-lifecycle Native Chat Authority interface",
       "adapter": "Native Chat Adapter",
       "tests": [
-        "pnpm --filter @jarvishub/web exec vitest run src/ui/chat/nativeChatAuthority.test.ts"
+        "pnpm --filter @jarvishub/web exec vitest run src/ui/chat/nativeChatAuthority.test.tsx"
       ],
       "upstreamDisposition": "permanent",
       "warningChangedLines": 80
@@ -609,7 +609,7 @@
       "purpose": "Expose presentation-independent native Chat command execution and lifecycle availability",
       "adapter": "Native Chat Adapter",
       "tests": [
-        "pnpm --filter @jarvishub/web exec vitest run src/ui/chat/nativeChatAuthority.test.ts src/product-host/nativeChatWorkspaceAdapter.test.ts",
+        "pnpm --filter @jarvishub/web exec vitest run src/ui/chat/nativeChatAuthority.test.tsx src/product-host/nativeChatWorkspaceAdapter.test.ts",
         "pnpm --filter @jarvishub/web build:native"
       ],
       "upstreamDisposition": "permanent",

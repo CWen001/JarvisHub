@@ -14,7 +14,9 @@ vi.mock('./AgentWorkspace', () => ({
   AgentWorkspace: () => <div>Product timeline</div>,
 }))
 vi.mock('../ui/chat/AiChatDialog', () => ({
-  NativeChatAuthorityHost: () => <div data-testid="native-chat-authority" />,
+  NativeChatAuthorityHost: ({ children }: { children?: React.ReactNode }) => (
+    <><div data-testid="native-chat-authority" />{children}</>
+  ),
 }))
 
 import { ProductWorkspaceHost } from './ProductWorkspaceHost'

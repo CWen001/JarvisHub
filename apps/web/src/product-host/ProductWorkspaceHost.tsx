@@ -24,19 +24,17 @@ type ProductWorkspaceHostProps =
       commands: ProductionAgentWorkspaceCommands
     }>
 
-function ProductWorkspaceSurface({
+function ProductWorkspaceAgent({
   brand,
   runtimeInput,
   commands,
-}: Extract<ProductWorkspaceHostProps, { surface: 'workspace' }>): JSX.Element {
+  railCollapsed,
+  setRailCollapsed,
+}: Extract<ProductWorkspaceHostProps, { surface: 'workspace' }> & Readonly<{
+  railCollapsed: boolean
+  setRailCollapsed: (collapsed: boolean) => void
+}>): JSX.Element {
   const runtime = useAuthoritativeAgentWorkspaceRuntime({ ...runtimeInput, ...commands })
-  const [railCollapsed, setRailCollapsed] = React.useState(false)
-
-  React.useEffect(() => {
-    document.documentElement.dataset.productHost = 'true'
-    return () => { delete document.documentElement.dataset.productHost }
-  }, [])
-
   return (
     <div className="agent-workspace-surface" data-rail-collapsed={railCollapsed}>
       <AgentWorkspace
@@ -45,8 +43,28 @@ function ProductWorkspaceSurface({
         railCollapsed={railCollapsed}
         onRailCollapsedChange={setRailCollapsed}
       />
-      <NativeChatAuthorityHost />
     </div>
+  )
+}
+
+function ProductWorkspaceSurface(
+  props: Extract<ProductWorkspaceHostProps, { surface: 'workspace' }>,
+): JSX.Element {
+  const [railCollapsed, setRailCollapsed] = React.useState(false)
+
+  React.useEffect(() => {
+    document.documentElement.dataset.productHost = 'true'
+    return () => { delete document.documentElement.dataset.productHost }
+  }, [])
+
+  return (
+    <NativeChatAuthorityHost>
+      <ProductWorkspaceAgent
+        {...props}
+        railCollapsed={railCollapsed}
+        setRailCollapsed={setRailCollapsed}
+      />
+    </NativeChatAuthorityHost>
   )
 }
 

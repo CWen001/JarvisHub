@@ -13,7 +13,7 @@ const productImplementationTokens = [
 
 describe('Native Chat Upstream Compatibility Surface', () => {
   it('retains one native adapter without Product command implementation', () => {
-    expect(nativeChatSource).toContain('useNativeChatWorkspaceAdapter({')
+    expect(nativeChatSource).toContain('useNativeChatAuthorityAdapter(')
     expect(nativeChatSource).toContain('export function NativeChatAuthorityHost')
     expect(nativeChatSource.match(/from '\.\.\/\.\.\/product-host\//g)).toHaveLength(1)
     for (const token of productImplementationTokens) expect(nativeChatSource).not.toContain(token)
@@ -21,7 +21,8 @@ describe('Native Chat Upstream Compatibility Surface', () => {
 
   it('keeps Authority lifecycle available without native presentation DOM', () => {
     expect(nativeChatSource).toContain("const headless = presentation === 'none'")
-    expect(nativeChatSource).toContain('if (headless) return null')
+    expect(nativeChatSource).toContain('if (headless)')
+    expect(nativeChatSource).toContain('<NativeChatAuthorityProvider authority={nativeChatAuthority}>{children}</NativeChatAuthorityProvider>')
     expect(nativeChatSource).not.toContain('productMode')
   })
 })

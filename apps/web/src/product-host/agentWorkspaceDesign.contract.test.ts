@@ -68,7 +68,7 @@ describe('Agent Workspace Design System', () => {
   it('renders Product-owned Agent presentation without hidden native Chat presentation', () => {
     expect(agentWorkspaceSource).not.toContain('AiChatDialog')
     expect(agentWorkspaceSource).toContain('ProductChat')
-    expect(productHostSource).toContain('<NativeChatAuthorityHost />')
+    expect(productHostSource).toContain('<NativeChatAuthorityHost>')
     expect(productHostSource).not.toContain('<AiChatDialog')
     expect(appSource).toContain('<AiChatDialog className="app-ai-chat-dialog" />')
   })

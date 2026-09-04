@@ -93,8 +93,9 @@ import {
   notifyNativeChatNavigationChanged,
   resolveLoadedVerticalSkill,
   useNativeArtifactWorkspaceAdapter,
-  useNativeChatWorkspaceAdapter,
+  useNativeChatAuthorityAdapter,
 } from '../../product-host/nativeChatWorkspaceAdapter'
+import { NativeChatAuthorityProvider } from './nativeChatAuthority'
 import { useTimelineAutoFollow, type TimelineAutoFollowResumeReason } from './timelineAutoFollow'
 import {
   addAiChatTab,
@@ -2593,10 +2594,11 @@ type NativeChatPresentation = 'native' | 'none'
 export function NativeChatAuthorityHost({
   className,
   presentation = 'none',
-}: {
+  children,
+}: React.PropsWithChildren<{
   className?: string
   presentation?: NativeChatPresentation
-}): JSX.Element | null {
+}>): JSX.Element | null {
   const surface = presentation === 'native' ? 'native' : 'agent-workspace'
   const headless = presentation === 'none'
   const cardRef = React.useRef<HTMLDivElement | null>(null)
@@ -5517,25 +5519,26 @@ export function NativeChatAuthorityHost({
     void onUploadReferenceFiles(files)
   }, [onUploadReferenceFiles])
 
-  useNativeChatWorkspaceAdapter({
-    authority: createNativeChatWorkspaceAuthority({
-      activeTabId,
-      currentProjectId,
-      updateTabRuntime,
-      setDraft,
-      send,
-      interrupt: interruptActiveChat,
-      uploadReferences: onUploadReferenceFiles,
-      addReferenceImages: addReferenceImagesSafe,
-      selectSkill: setActiveSkill,
-      startNewConversation,
-      selectConversation: selectConversationTab,
-    }),
-  })
+  const nativeChatAuthority = useNativeChatAuthorityAdapter(createNativeChatWorkspaceAuthority({
+    activeTabId,
+    currentProjectId,
+    updateTabRuntime,
+    setDraft,
+    send,
+    interrupt: interruptActiveChat,
+    uploadReferences: onUploadReferenceFiles,
+    addReferenceImages: addReferenceImagesSafe,
+    selectSkill: setActiveSkill,
+    startNewConversation,
+    selectConversation: selectConversationTab,
+  }))
 
-  if (headless) return null
+  if (headless) {
+    return <NativeChatAuthorityProvider authority={nativeChatAuthority}>{children}</NativeChatAuthorityProvider>
+  }
 
   return (
+    <NativeChatAuthorityProvider authority={nativeChatAuthority}>
     <div
       className={rootClassName}
       data-ux-floating
@@ -5896,6 +5899,7 @@ export function NativeChatAuthorityHost({
         )}
       </Paper>
     </div>
+    </NativeChatAuthorityProvider>
   )
 }
 
