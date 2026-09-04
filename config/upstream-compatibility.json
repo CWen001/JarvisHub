@@ -161,6 +161,18 @@
       "warningChangedLines": 80
     },
     {
+      "path": "apps/agents-cli/src/core/root-persona.test.ts",
+      "classification": "integration-seam",
+      "purpose": "Protect Root Agent design-direction orchestration required by Vertical Skills",
+      "adapter": "Shared Product Trunk",
+      "tests": [
+        "cd apps/agents-cli && node --loader ts-node/esm --test src/core/root-persona.test.ts",
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
       "path": "apps/agents-cli/src/core/agent-loop.test.ts",
       "classification": "upstream-patch",
       "purpose": "Protect required Critic review after persisted vertical media",
@@ -183,6 +195,30 @@
       ],
       "upstreamDisposition": "local-only",
       "warningChangedLines": 120
+    },
+    {
+      "path": "apps/agents-cli/src/core/subagent/runner.test.ts",
+      "classification": "upstream-patch",
+      "purpose": "Protect fail-closed Media sub-agent completion against stale or mismatched Artifact evidence",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "cd apps/agents-cli && node --loader ts-node/esm --test src/core/subagent/runner.test.ts",
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "local-only",
+      "warningChangedLines": 180
+    },
+    {
+      "path": "apps/agents-cli/src/core/subagent/runner.ts",
+      "classification": "upstream-patch",
+      "purpose": "Fail closed unless the current Media sub-agent invocation returns or proves authoritative persisted completion",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "cd apps/agents-cli && node --loader ts-node/esm --test src/core/subagent/runner.test.ts",
+        "pnpm run test:upstream-compatibility"
+      ],
+      "upstreamDisposition": "local-only",
+      "warningChangedLines": 180
     },
     {
       "path": "apps/agents-cli/src/core/tools/ask-user.test.ts",
