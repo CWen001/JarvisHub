@@ -1,0 +1,15 @@
+Create one brand-neutral 2026 India-oriented upper-mainstream smartphone, “Chamfer Diffusion”. Phone Kernel 0.4.0, Base Contract 0.1.3, 2026 baseline, local candidate schema 0.7.0. Exterior thesis: a quiet moonstone-green slab whose grip transition uses controlled centre-to-periphery light diffusion. Leading Departure: four short functional corner-chamfer facets are brightest near each corner apex and smoothly settle into the satin side rail, producing radial cadence through physical edge geometry. 80% mature Functional Form, 20% Mandala-derived order. No Mandala image, rosette, flower, diagram, circular print, ornamental border or religion.
+
+Exactly one landscape Dual-View Hero with exactly two consistent views of the same bare phone and same moonstone-green colourway: rear-three-quarter primary left, near-level front secondary right. No panels, labels, extra phone, hand, person, logo, text, watermark. Views agree in body/display radii, rail, thickness, keys, camera hardware, seams, material and colour; front must not expose bottom ports.
+
+FORM SPINE: tall 6.7-inch-class current slab, believable upper-mainstream thickness, moderate continuous soft-square radii shared by chassis and display, flat central rail, almost-flat front and rear. Each corner has one short precision chamfer facet integrated into the chassis: slightly broader and brighter at the corner apex, continuously narrowing toward straight side rails. No armour, bumper or doubled shell. Even narrow bezels, centred punch hole, neutral charcoal screen.
+
+CAMERA: conventional upper-left colour-matched compact court, hardware-first and unrelated to symbolic circles. Exactly two real lenses and one small flash: larger main lens above, smaller auxiliary below, tiny pill flash beside lower lens. No extra hole, sensor, aperture, text, or filler. One shallow rigid base, protected rings, clean annular seams and one attachment shadow.
+
+CMF: low-saturation moonstone-green fine matte rear; deeper forest-green satin rail/court; pale nickel chamfer facets; dark optical glass. Reflectivity: optics high, facets/rings medium, rear low. Broad rear is quiet. Supporting cultural carrier is a subtle centre-to-edge radial brushing only on the power button cap.
+
+CULTURAL TRANSLATION: Mandala contributes centred-to-outward attenuation and equal interval discipline. Primary carrier is functional corner/grip chamfer geometry; supporting carrier is control finish. It must be visible at hero size through lighting but never dictate camera topology or body mass.
+
+Resolve coherent keys, antenna breaks, charging opening, speakers, microphones, SIM and assembly seams where visible. Warm pale sandstone/apricot background clearly lighter and warmer than phone; side lighting deliberately reveals chamfer width, grounded shadows, premium attainable photography, 70–80% occupancy.
+
+Forbidden: literal motif, giant circular camera, decorative rear medallion, fake optics, case-like perimeter, floating parts, melted corners, impossible thinness, copied signature, sci-fi UI, unsupported claims.

@@ -1,0 +1,21 @@
+{
+  "batch": "india-batch-14",
+  "schema_version": "1.3.0-candidate",
+  "motif": "Rangoli",
+  "design_score": 59,
+  "base_contract": 0,
+  "maturity": 13,
+  "industrial_design": 12,
+  "cultural_restraint": 12,
+  "aesthetic_coherence": 12,
+  "prompt_adherence": 10,
+  "verdict": "Reject — one output copies a recognizable competitor camera signature",
+  "score_method": "All four actual images reviewed and retained. Raw image scores are recorded, but the batch is capped at 59 after a Base Contract rejection; no image regenerated or hidden.",
+  "outputs": [
+    {"id":1,"name":"Milled soft-square court","path":"01-rangoli-milled-court.png","raw_score":58,"base_contract":"reject","first_failed_rule":"Phone Base Contract 0.1.3 section 8 — Brand neutrality","evidence":["high-quality silver finish","clear three-lens hierarchy","milled nested boundary is controlled"],"limitation":"The square court, triangular three-ring layout, flash placement and silver slab collectively reproduce a highly recognizable competitor signature rather than a distinct brand-neutral proposal."},
+    {"id":2,"name":"PVD interval bridge","path":"02-rangoli-pvd-bridge.png","raw_score":82,"base_contract":"pass","evidence":["mature horizontal camera order","three real lenses and flash are clear","process remains bounded to bridge"],"limitation":"The metallic bands are stronger and more multicoloured than the restrained PVD brief, and the bridge feels familiar rather than newly authored."},
+    {"id":3,"name":"Embossed control rail","path":"03-rangoli-embossed-rail.png","raw_score":78,"base_contract":"pass","evidence":["clean mainstream two-camera phone","saffron-copper CMF is controlled","continuous chassis"],"limitation":"The intended rail notches are only weakly visible; innovation and Rangoli ordering disappear at normal size."},
+    {"id":4,"name":"IMT camera saddle","path":"04-rangoli-imt-saddle.png","raw_score":88,"base_contract":"pass","evidence":["bounded process stays entirely inside camera saddle","nested paths organize real hardware clearances","pomegranate rigid body remains mature"],"limitation":"Contour density approaches a literal labyrinth/Rangoli graphic and should be reduced near the outer boundary."}
+  ],
+  "schema_learning": "Bounded carrier coverage successfully prevents rear-surface spillover, especially in image 4. It does not prevent a mature prompt from collapsing into a copied competitor signature. Add a topology originality check covering enclosure outline, lens-node arrangement, flash position and overall CMF combination; maturity cannot be achieved by copying a recognizable released-product system."
+}

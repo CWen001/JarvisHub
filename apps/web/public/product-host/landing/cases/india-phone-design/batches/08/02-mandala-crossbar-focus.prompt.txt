@@ -1,0 +1,15 @@
+Create one brand-neutral 2026 India-oriented mainstream imaging phone, “Measured Focus Bar”. Phone Kernel 0.4.0, Base Contract 0.1.3, 2026 baseline, local candidate schema 0.7.0. Exterior thesis: a current soft-square slab with one integrated upper horizontal camera enclosure; Mandala is abstracted as a calm centre-to-edge hierarchy inside this functional part. Leading Departure: the largest main lens forms the visual focus and two progressively quieter satin finish bands attenuate across the enclosure toward the auxiliary lenses and flash. 80% mature Functional Form, 20% restrained Cultural Expression. No literal Mandala, circular diagram, rosette, flower, radial line drawing, ornament, or religious imagery.
+
+Exactly one landscape Dual-View Hero with exactly two matching representations of the same bare phone and same low-saturation copper-sand colourway: rear-three-quarter primary left, near-level front secondary right. No panels, labels, extra device, people, hands, logo, text, watermark. Cross-view geometry, frame, thickness, controls, camera count, seams and finish agree; front does not expose bottom ports.
+
+FORM: tall 6.7-inch-class slab, honest mainstream volume, moderate coherent soft-square radii, flat central rail with softened contact chamfers, nearly flat glass and back, even narrow bezels, centred small punch hole, neutral deep-grey screen.
+
+CAMERA: one rigid elongated rounded-rectangle enclosure at upper left with clear margins, one shallow elevation and precise attachment seam. Exactly three real lenses and one flash arranged horizontally: largest main lens left, two smaller real lenses decreasing rightward, much smaller pill flash at the terminal end. No extra dot, aperture, sensor, text or light. Outer contour remains a mature simple rounded rectangle. Within it, two extremely shallow nested satin finish zones share the main-lens centre and fade into the enclosure—not printed rings and not a large disc. Hardware always dominates.
+
+CMF: copper-sand fine matte rigid back, darker bronze satin enclosure/frame, dark optics, restrained champagne ring edges. The back outside the enclosure is completely quiet. Supporting carrier: two measured micro-notches in the camera attachment seam, aligned to the enclosure hierarchy, not decorative graphics.
+
+CULTURAL TRANSLATION: Mandala contributes focus, radial hierarchy and attenuation; primary carrier is enclosure reflectivity around real hardware, supporting carrier is seam cadence. Readable at normal hero size as material depth, never as a symbol.
+
+Show coherent side keys, antenna breaks, charging opening, speakers, microphones, SIM and assembly seams where view permits. Deep cool peacock-blue backdrop clearly darker/cooler than phone, subtle neutral haze, soft controlled light, crisp silhouette, grounded shadow, 70–80% occupancy.
+
+Forbidden: giant round island, literal motif, all-over pattern, fake optics, fourth camera, generic black visor, case, bumper, armour, floating/melted parts, impossible thinness, copied signature, pseudo text, sci-fi wallpaper, unsupported claims.

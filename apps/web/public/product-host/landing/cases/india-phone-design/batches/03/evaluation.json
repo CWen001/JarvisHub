@@ -1,0 +1,18 @@
+{
+  "batch": "india-batch-03",
+  "kernelVersion": "0.3.0",
+  "question": "Can a 60% Functional Form / 40% Cultural Expression balance create mature India-oriented mid-range exteriors?",
+  "outputs": [
+    {"id": 1, "path": "01-textile-craft.png", "status": "generated"},
+    {"id": 2, "path": "02-stone-inlay.png", "status": "generated"},
+    {"id": 3, "path": "03-modern-architecture.png", "status": "generated"},
+    {"id": 4, "path": "04-monsoon-nature.png", "status": "not-generated"}
+  ],
+  "userFeedback": {
+    "preferred": [1],
+    "disliked": [2, 3],
+    "comment": "第一张类似印度的袍，方向较好；摄像头应在纹样线一侧而不是压线。其他方向有些为求不同而求异。60/40 可能让文化表达过重，下一批改为 80/20。"
+  },
+  "verdict": "Textile character worked when carried by a secondary surface field, but cultural geometry overrode mature phone form in the other concepts.",
+  "schemaLearning": "Use an 80/20 default. Cultural Expression may enrich a resolved physical zone but must not determine major body volume, camera position, or primary camera-island topology unless the brief explicitly grants that role."
+}

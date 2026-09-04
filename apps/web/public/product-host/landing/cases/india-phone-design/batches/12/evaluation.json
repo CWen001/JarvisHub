@@ -1,0 +1,21 @@
+{
+  "batch": "india-batch-12",
+  "schema_version": "1.1.0-candidate",
+  "motif": "Elephant / non-iconic Ganesha source boundary",
+  "design_score": 85,
+  "base_contract": 1,
+  "maturity": 19,
+  "industrial_design": 18,
+  "cultural_restraint": 14,
+  "aesthetic_coherence": 18,
+  "prompt_adherence": 16,
+  "verdict": "Pass, equal to current best",
+  "score_method": "Rounded category means across all four actual images; all retained, none regenerated. Equal primary score is not treated as improvement.",
+  "outputs": [
+    {"id":1,"name":"Machined protective brow","path":"01-elephant-protective-brow.png","score":82,"base_contract":"pass","evidence":["credible three-camera hierarchy","restrained graphite/bronze CMF","clean continuous chassis"],"limitation":"The requested upper brow is weakly differentiated from a conventional rounded camera island."},
+    {"id":2,"name":"Forged camera saddle","path":"02-elephant-forged-saddle.png","score":90,"base_contract":"pass","evidence":["strongest structural concept in batch","broad bead-blasted saddle visibly connects camera mass to frame","clear three-lens-to-flash hierarchy and mature material restraint"],"limitation":"The top bridge is visually dominant and would need careful family scaling for lower tiers."},
+    {"id":3,"name":"Grounded grip rail","path":"03-elephant-grounded-rail.png","score":79,"base_contract":"pass","evidence":["clean mainstream two-camera phone","indigo fine texture and warm background are coherent","continuous chassis avoids armour"],"limitation":"The broadened laser-textured lower rail is barely visible, so both innovation and cultural relationship are absent at hero size."},
+    {"id":4,"name":"Ceramic camera shoulder","path":"04-elephant-ceramic-shoulder.png","score":88,"base_contract":"pass","evidence":["clear strong-single-move shoulder volume","ceramic-effect low-gloss red part reads as a specific rigid process zone","three cameras and flash remain ordered"],"limitation":"The camera shoulder reads more as premium mass than a uniquely source-linked relationship, though it remains appropriately non-iconic."}
+  ],
+  "schema_learning": "The compact focused-process rule produces clean, mature results and avoids decorative drift. Strong functional mass carriers—frame-fed forged saddle and ceramic-effect camera shoulder—outperform subtle rail texture. The next schema should add a visibility allocation rule: if the Leading Departure is frame or edge based, composition and lighting must dedicate enough projected area to prove it."
+}

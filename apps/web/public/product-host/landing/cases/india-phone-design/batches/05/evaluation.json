@@ -1,0 +1,46 @@
+{
+  "batch": "india-batch-05",
+  "kernelVersion": "0.4.0",
+  "evidence": [
+    "phone-kernel@0.4.0-learning",
+    "phone-base-contract@0.1.3",
+    "phone-contemporary-baseline:2026@0.1.0",
+    "phone-design-judgment-schema@0.4.0",
+    "phone-design-judgment-model@0.1.0"
+  ],
+  "question": "Which upper horizontal camera architecture could become a Transsion-like family language without copying a released-product signature or becoming a generic black bar?",
+  "outputs": [
+    {
+      "id": 1,
+      "path": "01-horizontal-twin-ring-bridge.png",
+      "status": "generated",
+      "baseContract": "pass",
+      "visibleEvidence": ["three-camera hierarchy is clear", "dark phone separates strongly from the warm light background", "rear and front share the same soft-square chassis and graphite CMF"]
+    },
+    {
+      "id": 2,
+      "path": "02-top-edge-terrace.png",
+      "status": "generated",
+      "baseContract": "pass",
+      "visibleEvidence": ["three descending camera rings form a clean upper horizontal order", "the top colour field and lower groove visibly attach the camera zone to the whole back", "cool pale background separates from the copper body"]
+    },
+    {
+      "id": 3,
+      "path": "03-segmented-crossbar.png",
+      "status": "generated",
+      "baseContract": "reject: Camera Architecture contains an unexplained extra black aperture to the left of the main lens",
+      "firstFailedRule": "Phone Base Contract 0.1.3 section 5 Camera Architecture",
+      "visibleEvidence": ["segmented hierarchy is readable", "pale jade body separates from the aubergine backdrop", "an unrequested small black hole appears inside the left segment"]
+    },
+    {
+      "id": 4,
+      "path": "04-woven-band-windows.png",
+      "status": "generated",
+      "baseContract": "pass",
+      "visibleEvidence": ["three functional windows are clearly ordered within one material band", "cobalt body separates strongly from the pale apricot backdrop", "front and rear agree in colour, frame and corner family"]
+    }
+  ],
+  "userFeedback": "User prefers concepts 1 and 3. Concepts 2 and 4 have awkward relationships among the lenses and flash, and their soft/hard material combinations are not well integrated.",
+  "verdict": "concepts 1 and 3 preferred; concepts 2 and 4 rejected by user preference",
+  "schemaLearning": "For upper horizontal camera architectures, preserve a strict lens-and-flash alignment hierarchy and use materially coherent hard-part boundaries. Avoid combining soft-looking rear finishes with hard camera parts unless the junction is visibly resolved. This reinforces existing Camera Architecture and CMF integrity rules rather than requiring a Schema change."
+}

@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "series-design-judgment.candidate.schema.json",
+  "title": "India-oriented Phone Series Design Judgment 0.5.0 Candidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["series_brief", "family_system", "member_system", "presentation"],
+  "properties": {
+    "series_brief": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["market_context", "series_scope", "fixed_requirements", "reference_role"],
+      "properties": {
+        "market_context": {"const": "2026 India-oriented mainstream to upper-mid smartphone series"},
+        "series_scope": {"const": "Base, Standard, Pro, and India Edition"},
+        "fixed_requirements": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "reference_role": {"const": "directional evidence for retail-distance recognition and youthful CMF; never a geometry to copy"}
+      }
+    },
+    "family_system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["form_invariants", "camera_grammar", "material_system", "cultural_relationship"],
+      "properties": {
+        "form_invariants": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["silhouette", "corner_family", "frame_and_grip", "camera_location"],
+          "properties": {
+            "silhouette": {"const": "tall large-screen slab with believable medium volume"},
+            "corner_family": {"const": "moderate continuous soft-square radii shared by body, display, and camera enclosure"},
+            "frame_and_grip": {"const": "flat central rail with softened contact chamfers and one coherent rear transition"},
+            "camera_location": {"const": "one upper horizontal camera enclosure with clear top and side margins"}
+          }
+        },
+        "camera_grammar": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["primary_mass", "optical_axis", "functional_hierarchy", "enclosure", "invariants", "permitted_variations"],
+          "properties": {
+            "primary_mass": {"const": "full rounded left main-camera body flowing into a gently tapered right tail"},
+            "optical_axis": {"const": "every real lens centre and the flash centre share one horizontal axis"},
+            "functional_hierarchy": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["main_camera", "auxiliary_cameras", "flash", "forbidden"],
+              "properties": {
+                "main_camera": {"const": "largest protected ring at the rounded left anchor"},
+                "auxiliary_cameras": {"const": "true supplied lenses only, descending clearly in scale toward the right"},
+                "flash": {"const": "one visibly smaller pill or dot at the far tapered tail, subordinate to every lens"},
+                "forbidden": {"const": "no fake aperture, decorative sensor, repeated filler, random vertical offset, camera text, display, or active light"}
+              }
+            },
+            "enclosure": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["body", "segmentation", "elevation", "junction"],
+              "properties": {
+                "body": {"const": "one rigid horizontal enclosure rather than a soft patch or generic black visor"},
+                "segmentation": {"const": "at most one hard-part seam separating the main-camera anchor from the auxiliary tail"},
+                "elevation": {"const": "one shallow enclosure elevation plus protected lens rings"},
+                "junction": {"const": "a precise seam or narrow shadow gap visibly proves attachment to the rigid rear surface"}
+              }
+            },
+            "invariants": {
+              "type": "array",
+              "items": {"type": "string", "minLength": 1},
+              "uniqueItems": true
+            },
+            "permitted_variations": {
+              "type": "array",
+              "items": {"enum": ["enclosure length", "real lens count", "main-camera scale", "single-seam contrast", "Paisley expression intensity"]},
+              "uniqueItems": true
+            }
+          }
+        },
+        "material_system": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["substrate_logic", "zones", "junction_logic", "reflectivity_hierarchy"],
+          "properties": {
+            "substrate_logic": {"const": "rear, camera enclosure, and frame all read as compatible rigid parts"},
+            "zones": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 4,
+              "items": {"type": "string", "minLength": 1},
+              "uniqueItems": true
+            },
+            "junction_logic": {"const": "material changes follow one rigid part seam, controlled step, or finish boundary; never an unresolved faux-soft and hard-part collision"},
+            "reflectivity_hierarchy": {"const": "optical glass high reflection, lens rings and hard enclosure medium reflection, broad rear surface low reflection"}
+          }
+        },
+        "cultural_relationship": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source", "abstracted_relationship", "primary_carrier", "supporting_carrier", "camera_clearance", "member_intensity"],
+          "properties": {
+            "source": {"const": "Paisley / Boteh"},
+            "abstracted_relationship": {"const": "a full rounded body flows directionally into a tapered tip and restrained continuous curl"},
+            "primary_carrier": {"const": "the horizontal enclosure outer flow and its single hard-part seam"},
+            "supporting_carrier": {"const": "directional microtexture, clear-coat light flow, or one non-repeating micro-engraved field on the rigid rear"},
+            "camera_clearance": {"const": "cultural lines and texture terminate around every lens and flash; they never cross, place, disguise, or compete with functional hardware"},
+            "member_intensity": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["Base", "Standard", "Pro", "India Edition"],
+              "properties": {
+                "Base": {"const": "enclosure flow only"},
+                "Standard": {"const": "enclosure flow plus low-contrast directional microtexture"},
+                "Pro": {"const": "enclosure flow plus precise transparent-layer light flow"},
+                "India Edition": {"const": "enclosure flow plus one readable non-repeating micro-engraved Paisley field"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "member_system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["member_count", "members"],
+      "properties": {
+        "member_count": {"const": 4},
+        "members": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "prefixItems": [
+            {"$ref": "#/$defs/baseMember"},
+            {"$ref": "#/$defs/standardMember"},
+            {"$ref": "#/$defs/proMember"},
+            {"$ref": "#/$defs/indiaEditionMember"}
+          ]
+        }
+      }
+    },
+    "presentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["member_hero", "comparison_consistency", "background_separation"],
+      "properties": {
+        "member_hero": {"const": "each member receives one Phone Dual-View Hero with exactly two consistent views of that member and colourway"},
+        "comparison_consistency": {"const": "all four heroes share framing, projection character, occupancy, and lighting softness"},
+        "background_separation": {"const": "each backdrop differs from its phone in both luminance and hue so the complete silhouette remains distinct"}
+      }
+    }
+  },
+  "$defs": {
+    "memberBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["supplied_role", "supplied_hardware", "inherited_genes", "permitted_variation", "resolved_member"],
+      "properties": {
+        "supplied_role": {"type": "string"},
+        "supplied_hardware": {"type": "string", "minLength": 1},
+        "inherited_genes": {"const": ["soft-square slab", "upper horizontal Boteh crossbar", "single rigid material seam", "coaxial lenses and tail flash"]},
+        "permitted_variation": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "resolved_member": {"$ref": "phone-design-judgment-before.schema.json"}
+      }
+    },
+    "baseMember": {
+      "allOf": [
+        {"$ref": "#/$defs/memberBase"},
+        {"properties": {"supplied_role": {"const": "Base"}, "supplied_hardware": {"const": "two real rear cameras and one flash"}}}
+      ]
+    },
+    "standardMember": {
+      "allOf": [
+        {"$ref": "#/$defs/memberBase"},
+        {"properties": {"supplied_role": {"const": "Standard"}, "supplied_hardware": {"const": "three real rear cameras and one flash"}}}
+      ]
+    },
+    "proMember": {
+      "allOf": [
+        {"$ref": "#/$defs/memberBase"},
+        {"properties": {"supplied_role": {"const": "Pro"}, "supplied_hardware": {"const": "three real rear cameras with an enlarged main camera and one flash"}}}
+      ]
+    },
+    "indiaEditionMember": {
+      "allOf": [
+        {"$ref": "#/$defs/memberBase"},
+        {"properties": {"supplied_role": {"const": "India Edition"}, "supplied_hardware": {"const": "the Standard member's three real rear cameras and one flash"}}}
+      ]
+    }
+  }
+}

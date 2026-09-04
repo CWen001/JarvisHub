@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "camera-zone-cultural-integration.candidate.schema.json",
+  "title": "Camera-Zone Cultural Integration 0.5.0 Candidate 2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["design_brief", "functional_form", "camera_zone", "cultural_integration", "material_system", "concept_identity", "presentation"],
+  "properties": {
+    "design_brief": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["product_class", "market_context", "supplied_hardware", "selected_topology", "reference_role"],
+      "properties": {
+        "product_class": {"const": "mainstream"},
+        "market_context": {"const": "2026 India-oriented"},
+        "supplied_hardware": {"const": "three real rear cameras and one flash"},
+        "selected_topology": {"type": "string", "minLength": 1},
+        "reference_role": {"const": "directional evidence for modern mature Transsion-like retail recognition; never geometry to copy"}
+      }
+    },
+    "functional_form": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attention_share", "form_spine", "front_and_frame", "rear_surface"],
+      "properties": {
+        "attention_share": {"const": "about 80%"},
+        "form_spine": {"const": "tall large-screen soft-square slab with believable medium volume, flat central rail, softened contact edges, and one coherent rear transition"},
+        "front_and_frame": {"const": "flat display, visually even narrow bezels, centred small punch hole, coherent controls, openings, antenna breaks, and seams"},
+        "rear_surface": {"const": "quiet rigid peacock-teal rear whose broad surface does not act as a cultural graphic skin"}
+      }
+    },
+    "camera_zone": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["topology", "functional_hierarchy", "structural_integration", "internal_order", "forbidden"],
+      "properties": {
+        "topology": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "outer_geometry", "camera_location", "reason_for_selection"],
+          "properties": {
+            "name": {"type": "string", "minLength": 1},
+            "outer_geometry": {"type": "string", "minLength": 1},
+            "camera_location": {"const": "upper rear"},
+            "reason_for_selection": {"type": "string", "minLength": 1}
+          }
+        },
+        "functional_hierarchy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["main_camera", "auxiliary_cameras", "flash", "spacing_logic"],
+          "properties": {
+            "main_camera": {"const": "one visibly largest protected real lens"},
+            "auxiliary_cameras": {"const": "two smaller real lenses with unambiguous descending or paired hierarchy"},
+            "flash": {"const": "one clearly smaller functional element subordinate to every lens and intentionally aligned to the selected topology"},
+            "spacing_logic": {"const": "real hardware centres establish the composition; decoration never creates pseudo-hardware nodes"}
+          }
+        },
+        "structural_integration": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rear_relationship", "frame_relationship", "elevation", "junction"],
+          "properties": {
+            "rear_relationship": {"type": "string", "minLength": 1},
+            "frame_relationship": {"type": "string", "minLength": 1},
+            "elevation": {"const": "one coherent enclosure or carrier elevation plus protected lens rings"},
+            "junction": {"const": "one precise rigid-part seam, controlled step, or narrow shadow gap proves attachment"}
+          }
+        },
+        "internal_order": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["node_system", "reflection_or_continuity", "subordination"],
+          "properties": {
+            "node_system": {"const": "only the supplied lenses and flash act as geometric nodes"},
+            "reflection_or_continuity": {"type": "string", "minLength": 1},
+            "subordination": {"const": "internal order clarifies the selected topology and hardware hierarchy rather than reshaping the outer enclosure into a cultural symbol"}
+          }
+        },
+        "forbidden": {
+          "const": "no fake aperture, decorative dot, filler sensor, camera text, active display, ornamental light, hesitant triangular tail, or copied released-product signature"
+        }
+      }
+    },
+    "cultural_integration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "ordering_logic", "primary_carrier", "supporting_carrier", "three_distance_read", "illustration_limit"],
+      "properties": {
+        "source": {"const": "Rangoli"},
+        "ordering_logic": {"const": "node spacing, reflection, continuity, and geometric rhythm derived from real hardware and part boundaries"},
+        "primary_carrier": {"enum": ["functional spacing", "hard internal carrier", "retention boundary", "assembly seam", "reflectivity boundary", "lens-ring relationship"]},
+        "supporting_carrier": {"enum": ["power-key detail", "local hard chamfer", "none"]},
+        "three_distance_read": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["far", "middle", "close"],
+          "properties": {
+            "far": {"const": "a modern mature camera architecture with no traditional-art first read"},
+            "middle": {"const": "precise hardware rhythm and balanced structural order"},
+            "close": {"const": "subtle geometric logic in a real hard-part boundary, facet, seam, or finish transition"}
+          }
+        },
+        "illustration_limit": {"const": "no Rangoli picture, floral rosette, colourful powder effect, traditional motif drawing, decorative skin, or cultural camera-island silhouette"}
+      }
+    },
+    "material_system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["substrate_logic", "zones", "junction_logic", "reflectivity_hierarchy"],
+      "properties": {
+        "substrate_logic": {"const": "rear surface, camera zone, carriers, and frame read as compatible rigid parts"},
+        "zones": {"type": "array", "minItems": 2, "maxItems": 4, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "junction_logic": {"const": "finish and material changes follow real or visibly credible rigid-part boundaries"},
+        "reflectivity_hierarchy": {"const": "optical glass high reflection, rings and camera carrier medium reflection, broad rear surface low reflection"}
+      }
+    },
+    "concept_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["exterior_thesis", "leading_departure", "visible_decisions", "family_genes"],
+      "properties": {
+        "exterior_thesis": {"type": "string", "minLength": 1},
+        "leading_departure": {"type": "string", "minLength": 1},
+        "visible_decisions": {"type": "array", "minItems": 3, "maxItems": 5, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "family_genes": {"type": "array", "minItems": 2, "maxItems": 3, "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+      }
+    },
+    "presentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dual_view", "comparison_consistency", "background_separation"],
+      "properties": {
+        "dual_view": {"const": "exactly two consistent views of one bare phone and one colourway: rear or rear-three-quarter primary and front secondary"},
+        "comparison_consistency": {"const": "all four studies share body, hardware, CMF, framing, projection character, occupancy, and lighting softness"},
+        "background_separation": {"const": "the backdrop differs from the phone in both luminance and hue"}
+      }
+    }
+  }
+}

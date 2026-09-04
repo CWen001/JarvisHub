@@ -1,0 +1,18 @@
+{
+  "batch": "india-batch-01",
+  "kernelVersion": "0.1.4",
+  "question": "Can abstract functional-value priorities produce visibly different India-oriented high-end exteriors?",
+  "outputs": [
+    {"id": 1, "path": "01-control.png", "status": "generated"},
+    {"id": 2, "path": "02-camera-first.png", "status": "generated"},
+    {"id": 3, "path": "03-endurance-first.png", "status": "generated"},
+    {"id": 4, "path": "04-balanced.png", "status": "generated"}
+  ],
+  "userFeedback": {
+    "preferred": [],
+    "disliked": [],
+    "comment": "没看懂。四张过于相似，抽象的功能优先级没有成为可读的外观差异。"
+  },
+  "verdict": "The batch did not communicate its design question clearly enough for preference judgment.",
+  "schemaLearning": "Do not infer an exterior-design rule from this batch. Design Dialogue must propose visible geometric relationships rather than abstract product priorities."
+}

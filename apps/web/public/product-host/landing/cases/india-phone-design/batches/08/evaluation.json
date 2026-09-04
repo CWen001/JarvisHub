@@ -1,0 +1,55 @@
+{
+  "batch": "india-batch-08",
+  "schema_version": "0.7.0-candidate",
+  "motif": "Mandala",
+  "design_score": 59,
+  "base_contract": 0,
+  "maturity": 13,
+  "industrial_design": 11,
+  "cultural_restraint": 13,
+  "aesthetic_coherence": 12,
+  "prompt_adherence": 10,
+  "verdict": "Reject — two of four outputs fail the naked whole-body continuity gate",
+  "score_method": "All four actual images reviewed. Per-image raw scores are retained, but the batch score is capped at 59 because any Base Contract failure rejects the learning batch; no output was regenerated or omitted.",
+  "outputs": [
+    {
+      "id": 1,
+      "name": "Retention cadence",
+      "path": "01-mandala-retention-cadence.png",
+      "raw_score": 83,
+      "base_contract": "pass",
+      "evidence": ["credible current slab", "clear three-lens hierarchy", "restrained concentric retention detail"],
+      "limitation": "The Mandala relationship is barely distinguishable from ordinary lens-ring detailing."
+    },
+    {
+      "id": 2,
+      "name": "Crossbar focus",
+      "path": "02-mandala-crossbar-focus.png",
+      "raw_score": 86,
+      "base_contract": "pass",
+      "evidence": ["best mature camera integration in the batch", "clear main-to-auxiliary-to-flash hierarchy", "strong copper/deep-blue presentation separation"],
+      "limitation": "The centre-to-edge material rhythm is too subtle to carry a readable cultural relationship at hero size."
+    },
+    {
+      "id": 3,
+      "name": "Chamfer diffusion",
+      "path": "03-mandala-chamfer-diffusion.png",
+      "raw_score": 55,
+      "base_contract": "reject",
+      "first_failed_rule": "Phone Base Contract 0.1.3 section 3 — Naked whole-body continuity",
+      "evidence": ["two-camera hierarchy is clear", "front/rear colour agreement is good"],
+      "limitation": "Bright detached corner caps create case-like corner buildup and break one continuous chassis reading."
+    },
+    {
+      "id": 4,
+      "name": "Surface focus field",
+      "path": "04-mandala-surface-focus.png",
+      "raw_score": 58,
+      "base_contract": "reject",
+      "first_failed_rule": "Phone Base Contract 0.1.3 section 3 — Naked whole-body continuity",
+      "evidence": ["camera rings retain useful hierarchy", "radial material process is visible without a literal Mandala"],
+      "limitation": "The large outlined inset rear panel reads like a removable insert or case component rather than a finish field on one body."
+    }
+  ],
+  "schema_learning": "Carrier legibility alone is insufficient. Cultural carriers placed on perimeter chamfers or bounded rear fields need an explicit body-continuity constraint: finish changes must remain flush and borderless unless a real assembly part is intended; local chamfer variation must not create isolated corner caps. Camera-internal radial hierarchy remains safest but needs one secondary visible relationship to avoid cultural absence."
+}

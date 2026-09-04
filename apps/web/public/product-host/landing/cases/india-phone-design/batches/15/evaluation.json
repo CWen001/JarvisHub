@@ -1,0 +1,21 @@
+{
+  "batch": "india-batch-15",
+  "schema_version": "1.4.0-candidate",
+  "motif": "Ashoka Chakra",
+  "design_score": 87,
+  "base_contract": 1,
+  "maturity": 18,
+  "industrial_design": 18,
+  "cultural_restraint": 17,
+  "aesthetic_coherence": 18,
+  "prompt_adherence": 16,
+  "verdict": "Pass — new best",
+  "score_method": "Rounded category means across all four actual images; every output retained and none regenerated or omitted.",
+  "outputs": [
+    {"id":1,"name":"Diamond-cut main ring","path":"01-chakra-diamond-ring.png","score":90,"base_contract":"pass","evidence":["24-part micro-cadence is visibly tied to real lens retention","original offset horizontal court avoids the prior copied combination","graphite/bronze CMF is mature and restrained"],"limitation":"The ring remains the most symbol-adjacent carrier and must stay process-scale in future use."},
+    {"id":2,"name":"Knurled power key","path":"02-chakra-knurled-key.png","score":83,"base_contract":"pass","evidence":["functional control carries the cultural cadence","two-camera topology remains quiet and credible","mineral-green body is coherent"],"limitation":"The circular key is oversized and visually reads as a secondary hardware object rather than a fully integrated control."},
+    {"id":3,"name":"Photo-etched bridge edge","path":"03-chakra-etched-bridge.png","score":87,"base_contract":"pass","evidence":["micro-cuts form a restrained continuous functional cadence","three-lens bridge has clear hierarchy and distinct frame-fed relation","silver/indigo presentation is strong"],"limitation":"The top-left frame transition appears slightly stepped and needs cleaner whole-body continuity."},
+    {"id":4,"name":"Acoustic grille cadence","path":"04-chakra-speaker-cadence.png","score":88,"base_contract":"pass","evidence":["lower-frame perforation cadence is clearly visible and functional","two views share coherent low elevation and matching underside geometry","pomegranate CMF stays restrained"],"limitation":"Floating composition and broad underside emphasis make the image less conventional as a primary marketing hero."}
+  ],
+  "schema_learning": "Combination-level originality prevents the prior copied-camera failure without banning common primitives. Exact-count cadence works when implemented as process-scale detail on a real lens ring, bridge edge or acoustic grille. Functional micro-cadence is more robust than symbolic surface graphics. Keep the originality combination check and bounded-carrier rule; avoid oversized control carriers."
+}

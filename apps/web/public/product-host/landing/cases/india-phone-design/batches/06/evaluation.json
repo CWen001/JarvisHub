@@ -1,0 +1,67 @@
+{
+  "batch": "india-batch-06",
+  "kernelVersion": "0.4.0",
+  "candidateSchema": "India-oriented Phone Series Design Judgment 0.5.0 Candidate",
+  "evidence": [
+    "phone-kernel@0.4.0-learning",
+    "phone-base-contract@0.1.3",
+    "phone-contemporary-baseline:2026@0.1.0",
+    "phone-design-judgment-schema@0.4.0",
+    "phone-design-judgment-model@0.1.0",
+    "series-design-judgment@0.5.0-candidate"
+  ],
+  "question": "Can one nested series-level Schema produce four visibly related members while keeping camera hierarchy, rigid-material junctions, and Paisley/Boteh expression coherent?",
+  "outputs": [
+    {
+      "id": 1,
+      "role": "Base",
+      "path": "01-base.png",
+      "baseContract": "pass",
+      "visibleEvidence": [
+        "exactly two real lenses and one subordinate tail flash share one horizontal axis",
+        "the rigid camera bridge has a clean single attachment boundary",
+        "graphite phone separates clearly from the warm ivory background"
+      ],
+      "candidateFinding": "camera order and material continuity work, but the right end remains capsule-rounded rather than visibly tapered, so the Boteh family contour is weak"
+    },
+    {
+      "id": 2,
+      "role": "Standard",
+      "path": "02-standard.png",
+      "baseContract": "pass",
+      "visibleEvidence": [
+        "three descending lenses and one smaller flash are coaxial and legible",
+        "camera segmentation and hard rear surface meet through a precise boundary",
+        "directional rear grooves carry the cultural relationship without crossing hardware"
+      ],
+      "candidateFinding": "the family grammar is clear, though the rear grooves are stronger and larger than the requested low-contrast microtexture"
+    },
+    {
+      "id": 3,
+      "role": "Pro",
+      "path": "03-pro.png",
+      "baseContract": "pass",
+      "visibleEvidence": [
+        "the enlarged main camera, two smaller lenses, and tail flash retain one strict axis",
+        "the rigid tapered enclosure gives the clearest rounded-body-to-tail Boteh relationship",
+        "the silver body and dark aubergine background separate strongly"
+      ],
+      "candidateFinding": "best compliance with both family camera grammar and restrained transparent-layer cultural expression"
+    },
+    {
+      "id": 4,
+      "role": "India Edition",
+      "path": "04-india-edition.png",
+      "baseContract": "pass",
+      "visibleEvidence": [
+        "Standard hardware is preserved as three lenses and one smaller coaxial flash",
+        "all camera and rear parts read as rigid with clear seams",
+        "one non-repeating engraved Paisley field remains separate from camera hardware and contrasts against a pale cool background"
+      ],
+      "candidateFinding": "the cultural intensity ladder is visible, but the camera enclosure again resolves as a rounded capsule and the engraving becomes more literal and ornate than the intended abstract micro-engraved field"
+    }
+  ],
+  "candidateVerdict": "reject for promotion; revise the candidate as one coherent topology-neutral model",
+  "provisionalLearning": "The candidate improves lens/flash hierarchy, hard-material continuity, and background separation, but gives Paisley too much authority over the primary camera silhouette. Preserve functional camera topology first, then carry culture through internal functional or structural order rather than a rear skin. Do not hardcode the liked elongated rectangle as a universal Transsion family shape.",
+  "userFeedback": "Concepts 1 and 2 are acceptable. Concept 2 handles the camera zone especially well as one integrated elongated rectangular expression. Concept 3 does not reveal its cultural texture. Concepts 3 and 4 have unattractive, hesitant triangular camera-zone forms. Cultural expression should integrate modestly with functional or structural parts instead of sitting separately as a skin, while remaining restrained. Follow-up: the elongated rectangle is one valid Transsion approach, not a Schema invariant; the next model must support multiple coherent camera topologies."
+}

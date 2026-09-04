@@ -42,8 +42,7 @@ import MemoryPanel from './ui/memory/MemoryPanel'
 import ParamModal from './ui/ParamModal'
 import PreviewModal from './ui/PreviewModal'
 import AiChatDialog from './ui/chat/AiChatDialog'
-import { AgentWorkspace } from './product-host/AgentWorkspace'
-import { useAuthoritativeAgentWorkspaceRuntime } from './product-host/agentWorkspaceAdapter'
+import { ProductWorkspaceHost } from './product-host/ProductWorkspaceHost'
 import { runNodeRemote } from './runner/remoteRunner'
 import { Background } from '@xyflow/react'
 import { FeatureTour, type FeatureTourStep } from './ui/tour/FeatureTour'
@@ -58,7 +57,6 @@ import {
   resolveRequestedProjectFlowIdForLoad,
 } from './projects/projectCanvasEntry'
 import { consumeSkipProjectFlowLoad, markSkipNextProjectFlowLoad } from './projects/skipProjectFlowLoad'
-import HomePage from './ui/HomePage'
 import ProjectIdentityCell from './ui/ProjectIdentityCell'
 import { hasPendingUploads } from './ui/pendingUploadGuard'
 import { buildStudioUrl, isGithubOauthCallbackRoute, isStudioRoute, type StudioOwnerType } from './utils/appRoutes'
@@ -1061,31 +1059,6 @@ function CanvasApp({
     }
   }, [projects, restoreCreationSession, setCurrentFlow, setCurrentProject, setDirty])
 
-  const agentWorkspaceRuntime = useAuthoritativeAgentWorkspaceRuntime({
-    enabled: isProductHost,
-    projects,
-    currentProject,
-    currentFlow,
-    onSelectProject: selectProductProject,
-    onCreateProject: () => spaReplace('/projects'),
-    onCreateFlow: createProductFlow,
-    onOpenAssets: () => setActivePanel('gallery'),
-    onOpenProfessionalWorkspace: (nodeId) => dispatchProductWorkspaceCommand({
-      type: 'open-canvas',
-      ...(nodeId ? { nodeId } : {}),
-    }),
-  })
-  const [agentWorkspaceRailCollapsed, setAgentWorkspaceRailCollapsed] = React.useState(false)
-
-  React.useEffect(() => {
-    if (typeof document === 'undefined') return
-    if (isProductSurface) document.documentElement.dataset.productHost = 'true'
-    else delete document.documentElement.dataset.productHost
-    return () => {
-      delete document.documentElement.dataset.productHost
-    }
-  }, [isProductSurface])
-
   const snapshotFlowId = currentFlow?.source === 'server' && currentFlow?.id ? String(currentFlow.id) : null
   const snapshotExport = useSnapshotExport(snapshotFlowId)
   const handleExportSnapshot = React.useCallback(() => {
@@ -1236,26 +1209,27 @@ function CanvasApp({
         <ModelPanel />
         <HistoryPanel />
         <MemoryPanel />
-        <div
-          className={isProductSurface ? 'agent-workspace-surface' : undefined}
-          data-rail-collapsed={isProductSurface ? agentWorkspaceRailCollapsed : undefined}
-        >
-          {isProductSurface ? (
-            <>
-              <AgentWorkspace
-                brand={productBrand}
-                runtime={agentWorkspaceRuntime}
-                railCollapsed={agentWorkspaceRailCollapsed}
-                onRailCollapsedChange={setAgentWorkspaceRailCollapsed}
-              />
-              <AiChatDialog surface="agent-workspace" headless />
-            </>
-          ) : (
-            <div className="app-chat-engine-host">
-              <AiChatDialog className="app-ai-chat-dialog" surface="native" />
-            </div>
-          )}
-        </div>
+        {isProductSurface ? (
+          <ProductWorkspaceHost
+            surface="workspace"
+            brand={productBrand}
+            runtimeInput={{ enabled: true, projects, currentProject, currentFlow }}
+            commands={{
+              onSelectProject: selectProductProject,
+              onCreateProject: () => spaReplace('/projects'),
+              onCreateFlow: createProductFlow,
+              onOpenAssets: () => setActivePanel('gallery'),
+              onOpenProfessionalWorkspace: (nodeId) => dispatchProductWorkspaceCommand({
+                type: 'open-canvas',
+                ...(nodeId ? { nodeId } : {}),
+              }),
+            }}
+          />
+        ) : (
+          <div className="app-chat-engine-host">
+            <AiChatDialog className="app-ai-chat-dialog" surface="native" />
+          </div>
+        )}
       </BodyPortal>
       <ParamModal />
       <PreviewModal />
@@ -1332,22 +1306,8 @@ function matchProjectEntryRoute(): { projectId: string } | null {
   }
 }
 
-function RootEntryPage({
-  routeKey,
-  productBrand,
-}: {
-  routeKey: string
-  productBrand?: ProductBrand
-}): JSX.Element {
-  const auth = useAuth()
-  if (!auth.user) return <HomePage />
-  return (
-    <CanvasApp
-      routeKey={routeKey}
-      initialSurface={resolveInitialProductWorkspaceSurface(Boolean(productBrand))}
-      productBrand={productBrand}
-    />
-  )
+function RootEntryPage(): JSX.Element {
+  return <ProductWorkspaceHost surface="entry" pathname={window.location.pathname} />
 }
 
 export default function App({
@@ -1387,6 +1347,9 @@ export default function App({
   if (isGithubOauthCallbackRoute()) {
     return <CanvasApp routeKey={routeKey} />
   }
+  if (typeof window !== 'undefined' && window.location.pathname.startsWith('/cases/')) {
+    return <ProductWorkspaceHost surface="entry" pathname={window.location.pathname} />
+  }
   if (isStudioRoute()) {
     return (
       <CanvasApp
@@ -1396,5 +1359,5 @@ export default function App({
       />
     )
   }
-  return <RootEntryPage routeKey={routeKey} productBrand={productBrand} />
+  return <RootEntryPage />
 }

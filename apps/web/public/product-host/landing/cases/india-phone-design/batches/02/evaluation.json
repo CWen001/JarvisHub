@@ -1,0 +1,18 @@
+{
+  "batch": "india-batch-02",
+  "kernelVersion": "0.2.0",
+  "question": "Which moderate corner, chamfer, frame, and rear transition gives a mature mid-range phone the best grip and volume character?",
+  "outputs": [
+    {"id": 1, "path": "01-narrow-flat-micro-chamfer.png", "status": "generated"},
+    {"id": 2, "path": "02-flat-front-rear-arc.png", "status": "generated"},
+    {"id": 3, "path": "03-symmetric-dual-arc.png", "status": "generated"},
+    {"id": 4, "path": "04-broad-flat-local-facets.png", "status": "generated"}
+  ],
+  "userFeedback": {
+    "preferred": [],
+    "disliked": [],
+    "comment": "这一批次非常像，难以确认四种转面关系是否真的不同。"
+  },
+  "verdict": "The controlled variables were too subtle and the views did not expose the compared surfaces clearly.",
+  "schemaLearning": "Moderate constraints set an acceptable range but must not collapse a batch into micro-variants. Dialogue must propose distinct form topologies and presentation must reveal the changed relation."
+}

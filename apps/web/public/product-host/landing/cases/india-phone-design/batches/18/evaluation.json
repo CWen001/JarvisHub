@@ -1,0 +1,77 @@
+{
+  "batch": "india-batch-08",
+  "kernel_version": "1.4.0-learning",
+  "schema_version": "1.4.0",
+  "brief": "2026 India-oriented P-series long-endurance and light-entertainment variants",
+  "reference_role": "directional evidence only; no reference image was passed to generation",
+  "outputs": [
+    {
+      "id": 1,
+      "name": "Upper Power Deck",
+      "path": "01-upper-power-deck.png",
+      "base_contract": "pass",
+      "visible_evidence": [
+        "two real cameras and one pill flash form a clear horizontal hierarchy",
+        "the wide upper deck and layered lower edge create strong P-series retail recognition",
+        "dual views share a coherent graphite soft-square chassis and neutral front"
+      ],
+      "limitations": [
+        "the deck stops short of the requested bilateral side-rail attachment",
+        "the layered setback reads more as generic industrial fins than a specific restrained cultural relationship"
+      ],
+      "next_step": "keep the broad deck but make one real frame attachment and reduce the lower edge to two cleaner structural steps"
+    },
+    {
+      "id": 2,
+      "name": "Endurance Spine",
+      "path": "02-endurance-spine.png",
+      "base_contract": "reject",
+      "first_failed_rule": "Phone Base Contract 0.1.3 section 5 — Camera Architecture",
+      "visible_evidence": [
+        "the red flush spine creates the strongest P-series family resemblance",
+        "the two real lenses retain clear descending hierarchy",
+        "an unexplained extra black rounded aperture appears directly below the flash"
+      ],
+      "limitations": [
+        "the extra black aperture is pseudo-hardware and forces rejection",
+        "the vertical field breaks into several large tonal blocks rather than the requested gradual depth shift"
+      ],
+      "next_step": "remove the extra aperture and simplify the spine to one continuous flush depth field"
+    },
+    {
+      "id": 3,
+      "name": "Twin Ring Field",
+      "path": "03-twin-ring-field.png",
+      "base_contract": "pass",
+      "visible_evidence": [
+        "two independent real rings and one flash remain honest and immediately legible",
+        "the narrow connecting bridge avoids a generic black camera island",
+        "olive CMF and rigid micro-grooves are coherent across the rear and frame"
+      ],
+      "limitations": [
+        "the laser texture expands across the full upper half instead of staying near the camera footprint",
+        "the quiet premium treatment weakens the intended energetic P-series character"
+      ],
+      "next_step": "confine the grooves to a smaller bounded functional field and restore one stronger value-oriented structural cue"
+    },
+    {
+      "id": 4,
+      "name": "Frame-Fed Saddle",
+      "path": "04-frame-fed-saddle.png",
+      "base_contract": "pass",
+      "visible_evidence": [
+        "the unequal horizontal lens pair and pill flash have clean hierarchy",
+        "the saddle, layered shoulder and left frame read as one camera-to-chassis system",
+        "silver phone separates strongly from the dark indigo background and both views remain consistent"
+      ],
+      "limitations": [
+        "the shoulder uses more concentric layers than the restrained three-setback intent",
+        "the result reads closer to upper-mainstream imaging than affordable endurance entertainment"
+      ],
+      "next_step": "keep the tangent frame relationship but simplify the shoulder and reduce premium metal signalling"
+    }
+  ],
+  "verdict": "three pass, one reject; retain every image and do not auto-regenerate",
+  "schema_learning": "Schema 1.4.0 supports visibly distinct P-series directions while preserving mature form, topology originality and bounded process intent. Generation still tends to invent pseudo-hardware in dense camera courts and to over-expand or over-layer process carriers. Stronger prompt repetition may be needed for exact functional-element count and one bounded carrier, but no Schema change is promoted from this batch alone.",
+  "user_feedback": null
+}

@@ -1,0 +1,78 @@
+{
+  "batch": "india-batch-09",
+  "kernel_version": "1.4.0-learning",
+  "schema_version": "1.4.0",
+  "brief": "2026 India-oriented premium phones with stronger high-aesthetic cultural expression",
+  "attention_hierarchy": "approximately 65% Functional Form / 35% Cultural Expression",
+  "outputs": [
+    {
+      "id": 1,
+      "name": "Bidri Midnight Inlay",
+      "path": "01-bidri-midnight-inlay.png",
+      "base_contract": "pass",
+      "visible_evidence": [
+        "three descending real lenses and one pill flash form a clear optical hierarchy",
+        "silver-coloured routes visibly belong to the rigid camera shoulder and avoid the broad rear",
+        "black phone, warm pale background and neutral front remain coherent across both views"
+      ],
+      "limitations": [
+        "the inlay becomes several heavy concentric outlines rather than three finer embedded routes",
+        "the camera shoulder does not prove its frame-fed connection as strongly as requested"
+      ],
+      "next_step": "retain the black-and-silver craft direction while reducing the inlay to fewer finer lines and clarifying one frame attachment"
+    },
+    {
+      "id": 2,
+      "name": "Jali Shadow Glass",
+      "path": "02-jali-shadow-glass.png",
+      "base_contract": "reject",
+      "first_failed_rule": "Phone Base Contract 0.1.3 section 5 — Camera Architecture",
+      "visible_evidence": [
+        "the ivory chassis, champagne frame and graphite court create a premium high-contrast composition",
+        "three real lenses and a flash occupy the requested complete functional court",
+        "the internal diamond voids render as repeated decorative apertures and an unexplained dark flourish appears along the court floor"
+      ],
+      "limitations": [
+        "the solid–void layer is not visually separated from functional camera apertures",
+        "the extra flourish weakens structural credibility"
+      ],
+      "next_step": "replace open-looking voids with shallow under-glass relief and remove all free decorative linework"
+    },
+    {
+      "id": 3,
+      "name": "Stepwell Terrace",
+      "path": "03-stepwell-terrace.png",
+      "base_contract": "reject",
+      "first_failed_rule": "Phone Base Contract 0.1.3 section 4 — Evaluation-neutral front",
+      "visible_evidence": [
+        "the two-level 1-over-2 camera terrace clearly expresses descending structure",
+        "teal and bronze levels have strong premium depth and coherent real-lens hierarchy",
+        "the front screen repeats the exterior teal colour instead of remaining evaluation-neutral"
+      ],
+      "limitations": [
+        "the main camera level is oversized and slightly disconnected from the lower optical row",
+        "the matching teal front contaminates exterior evaluation"
+      ],
+      "next_step": "keep the two-level descent but reduce the upper mass, tighten its overlap with the lower level and force a neutral charcoal front"
+    },
+    {
+      "id": 4,
+      "name": "Meenakari Precision Edge",
+      "path": "04-meenakari-precision-edge.png",
+      "base_contract": "pass",
+      "visible_evidence": [
+        "three real lenses, one subordinate flash and one rigid bridge remain functionally clear",
+        "bounded colour cells visibly integrate with the retaining edge rather than becoming a rear skin",
+        "indigo chassis and pale cool background provide strong silhouette separation"
+      ],
+      "limitations": [
+        "the generated colour-cell count appears greater than the requested nine",
+        "the jewel-like edge approaches decorative luxury and needs strict scale control for family use"
+      ],
+      "next_step": "retain the bounded colour-within-metal principle while reducing cell count and saturation"
+    }
+  ],
+  "verdict": "two pass, two reject; all images retained and no output regenerated",
+  "schema_learning": "Schema 1.4.0 can support stronger premium cultural expression when the carrier is a bounded rigid functional part, as shown by Bidri-inspired inlay and Meenakari-inspired retention cells. Open-looking Jali voids risk becoming decorative camera apertures, and strong form experiments still require strict neutral-front enforcement. No Schema revision is promoted from one batch.",
+  "user_feedback": null
+}

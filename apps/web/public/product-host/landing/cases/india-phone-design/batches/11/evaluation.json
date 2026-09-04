@@ -1,0 +1,21 @@
+{
+  "batch": "india-batch-11",
+  "schema_version": "1.0.0-candidate",
+  "motif": "Tree of Life",
+  "design_score": 83,
+  "base_contract": 1,
+  "maturity": 18,
+  "industrial_design": 17,
+  "cultural_restraint": 14,
+  "aesthetic_coherence": 17,
+  "prompt_adherence": 17,
+  "verdict": "Pass, below current best",
+  "score_method": "Rounded category means across all four actual images; all outputs retained, none regenerated.",
+  "outputs": [
+    {"id":1,"name":"Vertical tool spine","path":"01-tree-vertical-tool-spine.png","score":87,"base_contract":"pass","evidence":["clear main-to-two-auxiliary functional hierarchy","rigid PVD spine is visually specific and integrated","mature graphite chassis"],"limitation":"The axial carrier is strong but cultural reading remains dependent on explanation."},
+    {"id":2,"name":"Frame-fed bridge","path":"02-tree-frame-fed-bridge.png","score":87,"base_contract":"pass","evidence":["best frame-to-camera attachment in the batch","three lenses and flash form clear order","silver/aubergine presentation is coherent"],"limitation":"Blue internal boundaries approach circuit-line styling, one of the stated forbidden resemblances."},
+    {"id":3,"name":"Assembly cadence","path":"03-tree-assembly-cadence.png","score":76,"base_contract":"pass","evidence":["two-camera hierarchy and rigid plate are credible","terracotta CMF is restrained","dual views remain consistent"],"limitation":"The long seam terminating in an exposed fastener looks decorative and mechanically unresolved rather than like a purposeful assembly datum."},
+    {"id":4,"name":"Embedded distribution","path":"04-tree-embedded-route.png","score":81,"base_contract":"pass","evidence":["continuous borderless rear avoids a panel reading","three-camera hardware remains mature","deep indigo CMF is attractive"],"limitation":"The broad diagonal field reads mostly as studio light; named IMT process and source-to-distribution hierarchy are not proven."}
+  ],
+  "schema_learning": "Process appearance guards reduced literal tree imagery across all outputs, but negative resemblance lists can redirect generation into adjacent clichés such as circuit lines. Positive permitted signatures must dominate exclusions. Functional camera/frame carriers remain strongest; long decorative seams and lighting-dependent embedded fields are unreliable."
+}

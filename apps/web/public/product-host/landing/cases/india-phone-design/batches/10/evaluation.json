@@ -1,0 +1,21 @@
+{
+  "batch": "india-batch-10",
+  "schema_version": "0.9.0-candidate",
+  "motif": "Peacock",
+  "design_score": 84,
+  "base_contract": 1,
+  "maturity": 18,
+  "industrial_design": 17,
+  "cultural_restraint": 14,
+  "aesthetic_coherence": 18,
+  "prompt_adherence": 17,
+  "verdict": "Pass, but below current best",
+  "score_method": "Rounded category means across all four actual images; every output retained and none regenerated.",
+  "outputs": [
+    {"id":1,"name":"PVD camera spine","path":"01-peacock-pvd-spine.png","score":88,"base_contract":"pass","evidence":["clear thumbnail-scale camera-architecture departure","selective teal-blue metallic travel remains bounded to one rigid spine","three lenses and flash form a credible hierarchy"],"limitation":"The broad upper strip approaches a familiar full-width bar language and needs a more authored frame junction."},
+    {"id":2,"name":"IMT depth field","path":"02-peacock-imt-depth-field.png","score":80,"base_contract":"pass","evidence":["embedded field reads distinctly from the matte back","two-camera architecture stays separate and plausible","flush surface avoids case-like paneling"],"limitation":"The radial microprismatic field visually resembles a literal feather, reducing restraint despite the prompt exclusion."},
+    {"id":3,"name":"Laser microprism rail","path":"03-peacock-laser-rail.png","score":82,"base_contract":"pass","evidence":["continuous chassis and rail remain credible","cyan directional rail highlight is tied to controls","camera hierarchy is mature"],"limitation":"The named laser microtexture and three facets are weakly visible, while the camera court remains generic and dominates the design."},
+    {"id":4,"name":"NCVM optical court","path":"04-peacock-ncvm-court.png","score":84,"base_contract":"pass","evidence":["strong single-move asymmetric camera court","NCVM-like optical depth is clearly bounded to one rigid part","silver body and aubergine backdrop have strong separation"],"limitation":"The internal radial streaking again approaches a literal peacock-feather image and the court becomes more decorative than functional."}
+  ],
+  "schema_learning": "Named process, substrate and zone fields substantially improve visual specificity, and the innovation-budget field creates clearer differences than prior batches. However, process names alone do not control motif literalness: IMT and NCVM directions converted abstract optical depth into feather-like radial graphics. Add process-to-appearance constraints with a permitted visual signature and an explicit motif resemblance test. Preserve the innovation budget; avoid hardcoding one topology from this batch."
+}

@@ -1,0 +1,690 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "phone-design-judgment.schema.json",
+  "title": "India-oriented Phone Exterior Design Judgment 1.4.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "design_brief",
+    "functional_form",
+    "cultural_expression",
+    "concept_identity",
+    "presentation"
+  ],
+  "properties": {
+    "design_brief": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "product_class",
+        "fixed_requirements",
+        "open_exterior_decisions"
+      ],
+      "properties": {
+        "product_class": {
+          "enum": [
+            "entry",
+            "mainstream",
+            "upper-mid",
+            "flagship"
+          ]
+        },
+        "fixed_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "open_exterior_decisions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "functional_form": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attention_share",
+        "silhouette_proportion",
+        "corner_chamfer_grip",
+        "front_frame_controls",
+        "camera_architecture",
+        "rear_surface",
+        "exterior_consequences"
+      ],
+      "properties": {
+        "attention_share": {
+          "const": "about 80% unless the brief overrides it"
+        },
+        "silhouette_proportion": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "body_aspect",
+            "visual_thickness",
+            "volume_character"
+          ],
+          "properties": {
+            "body_aspect": {
+              "type": "string",
+              "minLength": 1
+            },
+            "visual_thickness": {
+              "type": "string",
+              "minLength": 1
+            },
+            "volume_character": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "corner_chamfer_grip": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "corner_family",
+            "front_edge",
+            "frame_profile",
+            "rear_transition",
+            "grip_character",
+            "propagated_relationship",
+            "perimeter_continuity"
+          ],
+          "properties": {
+            "corner_family": {
+              "type": "string",
+              "minLength": 1
+            },
+            "front_edge": {
+              "type": "string",
+              "minLength": 1
+            },
+            "frame_profile": {
+              "type": "string",
+              "minLength": 1
+            },
+            "rear_transition": {
+              "type": "string",
+              "minLength": 1
+            },
+            "grip_character": {
+              "type": "string",
+              "minLength": 1
+            },
+            "propagated_relationship": {
+              "type": "string",
+              "minLength": 1
+            },
+            "perimeter_continuity": {
+              "const": "local chamfer variation flows continuously into adjacent rails and transitions; no detached corner cap, armour piece, raised lip, or doubled perimeter"
+            }
+          }
+        },
+        "front_frame_controls": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "display_boundary",
+            "bezel_logic",
+            "front_camera",
+            "controls",
+            "openings_and_seams"
+          ],
+          "properties": {
+            "display_boundary": {
+              "type": "string",
+              "minLength": 1
+            },
+            "bezel_logic": {
+              "type": "string",
+              "minLength": 1
+            },
+            "front_camera": {
+              "type": "string",
+              "minLength": 1
+            },
+            "controls": {
+              "type": "string",
+              "minLength": 1
+            },
+            "openings_and_seams": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "camera_architecture": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "supplied_hardware",
+            "visual_role",
+            "arrangement",
+            "elevation",
+            "protection",
+            "chassis_relationship",
+            "topology_originality"
+          ],
+          "properties": {
+            "supplied_hardware": {
+              "type": "string",
+              "minLength": 1
+            },
+            "visual_role": {
+              "enum": [
+                "primary",
+                "supporting",
+                "quiet"
+              ]
+            },
+            "arrangement": {
+              "type": "string",
+              "minLength": 1
+            },
+            "elevation": {
+              "type": "string",
+              "minLength": 1
+            },
+            "protection": {
+              "type": "string",
+              "minLength": 1
+            },
+            "chassis_relationship": {
+              "type": "string",
+              "minLength": 1
+            },
+            "topology_originality": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "combination_read",
+                "differentiating_relationship",
+                "copied_signature_exclusion"
+              ],
+              "properties": {
+                "combination_read": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "differentiating_relationship": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "copied_signature_exclusion": {
+                  "const": "judge enclosure outline, lens-node arrangement, flash position, frame relationship, and CMF as one combination; no recognizable released-product signature, while no individual primitive shape is banned by itself"
+                }
+              }
+            }
+          }
+        },
+        "rear_surface": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "surface_architecture",
+            "material_zones",
+            "reflectivity_hierarchy",
+            "body_continuity",
+            "appearance_process"
+          ],
+          "properties": {
+            "surface_architecture": {
+              "type": "string",
+              "minLength": 1
+            },
+            "material_zones": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "reflectivity_hierarchy": {
+              "type": "string",
+              "minLength": 1
+            },
+            "body_continuity": {
+              "const": "finish and reflectivity changes remain flush and borderless unless they correspond to one intentional assembled rigid part; rear fields cannot appear inset, removable, padded, or case-like"
+            },
+            "appearance_process": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "process_name",
+                "substrate",
+                "physical_zone",
+                "process_role",
+                "visible_signature",
+                "feature_scale",
+                "boundary_behavior",
+                "reflectivity_behavior",
+                "colour_behavior",
+                "plausibility_limit",
+                "permitted_visual_signature",
+                "forbidden_motif_resemblance",
+                "normal_view_test",
+                "focus_rule"
+              ],
+              "properties": {
+                "process_name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "substrate": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "physical_zone": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "process_role": {
+                  "enum": [
+                    "hero-process",
+                    "supporting-process"
+                  ]
+                },
+                "visible_signature": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "feature_scale": {
+                  "enum": [
+                    "macro-zone",
+                    "meso-gradient",
+                    "micro-texture",
+                    "edge-detail"
+                  ]
+                },
+                "boundary_behavior": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "reflectivity_behavior": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "colour_behavior": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "plausibility_limit": {
+                  "const": "describe only visible appearance and part relationships; do not claim validated manufacturing yield, durability, radio, sustainability, or cost"
+                },
+                "permitted_visual_signature": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "forbidden_motif_resemblance": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "normal_view_test": {
+                  "const": "at normal hero size the process must read as the named material or construction effect, not as an illustration, icon, distressed surface, lighting-only artifact, or separate accessory"
+                },
+                "focus_rule": {
+                  "const": "one named hero process, one exact substrate/physical zone, one affirmative visible signature, and one boundary behavior; supporting zones use baseline finishes rather than a second novelty process"
+                }
+              }
+            }
+          }
+        },
+        "exterior_consequences": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "supplied_requirement",
+              "visible_consequence",
+              "claim_limit"
+            ],
+            "properties": {
+              "supplied_requirement": {
+                "type": "string",
+                "minLength": 1
+              },
+              "visible_consequence": {
+                "type": "string",
+                "minLength": 1
+              },
+              "claim_limit": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "cultural_expression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attention_share",
+        "source_family",
+        "abstracted_relationship",
+        "primary_carrier",
+        "supporting_carrier",
+        "camera_clearance",
+        "integration_limit",
+        "abstraction_control",
+        "sacred_symbol_boundary",
+        "carrier_coverage"
+      ],
+      "properties": {
+        "attention_share": {
+          "const": "about 20% unless the brief overrides it"
+        },
+        "source_family": {
+          "enum": [
+            "material-craft",
+            "architectural-relationship",
+            "regional-nature",
+            "festival-atmosphere",
+            "brief-supplied"
+          ]
+        },
+        "abstracted_relationship": {
+          "type": "string",
+          "minLength": 1
+        },
+        "primary_carrier": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "zone",
+            "expression"
+          ],
+          "properties": {
+            "zone": {
+              "enum": [
+                "rear-surface",
+                "material-process",
+                "pattern-field",
+                "colour-behaviour",
+                "finish-field",
+                "local-edge-detail",
+                "brief-supplied"
+              ]
+            },
+            "expression": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "supporting_carrier": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "zone",
+            "expression"
+          ],
+          "properties": {
+            "zone": {
+              "enum": [
+                "control-detail",
+                "fine-boundary",
+                "micro-texture",
+                "local-chamfer",
+                "subtle-colour-accent",
+                "none",
+                "brief-supplied"
+              ]
+            },
+            "expression": {
+              "type": "string"
+            }
+          }
+        },
+        "camera_clearance": {
+          "const": "camera position and optical hierarchy resolve first; cultural fields terminate, route around, or support them without placing lenses ambiguously on a decorative boundary"
+        },
+        "integration_limit": {
+          "const": "cultural expression does not determine major body volume, camera position, or primary camera-island topology unless the brief explicitly grants that role"
+        },
+        "abstraction_control": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_observation",
+            "extracted_relationship",
+            "literal_copy_exclusion",
+            "distance_hierarchy",
+            "carrier_legibility",
+            "shape_authority"
+          ],
+          "properties": {
+            "source_observation": {
+              "type": "string",
+              "minLength": 1
+            },
+            "extracted_relationship": {
+              "type": "string",
+              "minLength": 1
+            },
+            "literal_copy_exclusion": {
+              "type": "string",
+              "minLength": 1
+            },
+            "distance_hierarchy": {
+              "const": "retail distance reads as mature phone architecture; hand distance reveals the cultural relationship; macro distance may reveal craft detail"
+            },
+            "carrier_legibility": {
+              "const": "one abstract cultural relationship must be visibly inspectable at normal hero size through a precise physical zone or functional hierarchy; it may not depend only on macro texture or atmosphere"
+            },
+            "shape_authority": {
+              "const": "cultural expression may organize internal hardware rhythm, retention details, finish direction, seams, or local chamfers; it does not choose the primary camera topology or major body mass unless the brief explicitly grants that role"
+            }
+          }
+        },
+        "sacred_symbol_boundary": {
+          "const": "when a source has sacred or devotional forms, translate only a non-iconic spatial, material, or structural relationship unless the brief explicitly requests and authorizes religious imagery"
+        },
+        "carrier_coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "part_name",
+            "physical_boundary",
+            "coverage_rule",
+            "spillover_exclusion"
+          ],
+          "properties": {
+            "part_name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "physical_boundary": {
+              "type": "string",
+              "minLength": 1
+            },
+            "coverage_rule": {
+              "const": "the primary cultural relationship occupies one named bounded physical part; its process or linework cannot expand onto the broad rear, frame, screen, or background"
+            },
+            "spillover_exclusion": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "concept_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exterior_thesis",
+        "leading_departure",
+        "visible_decisions",
+        "family_genes",
+        "innovation_budget"
+      ],
+      "properties": {
+        "exterior_thesis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "leading_departure": {
+          "type": "string",
+          "minLength": 1
+        },
+        "visible_decisions": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 5,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "family_genes": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "innovation_budget": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "posture",
+            "baseline_share",
+            "departure_strength",
+            "departure_domain",
+            "preserved_baseline",
+            "difference_test"
+          ],
+          "properties": {
+            "posture": {
+              "enum": [
+                "conservative",
+                "restrained-progressive",
+                "expressive-progressive"
+              ]
+            },
+            "baseline_share": {
+              "const": "the complete product remains anchored to the 2026 Contemporary Baseline; default posture is restrained-progressive"
+            },
+            "departure_strength": {
+              "enum": [
+                "quiet",
+                "clear",
+                "strong-single-move"
+              ]
+            },
+            "departure_domain": {
+              "enum": [
+                "camera-architecture",
+                "form-spine",
+                "rear-surface-architecture",
+                "frame-and-controls",
+                "appearance-process"
+              ]
+            },
+            "preserved_baseline": {
+              "type": "array",
+              "minItems": 3,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            },
+            "difference_test": {
+              "const": "the Leading Departure must be obvious at thumbnail or retail distance while all non-departure domains remain mature, coherent, and subordinate"
+            }
+          }
+        }
+      }
+    },
+    "presentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dual_view",
+        "atmosphere",
+        "departure_proof"
+      ],
+      "properties": {
+        "dual_view": {
+          "const": "exactly two consistent views of one bare phone and one colourway: rear or rear-three-quarter primary and front secondary"
+        },
+        "atmosphere": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_continuity",
+            "colour_field",
+            "light_shadow_haze",
+            "subordination"
+          ],
+          "properties": {
+            "source_continuity": {
+              "type": "string",
+              "minLength": 1
+            },
+            "colour_field": {
+              "type": "string",
+              "minLength": 1
+            },
+            "light_shadow_haze": {
+              "type": "string",
+              "minLength": 1
+            },
+            "subordination": {
+              "const": "the atmosphere supports product presentation and cannot supply cultural identity absent from the phone"
+            }
+          }
+        },
+        "departure_proof": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "target_domain",
+            "primary_view",
+            "minimum_projected_area",
+            "lighting_task",
+            "normal_size_evidence"
+          ],
+          "properties": {
+            "target_domain": {
+              "type": "string",
+              "minLength": 1
+            },
+            "primary_view": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minimum_projected_area": {
+              "const": "the selected view gives the Leading Departure enough unobstructed projected area to be judged without a macro inset or explanatory label"
+            },
+            "lighting_task": {
+              "type": "string",
+              "minLength": 1
+            },
+            "normal_size_evidence": {
+              "const": "the rendered hero must visibly prove the declared geometry, process signature, and boundary at normal viewing size; atmosphere alone does not count"
+            }
+          }
+        }
+      }
+    }
+  }
+}

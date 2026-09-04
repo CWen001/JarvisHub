@@ -1,0 +1,19 @@
+Phone Design Kernel evidence: phone-kernel@0.4.0-learning; phone-base-contract@0.1.3; phone-contemporary-baseline:2026@0.1.0; local candidate schema@0.6.0.
+
+Create one brand-neutral 2026 India-oriented upper-mainstream smartphone, “Edge Cadence”. About 80% mature Functional Form and 20% restrained Cultural Expression. Exterior thesis: a moonstone-blue imaging slab in which soft-square body geometry, an independent three-ring camera court, and one asymmetrically attenuated rear chamfer form a composed whole. Leading Departure: the rear perimeter chamfer is fractionally broader near the upper-left camera balance and narrows smoothly down the opposite side, translating the Boteh full-to-fine relationship into grip and light behavior rather than decoration.
+
+Exactly one landscape Phone Dual-View Hero with exactly two consistent representations of the same bare phone and colourway: rear-three-quarter primary left and near-level front secondary right. No panels, labels, extra device, hand, person, logo, text, or watermark. Both views match silhouette, corner family, frame profile, thickness, controls, camera hardware, seams, colour, and finish. Front view must not reveal bottom ports.
+
+FORM SPINE: tall 6.7-inch-class current slab with honest upper-mainstream thickness, moderate continuous soft-square body/display radii, flat satin central frame, almost-flat front and rear, controlled soft grip edges. Rear chamfer is an integral chassis transition, never a bumper or raised shell: subtly fuller near the camera-side shoulder, then continuously narrows around the body and becomes minimal at the lower-right. Display has visually even narrow bezels, centred small punch hole, neutral low-information deep-grey screen unrelated to rear language.
+
+CAMERA ARCHITECTURE: upper-left independent-ring camera court with no generic black patch. Exactly three real lenses and exactly one flash: one largest main ring above, two smaller real rings below in a disciplined triangular hierarchy, one much smaller pill flash outside the optical triangle. No other dot, hole, aperture, sensor, text, light, or filler. Each ring rises from one shallow colour-matched rigid base with a precise annular seam; optical glass high, rings medium, rear low reflection. Camera hardware has quiet clearance from the chamfer and any finish field.
+
+CMF: low-saturation moonstone blue fine-matte rigid back; cool dark-blue satin frame and lens rings; subtle silver-blue chamfer highlight; dark glossy optics. Broad rear remains almost entirely quiet. One hairline satin accent on the power key echoes the chamfer attenuation. No Paisley drawing, droplet, curl, repeated motif, micro-engraved ornament, textile print, or coloured border.
+
+Controls/openings: coherent right power and volume keys, restrained antenna breaks, charging opening, speaker and microphone perforations, SIM and assembly seams only where physically visible. No doubled perimeter.
+
+CULTURAL TRANSLATION: source Paisley/Boteh; extracted relationship is asymmetrical fullness continuously resolving into a fine terminal edge. Primary carrier is the functional rear-to-frame chamfer; supporting carrier is the power-key satin accent. At retail distance the phone reads mature and credible; at hand distance the changing chamfer catches light and reveals the relationship.
+
+PRESENTATION: warm pale sandstone and soft apricot background, distinctly lighter and warmer than the blue phone, restrained indigo shadow, soft large-source lighting chosen to reveal chamfer width, grounded shadows, premium attainable photography, 70–80% occupancy.
+
+Forbidden: literal motif, decorative camera filler, fourth lens, generic black rectangle, full-width camera bar, case, rugged armour, floating part, melted edge, impossible thinness, copied competitor signature, pseudo text, sci-fi wallpaper, unsupported claim.

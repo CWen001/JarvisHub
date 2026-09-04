@@ -1,0 +1,14 @@
+{
+  "batch": "india-batch-04",
+  "kernelVersion": "0.4.0",
+  "question": "Does an 80% Functional Form / 20% Cultural Expression balance preserve mature mid-range phone form while retaining readable India character?",
+  "outputs": [
+    {"id": 1, "path": "01-textile-80-20.png", "status": "generated", "baseContract": "reject: output added a fourth camera lens beyond the fixed three-camera brief"},
+    {"id": 2, "path": "02-stone-inlay-80-20.png", "status": "generated", "baseContract": "pass"},
+    {"id": 3, "path": "03-architecture-80-20.png", "status": "generated", "baseContract": "pass"},
+    {"id": 4, "path": "04-monsoon-80-20.png", "status": "generated", "baseContract": "pass"}
+  ],
+  "userFeedback": "Overall the four concepts are acceptable. The remaining issue is presentation contrast: one or two backgrounds are too close to the phone colour, especially the red and dark concepts, so the silhouette does not separate clearly.",
+  "verdict": "accepted with a presentation correction",
+  "schemaLearning": "For product evaluation heroes, the backdrop must separate from the phone in both luminance and hue; avoid tone-on-tone backgrounds that weaken the silhouette."
+}

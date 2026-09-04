@@ -1,0 +1,69 @@
+{
+  "batch": "india-batch-07",
+  "schema_version": "0.6.0-candidate",
+  "motif": "Paisley / Boteh",
+  "design_score": 82,
+  "base_contract": 1,
+  "maturity": 18,
+  "industrial_design": 17,
+  "cultural_restraint": 15,
+  "aesthetic_coherence": 17,
+  "prompt_adherence": 15,
+  "verdict": "Pass — retain as a four-image learning batch",
+  "score_method": "Rounded category means across all four actual images; no image omitted and no output regenerated.",
+  "outputs": [
+    {
+      "id": 1,
+      "name": "Flow enclosure",
+      "path": "01-paisley-flow.png",
+      "score": 88,
+      "base_contract": "pass",
+      "evidence": [
+        "Current soft-square slab and coherent dual views",
+        "Clear three-lens hierarchy and precise hard-part junction",
+        "Full-to-tapered relationship is visible without literal Paisley"
+      ],
+      "limitation": "Front projection exposes the bottom edge; inset rear perimeter approaches a case-like reading."
+    },
+    {
+      "id": 2,
+      "name": "Internal order",
+      "path": "02-paisley-internal-order.png",
+      "score": 83,
+      "base_contract": "pass",
+      "evidence": [
+        "Integrated rounded crossbar reads as mature hardware architecture",
+        "Main-to-auxiliary-to-flash cadence is clear",
+        "Teal finish and warm backdrop separate well"
+      ],
+      "limitation": "The generated backdrop contains literal architectural silhouettes despite the exclusion; the all-over diagonal texture is broader than requested."
+    },
+    {
+      "id": 3,
+      "name": "Surface routing",
+      "path": "03-paisley-surface-routing.png",
+      "score": 78,
+      "base_contract": "pass",
+      "evidence": [
+        "Compact two-camera hierarchy is credible and separated from the finish field",
+        "Pomegranate-bronze CMF is restrained",
+        "Two views remain consistent"
+      ],
+      "limitation": "The mottled routed field resembles surface wear or decorative distressing rather than a precise material process."
+    },
+    {
+      "id": 4,
+      "name": "Edge cadence",
+      "path": "04-paisley-edge-cadence.png",
+      "score": 79,
+      "base_contract": "pass",
+      "evidence": [
+        "Three-camera hierarchy and colour-matched camera base are visually coherent",
+        "Moonstone blue body separates cleanly from the warm background",
+        "Overall phone identity is mature and quiet"
+      ],
+      "limitation": "The intended changing chamfer width is not visibly proven; cultural relationship is effectively absent at normal viewing size."
+    }
+  ],
+  "schema_learning": "Keep literal-copy exclusion and distance hierarchy. Add a carrier-legibility check: one abstract cultural relationship must be visibly inspectable at normal hero size, but must follow a precise physical zone or functional hierarchy. Avoid vague clear-coat or mottled fields that can read as wear, and do not let the cultural source determine the primary camera-enclosure silhouette by default."
+}
