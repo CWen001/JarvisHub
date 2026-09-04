@@ -14,7 +14,7 @@ vi.mock('./AgentWorkspace', () => ({
   AgentWorkspace: () => <div>Product timeline</div>,
 }))
 vi.mock('../ui/chat/AiChatDialog', () => ({
-  default: () => <div data-testid="native-chat-authority" />,
+  NativeChatAuthorityHost: () => <div data-testid="native-chat-authority" />,
 }))
 
 import { ProductWorkspaceHost } from './ProductWorkspaceHost'
@@ -64,5 +64,6 @@ describe('Product Workspace Host', () => {
 
     expect(screen.getByText('Product timeline')).toBeTruthy()
     expect(screen.getByTestId('native-chat-authority')).toBeTruthy()
+    expect(document.querySelector('.tc-ai-chat')).toBeNull()
   })
 })

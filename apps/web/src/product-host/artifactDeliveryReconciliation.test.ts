@@ -84,4 +84,15 @@ describe('Agent Workspace Artifact delivery reconciliation', () => {
     expect(result.timeline[0]?.assets).toEqual([])
     expect(result.run).toMatchObject({ status: 'failed', label: '本轮设计需要处理' })
   })
+
+  it('does not report completion when image generation failed but the chat transport completed', () => {
+    const result = reconcileArtifactDelivery({
+      timeline: [{ ...timeline[0]!, assets: [] }],
+      assets: [],
+      run: { ...run, status: 'succeeded', media: [{ nodeId: 'missing-image', status: 'failed', pending: false }] },
+    })
+
+    expect(result.timeline[0]?.assets).toEqual([])
+    expect(result.run).toMatchObject({ status: 'failed', label: '本轮设计需要处理' })
+  })
 })

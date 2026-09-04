@@ -1227,7 +1227,7 @@ function CanvasApp({
           />
         ) : (
           <div className="app-chat-engine-host">
-            <AiChatDialog className="app-ai-chat-dialog" surface="native" />
+            <AiChatDialog className="app-ai-chat-dialog" />
           </div>
         )}
       </BodyPortal>

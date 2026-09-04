@@ -8,6 +8,7 @@ const chatSource = fs.readFileSync(new URL('../ui/chat/AiChatDialog.tsx', import
 const agentWorkspaceSource = fs.readFileSync(new URL('./AgentWorkspace.tsx', import.meta.url), 'utf8')
 const productChatSource = fs.readFileSync(new URL('./ProductChat.tsx', import.meta.url), 'utf8')
 const appSource = fs.readFileSync(new URL('../App.tsx', import.meta.url), 'utf8')
+const productHostSource = fs.readFileSync(new URL('./ProductWorkspaceHost.tsx', import.meta.url), 'utf8')
 
 describe('Agent Workspace Design System', () => {
   it('uses one PDS light visual authority and excludes legacy visual directions', () => {
@@ -64,11 +65,12 @@ describe('Agent Workspace Design System', () => {
     expect(css).toMatch(/\.product-host-institution-lockup\s*>\s*small\s*\{[^}]*font-size:\s*14px[^}]*font-weight:\s*600/)
   })
 
-  it('renders Product-owned Agent presentation over a headless native authority seam', () => {
+  it('renders Product-owned Agent presentation without hidden native Chat presentation', () => {
     expect(agentWorkspaceSource).not.toContain('AiChatDialog')
     expect(agentWorkspaceSource).toContain('ProductChat')
-    expect(appSource).toContain('<AiChatDialog surface="agent-workspace" headless />')
-    expect(appSource).toContain('<AiChatDialog className="app-ai-chat-dialog" surface="native" />')
+    expect(productHostSource).toContain('<NativeChatAuthorityHost />')
+    expect(productHostSource).not.toContain('<AiChatDialog')
+    expect(appSource).toContain('<AiChatDialog className="app-ai-chat-dialog" />')
   })
 
   it('keeps Product timeline typography, focus, artifacts, and responsive geometry on Product-owned surfaces', () => {

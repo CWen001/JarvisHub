@@ -221,16 +221,12 @@ export function useNativeArtifactWorkspaceAdapter(input: Readonly<{
 }
 
 export function useNativeChatWorkspaceAdapter(input: Readonly<{
-  enabled: boolean
   authority: NativeChatWorkspaceAuthority
 }>): void {
   const authorityRef = React.useRef(input.authority)
   authorityRef.current = input.authority
 
-  React.useEffect(() => {
-    if (!input.enabled) return
-    return attachNativeChatAuthority({
-      execute: (command) => createNativeChatWorkspaceCommandExecutor(authorityRef.current)(command),
-    })
-  }, [input.enabled])
+  React.useEffect(() => attachNativeChatAuthority({
+    execute: (command) => createNativeChatWorkspaceCommandExecutor(authorityRef.current)(command),
+  }), [])
 }

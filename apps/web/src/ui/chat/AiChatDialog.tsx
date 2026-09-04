@@ -2588,17 +2588,17 @@ function RunTraceDisclosure({ children }: { children: React.ReactNode }) {
   )
 }
 
-type AiChatSurface = 'native' | 'agent-workspace'
+type NativeChatPresentation = 'native' | 'none'
 
-function ChatRuntimeController({
+export function NativeChatAuthorityHost({
   className,
-  surface = 'native',
-  headless = false,
+  presentation = 'none',
 }: {
   className?: string
-  surface?: AiChatSurface
-  headless?: boolean
+  presentation?: NativeChatPresentation
 }): JSX.Element | null {
+  const surface = presentation === 'native' ? 'native' : 'agent-workspace'
+  const headless = presentation === 'none'
   const cardRef = React.useRef<HTMLDivElement | null>(null)
   const initialLayoutPreference = React.useMemo(() => readAiChatLayoutPreference(), [])
   const [mode, setMode] = React.useState<'compact' | 'expanded' | 'maximized'>(initialLayoutPreference.mode)
@@ -5518,7 +5518,6 @@ function ChatRuntimeController({
   }, [onUploadReferenceFiles])
 
   useNativeChatWorkspaceAdapter({
-    enabled: surface === 'agent-workspace',
     authority: createNativeChatWorkspaceAuthority({
       activeTabId,
       currentProjectId,
@@ -5901,14 +5900,6 @@ function ChatRuntimeController({
 }
 
 /** One persistent Jarvis Chat engine with Workspace-specific presentation. */
-export default function AiChatDialog({
-  className,
-  surface = 'native',
-  headless = false,
-}: {
-  className?: string
-  surface?: AiChatSurface
-  headless?: boolean
-}): JSX.Element | null {
-  return <ChatRuntimeController className={className} surface={surface} headless={headless} />
+export default function AiChatDialog({ className }: { className?: string }): JSX.Element | null {
+  return <NativeChatAuthorityHost className={className} presentation="native" />
 }

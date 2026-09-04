@@ -1,5 +1,5 @@
 import React from 'react'
-import AiChatDialog from '../ui/chat/AiChatDialog'
+import { NativeChatAuthorityHost } from '../ui/chat/AiChatDialog'
 import { AgentWorkspace } from './AgentWorkspace'
 import {
   useAuthoritativeAgentWorkspaceRuntime,
@@ -45,7 +45,7 @@ function ProductWorkspaceSurface({
         railCollapsed={railCollapsed}
         onRailCollapsedChange={setRailCollapsed}
       />
-      <AiChatDialog surface="agent-workspace" headless />
+      <NativeChatAuthorityHost />
     </div>
   )
 }

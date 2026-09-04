@@ -98,7 +98,9 @@ function runFact(
     return Object.freeze({ status: 'running', label: '图片已生成，正在保存到项目', ...common })
   }
   if (evidence.status === 'running') return Object.freeze({ status: 'running', label: '设计任务正在进行', ...common })
-  if (evidence.status === 'failed') return Object.freeze({ status: 'failed', label: '本轮设计需要处理', ...common })
+  if (evidence.status === 'failed' || evidence.media.some((media) => media.status === 'failed')) {
+    return Object.freeze({ status: 'failed', label: '本轮设计需要处理', ...common })
+  }
   return Object.freeze({ status: 'succeeded', label: '本轮设计已经完成', ...common })
 }
 

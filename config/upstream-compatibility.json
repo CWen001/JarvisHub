@@ -233,6 +233,18 @@
       "warningChangedLines": 80
     },
     {
+      "path": "apps/web/index.html",
+      "classification": "integration-seam",
+      "purpose": "Expose Product entry document metadata without changing native runtime behavior",
+      "adapter": "Product Workspace Host",
+      "tests": [
+        "pnpm --filter @jarvishub/web build",
+        "pnpm --filter @jarvishub/web build:native"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 40
+    },
+    {
       "path": "apps/web/package.json",
       "classification": "integration-seam",
       "purpose": "Expose Product and native verification commands",
@@ -279,6 +291,30 @@
       ],
       "upstreamDisposition": "permanent",
       "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/HomePage.tsx",
+      "classification": "integration-seam",
+      "purpose": "Remove obsolete Product landing implementation from the upstream-native UI root",
+      "adapter": "Product Workspace Host",
+      "tests": [
+        "pnpm --filter @jarvishub/web exec vitest run src/product-host/ProductWorkspaceHost.test.tsx",
+        "pnpm --filter @jarvishub/web build:native"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 300
+    },
+    {
+      "path": "apps/web/src/ui/homePage.css",
+      "classification": "integration-seam",
+      "purpose": "Remove obsolete Product landing styles from the upstream-native UI root",
+      "adapter": "Product Workspace Host",
+      "tests": [
+        "pnpm --filter @jarvishub/web exec vitest run src/product-host/ProductWorkspaceHost.test.tsx",
+        "pnpm --filter @jarvishub/web build:native"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 1000
     },
     {
       "path": "apps/web/src/ui/AssetCenterPanel.tsx",
@@ -331,10 +367,10 @@
     {
       "path": "apps/web/src/ui/chat/AiChatDialog.tsx",
       "classification": "integration-seam",
-      "purpose": "Register mounted Native Chat Authority through one Product-owned Adapter Seam",
-      "adapter": "Agent Workspace Adapter",
+      "purpose": "Mount one shared Native Chat Authority with an optional native presentation adapter",
+      "adapter": "Native Chat Adapter",
       "tests": [
-        "pnpm --filter @jarvishub/web exec vitest run src/product-host/nativeChatWorkspaceAdapter.test.ts src/product-host/nativeChatCompatibility.contract.test.ts",
+        "pnpm --filter @jarvishub/web exec vitest run src/ui/chat/nativeChatAuthority.test.ts src/product-host/nativeChatWorkspaceAdapter.test.ts src/product-host/nativeChatCompatibility.contract.test.ts",
         "pnpm --filter @jarvishub/web build",
         "pnpm --filter @jarvishub/web build:native"
       ],
@@ -519,6 +555,29 @@
       ],
       "upstreamDisposition": "permanent",
       "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/nativeChatAuthority.test.ts",
+      "classification": "integration-seam",
+      "purpose": "Protect the single-lifecycle Native Chat Authority interface",
+      "adapter": "Native Chat Adapter",
+      "tests": [
+        "pnpm --filter @jarvishub/web exec vitest run src/ui/chat/nativeChatAuthority.test.ts"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/chat/nativeChatAuthority.ts",
+      "classification": "integration-seam",
+      "purpose": "Expose presentation-independent native Chat command execution and lifecycle availability",
+      "adapter": "Native Chat Adapter",
+      "tests": [
+        "pnpm --filter @jarvishub/web exec vitest run src/ui/chat/nativeChatAuthority.test.ts src/product-host/nativeChatWorkspaceAdapter.test.ts",
+        "pnpm --filter @jarvishub/web build:native"
+      ],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 100
     },
     {
       "path": "apps/web/src/ui/chat/nativeArtifactProjection.contract.test.ts",

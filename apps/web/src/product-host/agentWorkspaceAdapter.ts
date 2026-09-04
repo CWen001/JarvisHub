@@ -3,7 +3,7 @@ import { listRuntimeAgentSkills, listServerAssets, type ProjectDto, type Runtime
 import { useRFStore } from '../canvas/store'
 import { collectCanvasAssets } from '../ui/canvasAssetModel'
 import { peekAiChatTabsState } from '../ui/chat/chatTabs'
-import { useLiveChatRunStore } from '../ui/chat/liveChatRunStore'
+import { useLiveChatRunStore, type LiveToolCallRecord } from '../ui/chat/liveChatRunStore'
 import { createEmptyChatTabRuntime, useAiChatRuntimeStore, type ChatMessage, type ChatTabRuntimeState } from '../ui/chat/chatRuntimeStore'
 import { resolveSuccessfulToolSnapshotArtifacts } from '../ui/chat/mediaResultArtifactProjection'
 import { NATIVE_CHAT_NAVIGATION_CHANGED } from './nativeChatNavigation'
@@ -20,10 +20,10 @@ import {
   type AgentWorkspaceRuntimeAdapter,
 } from './agentWorkspaceRuntime'
 import {
-  executeAgentWorkspaceChatCommand,
-  isAgentWorkspaceChatIntegrationReady,
-  subscribeAgentWorkspaceChatIntegration,
-} from './agentWorkspaceChatIntegration'
+  executeNativeChatCommand,
+  isNativeChatAuthorityReady,
+  subscribeNativeChatAuthority,
+} from '../ui/chat/nativeChatAuthority'
 import { reconcileArtifactDelivery } from './artifactDeliveryReconciliation'
 import { installedVerticalSkills } from './installedVerticalSkills'
 import { selectRegisteredVerticalSkills } from './productHost'
@@ -168,14 +168,31 @@ function projectTimeline(messages: readonly ChatMessage[], nodes: readonly unkno
   })
 }
 
+function projectMediaEvidence(call: LiveToolCallRecord) {
+  if (call.media) return [{
+    nodeId: call.media.nodeId,
+    status: call.media.status,
+    pending: call.media.pending,
+  }]
+  if (call.status !== 'failed' || !/^canvas_(image|video)_/.test(call.toolName)) return []
+  const input = call.input && typeof call.input === 'object' && !Array.isArray(call.input)
+    ? call.input as Record<string, unknown>
+    : {}
+  return [{
+    nodeId: String(input.outputKey || input.nodeId || '').trim(),
+    status: 'failed' as const,
+    pending: false,
+  }]
+}
+
 function useAuthoritativeAgentWorkspaceFacts(input: AuthoritativeInput): AgentWorkspaceFacts {
   const nodes = useRFStore((state) => state.nodes)
   const runsBySessionKey = useLiveChatRunStore((state) => state.runsBySessionKey)
   const tabRuntimeById = useAiChatRuntimeStore((state) => state.tabRuntimeById)
   const chatReady = React.useSyncExternalStore(
-    subscribeAgentWorkspaceChatIntegration,
-    isAgentWorkspaceChatIntegrationReady,
-    isAgentWorkspaceChatIntegrationReady,
+    subscribeNativeChatAuthority,
+    isNativeChatAuthorityReady,
+    isNativeChatAuthorityReady,
   )
   const shouldRefreshAssetsContinuously = Object.values(runsBySessionKey).some((run) => run.status === 'running')
   const [serverAssets, setServerAssets] = React.useState<ServerAssetDto[]>([])
@@ -307,11 +324,7 @@ function useAuthoritativeAgentWorkspaceFacts(input: AuthoritativeInput): AgentWo
         todoItems: currentRun.todoItems,
         media: Object.values(currentRun.toolCallsByTurn)
           .flat()
-          .flatMap((call) => call.media ? [{
-            nodeId: call.media.nodeId,
-            status: call.media.status,
-            pending: call.media.pending,
-          }] : []),
+          .flatMap(projectMediaEvidence),
       } : null,
     })
     const pendingReferences = projectAgentWorkspacePendingReferences(tabRuntime)
@@ -378,7 +391,7 @@ export function useAuthoritativeAgentWorkspaceRuntime(
         if (command.type === 'chat.navigate') {
           const project = current.projects.find((candidate) => candidate.id === command.command.projectId)
           if (project && project.id !== String(current.currentProject?.id || '')) current.onSelectProject(project)
-          await executeAgentWorkspaceChatCommand(command.command.type === 'new-session'
+          await executeNativeChatCommand(command.command.type === 'new-session'
             ? { type: 'session.create', projectId: command.command.projectId }
             : { type: 'session.select', projectId: command.command.projectId, sessionId: command.command.sessionId })
           return
@@ -410,7 +423,7 @@ export function useAuthoritativeAgentWorkspaceRuntime(
           return
         }
         if (command.type === 'asset.modify' || command.type === 'asset.reference') {
-          await executeAgentWorkspaceChatCommand({
+          await executeNativeChatCommand({
             type: 'reference.add',
             reference: {
               kind: command.asset.kind,
@@ -426,7 +439,7 @@ export function useAuthoritativeAgentWorkspaceRuntime(
           return
         }
         if (command.type === 'chat.draft.set') {
-          await executeAgentWorkspaceChatCommand({ type: 'draft.set', text: command.text })
+          await executeNativeChatCommand({ type: 'draft.set', text: command.text })
           return
         }
         if (command.type === 'chat.request.submit') {
@@ -436,7 +449,7 @@ export function useAuthoritativeAgentWorkspaceRuntime(
           const beforeRunId = beforeTab?.sessionKey
             ? useLiveChatRunStore.getState().runsBySessionKey[beforeTab.sessionKey]?.runId
             : null
-          await executeAgentWorkspaceChatCommand({ type: 'request.submit' })
+          await executeNativeChatCommand({ type: 'request.submit' })
           const afterTabs = peekAiChatTabsState(projectId)
           const afterTab = afterTabs?.tabs.find((tab) => tab.id === afterTabs.activeTabId)
           const run = afterTab?.sessionKey
@@ -448,15 +461,15 @@ export function useAuthoritativeAgentWorkspaceRuntime(
           return
         }
         if (command.type === 'chat.request.interrupt') {
-          await executeAgentWorkspaceChatCommand({ type: 'request.interrupt' })
+          await executeNativeChatCommand({ type: 'request.interrupt' })
           return
         }
         if (command.type === 'chat.references.upload') {
-          await executeAgentWorkspaceChatCommand({ type: 'references.upload', files: command.files })
+          await executeNativeChatCommand({ type: 'references.upload', files: command.files })
           return
         }
         if (command.type === 'chat.reference.remove') {
-          await executeAgentWorkspaceChatCommand({ type: 'reference.remove', url: command.url })
+          await executeNativeChatCommand({ type: 'reference.remove', url: command.url })
           updateActiveProjectChatRuntime(
             String(current.currentProject?.id || '').trim(),
             (runtime) => removeAgentWorkspacePendingReference(runtime, command.url),
@@ -464,11 +477,11 @@ export function useAuthoritativeAgentWorkspaceRuntime(
           return
         }
         if (command.type === 'chat.decision.answer') {
-          await executeAgentWorkspaceChatCommand({ type: 'decision.answer', option: command.option })
+          await executeNativeChatCommand({ type: 'decision.answer', option: command.option })
           return
         }
         if (command.type === 'chat.skill.select') {
-          await executeAgentWorkspaceChatCommand({ type: 'skill.select', skill: command.skill })
+          await executeNativeChatCommand({ type: 'skill.select', skill: command.skill })
           return
         }
         current.onOpenProfessionalWorkspace(command.nodeId)
