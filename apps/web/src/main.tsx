@@ -10,7 +10,12 @@ async function startInstalledProduct(): Promise<void> {
   bootstrapJarvisApp(<App productBrand={sharedProductBrand} />)
 }
 
-void startInstalledProduct().catch((error: unknown) => {
+// THROWAWAY: render landing variants on the existing / route without backend startup.
+if (import.meta.env.DEV && new URLSearchParams(window.location.search).has('variant')) {
+  void import('./product-host/landing/LandingPrototype').then(({ default: Prototype }) => {
+    bootstrapJarvisApp(<Prototype />)
+  })
+} else void startInstalledProduct().catch((error: unknown) => {
   const message = error instanceof Error ? error.message : 'Vertical Product Host installation failed'
   bootstrapJarvisApp(
     <main className="product-installation-error" role="alert">

@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "./scripts/dev.sh local",
     "dev:web": "pnpm --filter @jarvishub/web dev",
+    "prototype:landing": "pnpm --filter @jarvishub/web dev --host 127.0.0.1 --port 5186 --strictPort --open '/?variant=A'",
     "dev:api": "pnpm --filter @jarvishub/api dev",
     "dev:api:stable": "pnpm --filter @jarvishub/api dev:stable",
     "dev:agents": "pnpm --filter agents dev",
