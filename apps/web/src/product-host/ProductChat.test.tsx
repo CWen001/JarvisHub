@@ -99,6 +99,52 @@ describe('Product Chat Interaction Continuity', () => {
     expect(onIntent).toHaveBeenLastCalledWith({ type: 'chat.set-draft', text: '你' })
   })
 
+  it('clears a submitted draft without restoring the stale authoritative snapshot', () => {
+    const onIntent = vi.fn()
+    const initial: AgentWorkspaceRuntimeSnapshot = {
+      ...base,
+      composer: { ...base.composer, draft: '表盘增加太阳纹', sending: false },
+    }
+    const rendered = render(<MantineProvider><ProductChat view={initial} onIntent={onIntent} /></MantineProvider>)
+    const input = screen.getByRole('textbox') as HTMLTextAreaElement
+
+    fireEvent.click(screen.getByRole('button', { name: '发送' }))
+    expect(onIntent).toHaveBeenLastCalledWith({ type: 'chat.submit' })
+    expect(input.value).toBe('')
+
+    rendered.rerender(<MantineProvider><ProductChat view={{
+      ...initial,
+      revision: 2,
+      composer: { ...initial.composer, sending: true },
+    }} onIntent={onIntent} /></MantineProvider>)
+    expect(input.value).toBe('')
+  })
+
+  it('keeps vertical Skills at the top level and folds default Skills into Auto', async () => {
+    const onIntent = vi.fn()
+    render(<MantineProvider><ProductChat view={{
+      ...base,
+      composer: {
+        ...base.composer,
+        sending: false,
+        availableSkills: [
+          { id: 'default-1', key: 'research', name: 'Research' },
+          { id: 'watch-1', key: 'watch-design-kernel', name: 'Watch Design Kernel' },
+          { id: 'tablet-1', key: 'tablet-design-kernel', name: 'Tablet Design Kernel' },
+        ],
+      },
+    }} onIntent={onIntent} /></MantineProvider>)
+
+    fireEvent.click(screen.getByRole('button', { name: '选择技能' }))
+    expect(await screen.findByRole('menuitem', { name: 'Watch Design Kernel' })).toBeTruthy()
+    expect(screen.getByRole('menuitem', { name: 'Tablet Design Kernel' })).toBeTruthy()
+    expect(screen.queryByRole('menuitem', { name: 'Research' })).toBeNull()
+
+    fireEvent.click(screen.getByRole('menuitem', { name: '自动' }))
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Research' }))
+    expect(onIntent).toHaveBeenLastCalledWith({ type: 'chat.select-skill', skill: { id: 'default-1', key: 'research', name: 'Research' } })
+  })
+
   it('renders Ask User Input as an ordinary full-length chat turn', () => {
     const onIntent = vi.fn()
     render(<MantineProvider><ProductChat view={{

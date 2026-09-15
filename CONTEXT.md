@@ -4,6 +4,30 @@ A shared professional-design product mainline built on JarvisHub's upstream-deri
 
 ## Language
 
+**Professional Design Workbench**:
+The category-neutral host in which portable professional Design Skills developed and validated in Pi or other supported hosts can perform complete design and generation work, with resulting Artifacts available directly through Jarvis assets, Canvas nodes, connections, and visualization. Professional design reasoning belongs to the Skills rather than category-specific host workflows; the historical Watch name does not restrict which design capabilities the Workbench can host.
+_Avoid_: Watch-only application, Phone-specific workflow, external-generation-only asset viewer, host-owned design methodology
+
+**Skill Development Validation**:
+The package checks, batch experiments, and regression comparisons used in a development host to establish a mature professional Skill version before Workbench use. It is distinct from checks on the current request's generation and persistence results and from any Artifact Review required by the active Skill; ordinary design requests do not repeat the development validation process.
+_Avoid_: Per-request package validation, repeated development batch, skipped runtime failure checks, automatic removal of image review
+
+**Design Iteration Case**:
+A client-facing, interactive case study entered from the Landing Page that turns recorded design experiments into a curated evidence narrative: exploration question, Prompt and Schema rationale, Comparison Board, internal Evaluation, and the learning carried forward. Phone and Watch cases have equal standing and evidence depth, with a selected presentation route and expandable source records; quantitative comparisons apply only where a comparable rubric exists. It demonstrates professional design and engineering iteration without presenting internal scores as market validation; unfamiliar cultural sources use a plain Chinese name followed by the original English term.
+_Avoid_: PPT deck, image gallery, raw experiment log, objective consumer score, unexplained transliteration
+
+**Applied Validation**:
+A separately presented Learning Batch that applies an established design method to a new product role or stronger cultural-expression boundary without being inserted into the causal Schema-evolution mainline. It retains source provenance and qualitative Base Contract evidence without inventing a retrospective aggregate score.
+_Avoid_: Renumbered mainline batch, retroactive score, hidden side experiment
+
+**Design Quality Ramp-up**:
+The early method-development stage that uses repeated comparison and scoring to raise baseline design quality to a level suitable for substantive human design discussion. Scores guide this stage rather than define the goal of subsequent design work.
+_Avoid_: Permanent score optimization, score as the product goal
+
+**Thematic Experiment**:
+A focused exploration using an established design method to investigate a cultural source, product role, form relationship, or series direction. Its organizing question is the design topic and the choices it makes discussable, rather than improving a shared leaderboard score; related revisions retain their actual relationships.
+_Avoid_: Next scored batch, automatic version upgrade, unrelated image collection
+
 **Jarvis Core**:
 The upstream-derived Agent foundation and sole **Execution Authority**. It owns Harness execution, Agent and Sub-agent orchestration, Tool lifecycle, Canvas capabilities, context management, recovery, provider dispatch, persistence, and tracing. Product verticals consume it through stable extension seams and do not replace its behavior.
 _Avoid_: Watch backend, product-specific Harness, code snapshot
@@ -144,12 +168,48 @@ _Avoid_: Skill package, Agent Harness, frontend theme, prompt collection, provid
 The Portable Design Kernel for professional smart-watch concept development and sole Design Authority in this product fork. Its Product Schemas, knowledge semantics, interaction content, Artifact requirements, and quality rules remain authoritative regardless of the Harness used to execute them.
 _Avoid_: Watch Agent Harness, one image BaseModel alone, Watch Design Skill
 
+**Watch Base Contract**:
+The stable visible-validity requirements every Watch Concept Image must satisfy, including unmistakable product identity, complete physical continuity, and preservation of accepted user constraints.
+_Avoid_: Taste checklist, style direction, Provider prompt
+
+**Design Judgment Schema**:
+The versioned, evidence-derived pre-generation relationship model that resolves watch proportion, form, CMF, craft composition, detail hierarchy, and aesthetic trade-offs into the request-specific Design State before Prompt authorship. It uses fixed values only for invariants, controlled choices with a precise-alternative escape, bounded composition counts, role-derived defaults, relational quantities, and explicit part relationships. It generates linked design decisions; it never evaluates rendered pixels or runs as a separate LLM call.
+_Avoid_: Post-generation judge, Prompt suffix, checklist, atom collection, universal taste score, separate Agent call
+
+**Physical Functional Scale**:
+A permanent cadence of short non-semantic index marks machined, engraved, etched, or inlaid into a Watch's non-display metal inner carrier, bezel, or rehaut. It remains part of the industrial design when the replaceable electronic watch face changes and never relies on generated numerals, characters, labels, or screen graphics.
+_Avoid_: Screen tick ring, decorative digital scale, tiny generated numbers, fake typography, pseudo-metrics
+
+**Watch Evaluation Set**:
+A stable set of varied Watch briefs and revision requests used to compare Design Judgment Schema versions against the same design demands.
+_Avoid_: Demo gallery, cherry-picked prompt set, production backlog
+
+**Diagnostic Batch**:
+A one-shot pass across the Watch Evaluation Set under one contract version, with no candidate selection or automatic retry, used to expose recurring first failures.
+_Avoid_: Candidate gallery, best-of-N generation, production selection
+
+**Contrast Batch**:
+A small same-brief comparison that varies one unresolved design judgment after a Diagnostic Batch identifies it, allowing the user to judge visible alternatives without changing several hypotheses at once.
+_Avoid_: Random variants, moodboard, unrestricted exploration batch
+
+**Skill Learning Cycle**:
+The evidence loop of Diagnostic Batch, targeted Contrast Batch, one justified contract change, and regression against the Watch Evaluation Set.
+_Avoid_: Prompt tweaking session, automatic self-improvement, Provider optimization
+
+**Design Feedback Routing**:
+The classification of visual feedback by authority and reuse: request-specific preferences remain in Design State, visible validity failures become Watch Base Contract candidates, and recurring aesthetic relationships become Design Judgment Schema candidates.
+_Avoid_: Writing every preference into the Skill, undifferentiated feedback log, automatic rule extraction
+
+**Contract Promotion**:
+The admission of one candidate rule into a new contract version after a Contrast Batch receives user visual approval and regression against the Watch Evaluation Set reveals no material loss.
+_Avoid_: Immediate Prompt patch, multi-rule rewrite, Critic-only approval, silent contract mutation
+
 **Design Authority**:
 The exclusive authority over what constitutes a valid design state, relevant knowledge, meaningful human design decisions, required Artifact evidence, and professional quality. It belongs to the Portable Design Kernel; a Harness may reason over and persist Kernel-defined facts but cannot redefine their semantics.
 _Avoid_: Execution authority, provider orchestration, Harness prompt behavior
 
 **Design State**:
-The Kernel's semantic interpretation of accepted product decisions and unresolved tensions for the current design turn. The Jarvis Adapter does not force it into a standalone persistent object: accepted choices remain in native Chat, while the executed Prompt, `generationContext`, Knowledge Evidence, Artifact node, Trace, and Flow versions preserve the observable result. The Kernel owns the meaning and transformation rules; Jarvis owns every persisted fact.
+The Kernel's request-specific set of accepted decisions, unresolved tensions, and concrete pre-generation resolutions derived from the Design Judgment Schema. Before Prompt authorship, it is expressed through one compact internal template whose lines are concretely resolved or explicitly non-applicable. The Jarvis Adapter does not force it into a standalone persistent object: accepted choices remain in native Chat, while the executed Prompt, `generationContext`, Knowledge Evidence, Artifact node, Trace, and Flow versions preserve the observable result. The Kernel owns the meaning and transformation rules; Jarvis owns every persisted fact.
 _Avoid_: Dedicated Design State node, frontend state, separate design-direction entity, custom Watch database, custom Canvas node type, parallel version system
 
 **Jarvis Flow**:
@@ -157,16 +217,16 @@ The native Jarvis work scope used directly as one coherent design direction insi
 _Avoid_: Design Direction entity, Kernel branch, frontend workspace record, cross-Flow Design State
 
 **Design Dialogue**:
-A lightweight professional conversation owned by the active Vertical Design Extension. It applies the Skill's professional knowledge through concise proposals, native Ask User Input, and ordinary follow-up rather than exposing a questionnaire, knowledge dump, or separate interaction engine; detailed rationale appears only on request or when needed to expose a real conflict, risk, or unverifiable claim.
-_Avoid_: Separate interview engine, persisted decision tree, mandatory category question, strategy-card workflow, fixed confirmation ceremony, proactive knowledge dump, frontend wizard, custom Tool schema
+A lightweight professional conversation owned by the active Vertical Design Extension. A new direction normally uses two Design Direction Turns and at most three; a local revision uses at least one and at most two; one dialogue covers a same-direction batch, while an explicit waiver still permits immediate generation.
+_Avoid_: Separate interview engine, persisted decision tree, exhaustive questionnaire, one question per Provider call, unlimited interview, proactive knowledge dump, frontend wizard, custom Tool schema
 
 **Design Direction Turn**:
-The default-required, user-waivable professional turn before each Watch, Tablet, or Phone image-generation request reaches a Provider. The Agent asks one task-appropriate question with three concise clickable directions by default, marks its recommendation, and continues after one clicked or free-text reply; a second question is permitted only for a real conflict, while an explicit request to use the recommendation or generate without discussion waives the turn.
-_Avoid_: Grill in user-facing copy, one turn per Provider call, multi-step questionnaire, independent style configurator, mandatory image search, repeated confirmation, keyword allowlist
+The default-required, user-waivable professional turn before each Watch, Tablet, or Phone image-generation request reaches a Provider. The Agent states a concise professional reading and the request's highest-leverage design tension, then offers three visually testable strategies with explicit trade-offs, marks its recommendation, and accepts either a click or free text.
+_Avoid_: Grill in user-facing copy, generic style menu, hidden rationale, one turn per Provider call, independent style configurator, mandatory image search, repeated confirmation, keyword allowlist
 
 **Generation Readiness**:
-A Kernel judgment that the current brief and accepted Design State contain enough coherent professional truth to produce the requested Artifact without silently inventing a consequential decision. For Watch, Tablet, and Phone image generation it also requires a completed or explicitly waived Design Direction Turn; it does not require a questionnaire, fixed step count, or exhaustive uncertainty review.
-_Avoid_: Fixed questionnaire completion, asking about every uncertainty, provider availability, frontend step counter, hidden generation without direction alignment
+A Kernel judgment that the current brief and accepted Design State contain an accepted design thesis, three to five visible decisions, explicit preservation and prohibition constraints, and no unresolved consequential conflict. Unless explicitly waived, readiness also requires the minimum Design Dialogue depth for the request type; remaining non-consequential detail belongs to professional defaults.
+_Avoid_: Schema completion, asking about every uncertainty, provider availability, frontend step counter, fixed rounds as proof of readiness, hidden generation without direction alignment
 
 **Generation Authorization**:
 The user's explicit request to produce an Artifact, including ordinary product verbs such as design, make, generate, draw, render, or create a concept image. For Watch, Tablet, and Phone, the request authorizes the Design Direction Turn and the reply authorizes Provider execution; an explicit instruction to use the recommendation or proceed without discussion authorizes immediate execution. Exploratory requests authorize only conversation, visible user constraints remain binding for Media, and professional knowledge selection, Skill loading, Prompt authorship, and Tool execution remain autonomous Jarvis responsibilities.
@@ -177,8 +237,12 @@ A generation request that establishes or materially changes product identity or 
 _Avoid_: Every Provider call, fixed strategy composition, treating a minor revision as a new Flow, repeating the complete design interview
 
 **Artifact Review**:
-One concise evaluation by the existing Jarvis Critic of the actual persisted pixels against Skill-owned quality rules. Every newly generated Watch Concept Image, Tablet Concept Sketch, and Phone Concept Image receives this review in the same request after Media succeeds; the Agent delivers the image whether it passes or is rejected, alongside the judgment, two or three visible evidence points, and one suggested next step so the professional user can continue the discussion naturally. The result remains in native Chat, Critic output, and Trace: it creates no Artifact quality field, frontend state, retry loop, or automatic replacement. Later derivative or unsupported Artifact types follow their Skill-defined policy.
-_Avoid_: Prompt-only approval, full checklist by default, automatic retry loop, hidden or discarded rejection, Media self-review, frontend evaluator, custom vertical Critic runtime
+An evaluation of actual generated pixels whose necessity, criteria, and delivery requirements belong to the active professional Skill or an explicit user request, rather than a Workbench-wide category rule. The host supplies the available review capability without adding duplicate professional review rounds; reviewed images remain available with their judgment and evidence, and rejection alone never authorizes automatic replacement.
+_Avoid_: Aesthetic preference score, Prompt-only approval, development validation, host-imposed extra review, automatic retry loop, hidden rejection, frontend evaluator, custom vertical Critic runtime
+
+**Visual Learning Review**:
+The user's lightweight comparative judgment over an actual Diagnostic Batch or Contrast Batch: best or none, first reason, and what to preserve or change. The Agent may translate this free-form judgment into proposed Design Judgment Schema evidence, but cannot replace the user's aesthetic authority with Critic scoring.
+_Avoid_: Survey form, universal beauty score, Agent-selected winner, Critic-owned taste, raw schema editing
 
 **Professional Workspace**:
 The complete upstream-native Jarvis Canvas revealed on explicit user request, with Chat retained and the current Flow and node selection preserved. Its structure, styling, behavior, and update path remain untouched by the Product View; only the Workspace Integration Seam may add the reciprocal Agent Workspace action.

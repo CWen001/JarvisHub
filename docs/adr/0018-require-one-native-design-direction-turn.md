@@ -1,5 +1,6 @@
 ---
-status: accepted
+status: superseded
+superseded-by: 0019-use-skill-owned-design-with-minimal-host-instructions
 supersedes:
   - 0017-keep-vertical-design-dialogue-inside-native-skills
 ---

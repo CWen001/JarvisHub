@@ -1,0 +1,10 @@
+{
+  "baseModel": "watch-base-model:concept-image@1.0.3",
+  "catalog": "watch-knowledge-catalog@0.2.0",
+  "atoms": [
+    "watch-atom:watch-mass-close-to-wrist@sha256:3040f824583bc46ab3bb131b65f9f8df1eed2d86646e9e1e8ff55ff88777bb4f",
+    "watch-atom:watch-small-wrist-articulation@sha256:4617708934a1d0a2e59ed3855c8362f440c1b06790b7f45e8d2667cd8ca66b10",
+    "watch-atom:watch-material-zoning-purpose@sha256:f6ad7222ffc44c364212f706cb9e5c5dc9e0960057fefabf91447da3b7ae496d",
+    "watch-atom:watch-strap-material-context@sha256:d5ae9a2374638a414336bd4cde8311915b863236481bda26ab2f61960ff96965"
+  ]
+}

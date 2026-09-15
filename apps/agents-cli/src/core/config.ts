@@ -8,10 +8,9 @@ export const DEFAULT_MAX_ALLOWED_TOOLS = 128;
 export const MAX_ALLOWED_TOOLS_HARD_LIMIT = 1024;
 
 const DEFAULT_CONFIG: AgentConfig = {
-  apiBaseUrl: "https://right.codes/codex/v1",
+  apiBaseUrl: "https://api.deepseek.com",
   apiKey: "",
-  // model: "gpt-5.3-codex",
-  model: "gpt-5.5",
+  model: "deepseek-flash",
   apiStyle: "responses",
   stream: true,
   memoryDir: ".agents/memory",
@@ -32,6 +31,8 @@ export function loadConfig(cwd: string): AgentConfig {
   const globalDir = getAgentsHomeDir();
   loadDotEnv(globalDir);
   loadDotEnv(cwd);
+  // pnpm starts the bridge in apps/agents-cli; shared runtime settings live at the workspace root.
+  if (workspaceRoot !== cwd) loadDotEnv(workspaceRoot);
   const globalConfigPath = path.join(globalDir, "agents.config.json");
   const configPath = path.join(cwd, "agents.config.json");
   let globalConfig: Partial<AgentConfig> = {};

@@ -1,0 +1,11 @@
+{
+  "baseModel": "watch-base-model:concept-image@1.0.5",
+  "catalog": "watch-knowledge-catalog@0.2.0",
+  "atoms": [
+    "watch-atom:watch-glance-priority@sha256:d3d46a7ef5c042ce3ae6a26d4f82cd9b486458711e7726f910f9121cd8689860",
+    "watch-atom:watch-touch-target-spacing@sha256:e90aac6b5d1fb7a03331add4c244c91f8fe19cc9f7233035b3b8d70218f3d5bb",
+    "watch-atom:watch-motion-alternative@sha256:a0daea530c6e7d27fa74762111de5d67427f1bf7b703deadd162b52f8538cf3f",
+    "watch-atom:watch-accessibility-multimodal@sha256:1e8169bab98dc09452d5cdfb10a0bc1747b1e4a17461983957ad20821c0a7cbd",
+    "watch-atom:watch-small-wrist-articulation@sha256:4617708934a1d0a2e59ed3855c8362f440c1b06790b7f45e8d2667cd8ca66b10"
+  ]
+}

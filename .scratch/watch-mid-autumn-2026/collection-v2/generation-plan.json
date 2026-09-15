@@ -1,0 +1,152 @@
+[
+  {
+    "index": 1,
+    "family": "月晕圆形",
+    "fit": "standard",
+    "prompt": "01-lunar-halo-standard.txt",
+    "output": "01-lunar-halo-standard.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-material-zoning-purpose@sha256:f6ad7222ffc44c364212f706cb9e5c5dc9e0960057fefabf91447da3b7ae496d",
+      "watch-atom:watch-finish-hierarchy@sha256:c0a92334357b1172ce653dab17198363165462d401eff39ae190b60dee7b7871",
+      "watch-atom:watch-seam-fastener-legibility@sha256:6b383e2bec93c11212a2982ecd84b85b2b552abe9f50c76ce4546055002b2aaf"
+    ]
+  },
+  {
+    "index": 2,
+    "family": "月晕圆形",
+    "fit": "small",
+    "prompt": "02-lunar-halo-small.txt",
+    "output": "02-lunar-halo-small.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-mass-close-to-wrist@sha256:3040f824583bc46ab3bb131b65f9f8df1eed2d86646e9e1e8ff55ff88777bb4f",
+      "watch-atom:watch-small-wrist-articulation@sha256:4617708934a1d0a2e59ed3855c8362f440c1b06790b7f45e8d2667cd8ca66b10",
+      "watch-atom:watch-seam-fastener-legibility@sha256:6b383e2bec93c11212a2982ecd84b85b2b552abe9f50c76ce4546055002b2aaf"
+    ]
+  },
+  {
+    "index": 3,
+    "family": "弦月柔方形",
+    "fit": "standard",
+    "prompt": "03-crescent-soft-square-standard.txt",
+    "output": "03-crescent-soft-square-standard.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-material-zoning-purpose@sha256:f6ad7222ffc44c364212f706cb9e5c5dc9e0960057fefabf91447da3b7ae496d",
+      "watch-atom:watch-finish-hierarchy@sha256:c0a92334357b1172ce653dab17198363165462d401eff39ae190b60dee7b7871",
+      "watch-atom:watch-seam-fastener-legibility@sha256:6b383e2bec93c11212a2982ecd84b85b2b552abe9f50c76ce4546055002b2aaf"
+    ]
+  },
+  {
+    "index": 4,
+    "family": "弦月柔方形",
+    "fit": "small",
+    "prompt": "04-crescent-soft-square-small.txt",
+    "output": "04-crescent-soft-square-small.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-mass-close-to-wrist@sha256:3040f824583bc46ab3bb131b65f9f8df1eed2d86646e9e1e8ff55ff88777bb4f",
+      "watch-atom:watch-small-wrist-articulation@sha256:4617708934a1d0a2e59ed3855c8362f440c1b06790b7f45e8d2667cd8ca66b10",
+      "watch-atom:watch-seam-fastener-legibility@sha256:6b383e2bec93c11212a2982ecd84b85b2b552abe9f50c76ce4546055002b2aaf"
+    ]
+  },
+  {
+    "index": 5,
+    "family": "潮汐横椭圆形",
+    "fit": "standard",
+    "prompt": "05-tidal-ellipse-standard.txt",
+    "output": "05-tidal-ellipse-standard.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-material-zoning-purpose@sha256:f6ad7222ffc44c364212f706cb9e5c5dc9e0960057fefabf91447da3b7ae496d",
+      "watch-atom:watch-finish-hierarchy@sha256:c0a92334357b1172ce653dab17198363165462d401eff39ae190b60dee7b7871",
+      "watch-atom:watch-seam-fastener-legibility@sha256:6b383e2bec93c11212a2982ecd84b85b2b552abe9f50c76ce4546055002b2aaf"
+    ]
+  },
+  {
+    "index": 6,
+    "family": "潮汐横椭圆形",
+    "fit": "small",
+    "prompt": "06-tidal-ellipse-small.txt",
+    "output": "06-tidal-ellipse-small.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-mass-close-to-wrist@sha256:3040f824583bc46ab3bb131b65f9f8df1eed2d86646e9e1e8ff55ff88777bb4f",
+      "watch-atom:watch-small-wrist-articulation@sha256:4617708934a1d0a2e59ed3855c8362f440c1b06790b7f45e8d2667cd8ca66b10",
+      "watch-atom:watch-seam-fastener-legibility@sha256:6b383e2bec93c11212a2982ecd84b85b2b552abe9f50c76ce4546055002b2aaf"
+    ]
+  },
+  {
+    "index": 7,
+    "family": "桂影柔八角形",
+    "fit": "standard",
+    "prompt": "07-osmanthus-octagon-standard.txt",
+    "output": "07-osmanthus-octagon-standard.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-material-zoning-purpose@sha256:f6ad7222ffc44c364212f706cb9e5c5dc9e0960057fefabf91447da3b7ae496d",
+      "watch-atom:watch-finish-hierarchy@sha256:c0a92334357b1172ce653dab17198363165462d401eff39ae190b60dee7b7871",
+      "watch-atom:watch-seam-fastener-legibility@sha256:6b383e2bec93c11212a2982ecd84b85b2b552abe9f50c76ce4546055002b2aaf"
+    ]
+  },
+  {
+    "index": 8,
+    "family": "桂影柔八角形",
+    "fit": "small",
+    "prompt": "08-osmanthus-octagon-small.txt",
+    "output": "08-osmanthus-octagon-small.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-mass-close-to-wrist@sha256:3040f824583bc46ab3bb131b65f9f8df1eed2d86646e9e1e8ff55ff88777bb4f",
+      "watch-atom:watch-small-wrist-articulation@sha256:4617708934a1d0a2e59ed3855c8362f440c1b06790b7f45e8d2667cd8ca66b10",
+      "watch-atom:watch-seam-fastener-legibility@sha256:6b383e2bec93c11212a2982ecd84b85b2b552abe9f50c76ce4546055002b2aaf"
+    ]
+  },
+  {
+    "index": 9,
+    "family": "夜阑长方形",
+    "fit": "standard",
+    "prompt": "09-night-spine-rectangle-standard.txt",
+    "output": "09-night-spine-rectangle-standard.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-material-zoning-purpose@sha256:f6ad7222ffc44c364212f706cb9e5c5dc9e0960057fefabf91447da3b7ae496d",
+      "watch-atom:watch-finish-hierarchy@sha256:c0a92334357b1172ce653dab17198363165462d401eff39ae190b60dee7b7871",
+      "watch-atom:watch-seam-fastener-legibility@sha256:6b383e2bec93c11212a2982ecd84b85b2b552abe9f50c76ce4546055002b2aaf"
+    ]
+  },
+  {
+    "index": 10,
+    "family": "夜阑长方形",
+    "fit": "small",
+    "prompt": "10-night-spine-rectangle-small.txt",
+    "output": "10-night-spine-rectangle-small.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-mass-close-to-wrist@sha256:3040f824583bc46ab3bb131b65f9f8df1eed2d86646e9e1e8ff55ff88777bb4f",
+      "watch-atom:watch-small-wrist-articulation@sha256:4617708934a1d0a2e59ed3855c8362f440c1b06790b7f45e8d2667cd8ca66b10",
+      "watch-atom:watch-seam-fastener-legibility@sha256:6b383e2bec93c11212a2982ecd84b85b2b552abe9f50c76ce4546055002b2aaf"
+    ]
+  }
+]

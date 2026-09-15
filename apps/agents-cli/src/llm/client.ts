@@ -764,6 +764,7 @@ export class LLMClient implements LLMAdapter {
 
   private async safeFetch(url: string, init: RequestInit): Promise<SafeFetchResult> {
     const timeoutMs = parseTimeoutMs(process.env.AGENTS_REQUEST_TIMEOUT_MS);
+    const headersTimeoutMs = parsePositiveInt(process.env.AGENTS_RESPONSE_HEADERS_TIMEOUT_MS, 30_000);
     const retries = parseRetryCount(process.env.AGENTS_FETCH_RETRIES);
     let lastError: unknown;
     const candidateUrls = buildCandidateUrls(url);
@@ -771,20 +772,33 @@ export class LLMClient implements LLMAdapter {
     for (const requestUrl of candidateUrls) {
       for (let attempt = 0; attempt <= retries; attempt += 1) {
         const signal = buildFetchAbortSignal(timeoutMs, init.signal ?? null);
+        const headersController = new AbortController();
+        const headersTimer = setTimeout(() => {
+          headersController.abort(new Error(`上游 LLM 在 ${headersTimeoutMs}ms 内未返回首个 HTTP 响应，已停止等待；未自动重试。`));
+        }, headersTimeoutMs);
+        const requestSignal = signal.signal
+          ? AbortSignal.any([signal.signal, headersController.signal])
+          : headersController.signal;
         let returnedResponse = false;
         try {
-          const initWithSignal: RequestInit = signal.signal
-            ? { ...init, signal: signal.signal }
-            : { ...init };
+          const initWithSignal: RequestInit = { ...init, signal: requestSignal };
           const response = await wireTraceFetch(this.wireTraceClientKind, requestUrl, initWithSignal);
           returnedResponse = true;
           return {
             response,
-            signal: signal.signal,
+            signal: requestSignal,
             cleanup: signal.cleanup,
           };
         } catch (error) {
           lastError = error;
+          // A deadline/cancellation is terminal, even if its message contains "TIMEOUT".
+          // Retrying a dispatched LLM POST can duplicate work and multiply the wait.
+          if (requestSignal.aborted) {
+            throw Object.assign(wrapFetchError(error, url, this.config.apiBaseUrl, timeoutMs, attempt), {
+              // AgentLoop retries llm_fetch_failed too; keep deadlines terminal across both layers.
+              code: init.signal?.aborted ? "llm_request_aborted" : "llm_request_timeout",
+            });
+          }
           if (!isRetryableFetchError(error) || attempt >= retries) {
             break;
           }
@@ -799,6 +813,8 @@ export class LLMClient implements LLMAdapter {
             : Math.min(1200, 250 * (attempt + 1));
           await sleep(backoffMs);
         } finally {
+          // Only the first response is bounded here; an active body keeps its original budget.
+          clearTimeout(headersTimer);
           if (!returnedResponse) signal.cleanup();
         }
       }
@@ -951,6 +967,7 @@ export class LLMClient implements LLMAdapter {
         }
       }
     } finally {
+      void reader.cancel().catch(() => undefined);
       reader.releaseLock();
     }
     pending += decoder.decode();
@@ -993,6 +1010,17 @@ export class LLMClient implements LLMAdapter {
 
 function isRetryableHttpStatus(status: number): boolean {
   return status === 429 || status === 500 || status === 502 || status === 503 || status === 504;
+}
+
+function throwIfStreamError(event: JsonObject): void {
+  const error = asObject(event.error) ?? asObject(asObject(event.response)?.error) ??
+    (event.type === "error" ? event : null);
+  if (!error) return;
+  // SSE errors are terminal protocol events, not empty answers or retryable fetch failures.
+  throw Object.assign(new Error(`LLM 上游流错误: ${truncateDiagnosticText(asString(error.message) || safePreview(error), 1600)}`), {
+    code: "llm_stream_error",
+    details: { upstreamCode: asString(error.code) },
+  });
 }
 
 export function createEventStreamParser(onTextDelta?: (delta: string) => void) {
@@ -1056,6 +1084,7 @@ export function createEventStreamParser(onTextDelta?: (delta: string) => void) {
   };
 
   const handleEvent = (parsed: JsonObject) => {
+    throwIfStreamError(parsed);
     const response = asObject(parsed.response);
     if (response) {
       lastJson = response as EventStreamState;
@@ -1303,6 +1332,7 @@ function createChatEventStreamParser(onTextDelta?: (delta: string) => void): Eve
   };
 
   const handleEvent = (parsed: JsonObject) => {
+    throwIfStreamError(parsed);
     lastJson = parsed;
     const choices = Array.isArray(parsed.choices) ? parsed.choices : [];
     for (const rawChoice of choices) {
@@ -1732,7 +1762,7 @@ function createHttpStatusError(input: {
   bodyText: string;
   requestSummary: LlmRequestSummary;
 }): Error {
-  const responsePreview = truncateDiagnosticText(input.bodyText, 1_600);
+  const responsePreview = summarizeHttpErrorBody(input.status, input.bodyText);
   const error = new Error(
     `LLM 请求失败: ${input.status} ${responsePreview || "<empty response body>"}`,
   ) as Error & {
@@ -1768,6 +1798,16 @@ function attachRequestSummaryToError(
     requestSummary,
   };
   return wrapped;
+}
+
+export function summarizeHttpErrorBody(status: number, bodyText: string): string {
+  const text = String(bodyText || "").trim();
+  if (/^(?:<!doctype\s+html|<html\b|<!--\[if\s)/i.test(text)) {
+    return status === 524
+      ? "上游 LLM 网关超时（524）"
+      : `上游 LLM 服务返回了 HTML 错误页（${status}）`;
+  }
+  return truncateDiagnosticText(text, 1_600);
 }
 
 function truncateDiagnosticText(value: string, maxChars: number): string {

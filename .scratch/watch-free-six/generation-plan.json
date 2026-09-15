@@ -1,0 +1,86 @@
+[
+  {
+    "index": 1,
+    "title": "Liquid Pearl Jewellery Tech",
+    "prompt": "01-liquid-pearl.txt",
+    "output": "01-liquid-pearl.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-silhouette-distance-read@sha256:22744f2a0b53d51c020355c3550b7382c6aaadd159a82e862891ca9fb5b57e95",
+      "watch-atom:watch-lugless-articulation@sha256:575930f155d47e60d23e20d87df2ce1afc67412c86130eaf26575c110661c0a8",
+      "watch-atom:watch-material-zoning-purpose@sha256:f6ad7222ffc44c364212f706cb9e5c5dc9e0960057fefabf91447da3b7ae496d",
+      "watch-atom:watch-finish-hierarchy@sha256:c0a92334357b1172ce653dab17198363165462d401eff39ae190b60dee7b7871"
+    ]
+  },
+  {
+    "index": 2,
+    "title": "Brutalist Night Grid",
+    "prompt": "02-brutalist-grid.txt",
+    "output": "02-brutalist-grid.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-silhouette-distance-read@sha256:22744f2a0b53d51c020355c3550b7382c6aaadd159a82e862891ca9fb5b57e95",
+      "watch-atom:watch-protection-without-bulk@sha256:514869453eb42fb652a311ed1825f0ded1671aa3a148fafae66c00d5005e29b5",
+      "watch-atom:watch-control-protrusion-hierarchy@sha256:a8607f61300cb7dc0d111471cf5b92d8b8039d76f4ca2aa2ad9200f472eb0b9a",
+      "watch-atom:watch-service-seam-honesty@sha256:70c41e07e7c48f3d4b1b8a439fe09fb22c4f94f21d6068b6386e605f4c16bd58"
+    ]
+  },
+  {
+    "index": 3,
+    "title": "Biomorphic Pebble",
+    "prompt": "03-biomorphic-pebble.txt",
+    "output": "03-biomorphic-pebble.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-silhouette-distance-read@sha256:22744f2a0b53d51c020355c3550b7382c6aaadd159a82e862891ca9fb5b57e95",
+      "watch-atom:watch-lugless-articulation@sha256:575930f155d47e60d23e20d87df2ce1afc67412c86130eaf26575c110661c0a8",
+      "watch-atom:watch-strap-case-continuity@sha256:062fec296783eb15792c09457b589a5d37dc99def6e54a2026223db41362002a",
+      "watch-atom:watch-color-identity-restraint@sha256:bd94bc063c27cee202e59e54dbdbc55d4449c11c28446dfc6c29b936ce679b6c"
+    ]
+  },
+  {
+    "index": 4,
+    "title": "Neo-1970s Amber Wedge",
+    "prompt": "04-amber-wedge.txt",
+    "output": "04-amber-wedge.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-silhouette-distance-read@sha256:22744f2a0b53d51c020355c3550b7382c6aaadd159a82e862891ca9fb5b57e95",
+      "watch-atom:watch-case-display-ratio@sha256:0b25056bd64309ec27b04ac906d4a85d56d64a68b661652c41510d936d98c4d8",
+      "watch-atom:watch-finish-hierarchy@sha256:c0a92334357b1172ce653dab17198363165462d401eff39ae190b60dee7b7871",
+      "watch-atom:watch-strap-material-context@sha256:d5ae9a2374638a414336bd4cde8311915b863236481bda26ab2f61960ff96965"
+    ]
+  },
+  {
+    "index": 5,
+    "title": "Skeletal Hex Performance",
+    "prompt": "05-skeletal-hex.txt",
+    "output": "05-skeletal-hex.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-silhouette-distance-read@sha256:22744f2a0b53d51c020355c3550b7382c6aaadd159a82e862891ca9fb5b57e95",
+      "watch-atom:watch-protection-without-bulk@sha256:514869453eb42fb652a311ed1825f0ded1671aa3a148fafae66c00d5005e29b5",
+      "watch-atom:watch-service-seam-honesty@sha256:70c41e07e7c48f3d4b1b8a439fe09fb22c4f94f21d6068b6386e605f4c16bd58",
+      "watch-atom:watch-no-ornament-without-role@sha256:549e6a538c35a0d9431ec4a190d051d50c89c754a5e62f4973f287804bccf67d"
+    ]
+  },
+  {
+    "index": 6,
+    "title": "Architectural Ribbon",
+    "prompt": "06-architectural-ribbon.txt",
+    "output": "06-architectural-ribbon.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-silhouette-distance-read@sha256:22744f2a0b53d51c020355c3550b7382c6aaadd159a82e862891ca9fb5b57e95",
+      "watch-atom:watch-strap-case-continuity@sha256:062fec296783eb15792c09457b589a5d37dc99def6e54a2026223db41362002a",
+      "watch-atom:watch-material-zoning-purpose@sha256:f6ad7222ffc44c364212f706cb9e5c5dc9e0960057fefabf91447da3b7ae496d",
+      "watch-atom:watch-color-identity-restraint@sha256:bd94bc063c27cee202e59e54dbdbc55d4449c11c28446dfc6c29b936ce679b6c"
+    ]
+  }
+]

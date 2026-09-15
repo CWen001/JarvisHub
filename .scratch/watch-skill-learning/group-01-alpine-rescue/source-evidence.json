@@ -1,0 +1,10 @@
+{
+  "baseModel": "watch-base-model:concept-image@1.0.2",
+  "catalog": "watch-knowledge-catalog@0.2.0",
+  "atoms": [
+    "watch-atom:watch-control-protrusion-hierarchy@sha256:a8607f61300cb7dc0d111471cf5b92d8b8039d76f4ca2aa2ad9200f472eb0b9a",
+    "watch-atom:watch-protection-without-bulk@sha256:514869453eb42fb652a311ed1825f0ded1671aa3a148fafae66c00d5005e29b5",
+    "watch-atom:watch-service-seam-honesty@sha256:70c41e07e7c48f3d4b1b8a439fe09fb22c4f94f21d6068b6386e605f4c16bd58",
+    "watch-atom:watch-outdoor-glare@sha256:55a8dbf88fbb0c509eeb147c7734c56ea7bd8e9d95eb3d380ec49c72f4b2b269"
+  ]
+}

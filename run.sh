@@ -28,6 +28,10 @@ Environment:
   AGENTS_PORT=8799    Agents bridge port
   AGENTS_REQUEST_TIMEOUT_MS=240000
                         Per LLM request timeout for the agents bridge
+  AGENTS_RESPONSE_HEADERS_TIMEOUT_MS=30000
+                        Max wait for the first LLM HTTP response (no timeout retries)
+  AGENTS_REASONING_EFFORT=high
+                        LLM reasoning effort; also read from the workspace .env
   TRACE_API_PORT=5781 Trace-viewer API server port
   TRACE_WEB_PORT=5782 Trace-viewer web dev server port
   NPM_REGISTRY=...    Registry used for dependency installation
@@ -64,7 +68,11 @@ Agents runtime:
 Build:
   start/restart will install missing workspace dependencies automatically
   DATABASE_URL defaults to a managed local Postgres container; Docker
-  Compose starts it and waits for it to become healthy before launch
+  Compose starts it and waits for it to become healthy before launch.
+  On macOS, an unavailable local Docker Desktop is started/restarted automatically.
+  An unhealthy managed Postgres container is recreated once without deleting data.
+  Every start/restart replaces existing services, waits for HTTP readiness,
+  then opens the browser; Ctrl+C stops application services.
   PPT Master must be present under vendor/ and uses an automatically
   selected Python 3.10+ with python-pptx and Pillow
   Object storage defaults to a public, disposable shared-test R2 bucket.
@@ -215,7 +223,7 @@ ensure_ppt_master_python() {
     return 0
   fi
 
-  local candidates=()
+  local candidates=("$ROOT_DIR/.venv/bin/python")
   local name path seen="|"
   for name in python3 python3.13 python3.12 python3.11 python3.10; do
     path="$(command -v "$name" 2>/dev/null || true)"
@@ -265,10 +273,40 @@ require_docker_compose() {
   fi
 }
 
+ensure_docker_runtime() {
+  # Compose version only proves the CLI is installed, not that its daemon is running.
+  docker info >/dev/null 2>&1 && return 0
+
+  # Recover only the local Desktop runtime, never switch a configured remote daemon.
+  local context
+  context="$(docker context show 2>/dev/null || true)"
+  if [ "$(uname -s)" != "Darwin" ] || [ -n "${DOCKER_HOST:-}" ] ||
+    { [ "$context" != "desktop-linux" ] && [ "$context" != "default" ]; }; then
+    echo "[run.sh] Docker daemon is unavailable. Start your configured Docker runtime, then retry." >&2
+    return 1
+  fi
+
+  echo "[run.sh] Docker is not ready; starting Docker Desktop (up to 120s)..."
+  if docker desktop start --timeout 120 && docker info >/dev/null 2>&1; then
+    return 0
+  fi
+  echo "[run.sh] Docker Desktop did not recover; restarting it once (up to 120s)..."
+  if docker desktop restart --timeout 120 && docker info >/dev/null 2>&1; then
+    return 0
+  fi
+  echo "[run.sh] Docker Desktop could not recover. No application services were stopped; check Docker Desktop diagnostics." >&2
+  return 1
+}
+
 start_managed_postgres() {
   require_docker_compose
+  ensure_docker_runtime
   echo "[run.sh] Starting managed local Postgres container..."
-  compose_api up -d --wait postgres
+  if compose_api up -d --wait --wait-timeout 120 postgres; then
+    return 0
+  fi
+  echo "[run.sh] Postgres did not become healthy; recreating its container once (data volume preserved)..."
+  compose_api up -d --force-recreate --wait --wait-timeout 120 postgres
 }
 
 has_postgres_compose_overrides() {
@@ -281,6 +319,44 @@ has_postgres_compose_overrides() {
   return 1
 }
 
+managed_postgres_uses_port() {
+  local port="$1"
+  compose_api port postgres 5432 2>/dev/null | grep -Eq ":${port}$"
+}
+
+port_has_non_docker_listener() {
+  local port="$1"
+  local pid command_line
+
+  while read -r pid; do
+    [ -n "$pid" ] || continue
+    command_line="$(ps -p "$pid" -o command= 2>/dev/null || true)"
+    case "$command_line" in
+      *Docker.app*|*com.docker.backend*|*docker-proxy*) ;;
+      *) return 0 ;;
+    esac
+  done <<EOF
+$(lsof -nP -tiTCP:"$port" -sTCP:LISTEN 2>/dev/null || true)
+EOF
+
+  return 1
+}
+
+configure_managed_postgres_port() {
+  local port=5432
+
+  if port_has_non_docker_listener "$port"; then
+    port=5433
+    while port_has_non_docker_listener "$port" || { ! port_is_free "$port" && ! managed_postgres_uses_port "$port"; }; do
+      port=$((port + 1))
+    done
+    echo "[run.sh] Host port 5432 is occupied; using ${port} for managed Postgres."
+  fi
+
+  export POSTGRES_PORT="$port"
+  MANAGED_DATABASE_URL="postgresql://jarvishub:jarvishub@127.0.0.1:${port}/jarvishub?schema=public"
+}
+
 ensure_database_runtime() {
   local database_url="${DATABASE_URL:-}"
 
@@ -290,6 +366,7 @@ ensure_database_runtime() {
       echo "[run.sh] Set DATABASE_URL in the shell command, or remove the POSTGRES_* overrides." >&2
       exit 1
     fi
+    configure_managed_postgres_port
     database_url="$MANAGED_DATABASE_URL"
     export DATABASE_URL="$database_url"
   fi
@@ -581,11 +658,10 @@ fi
 
 case "$command" in
   db|db:start)
-    export DATABASE_URL="${DATABASE_URL:-$MANAGED_DATABASE_URL}"
-    start_managed_postgres
+    ensure_database_runtime
     echo
     echo "[run.sh] Postgres is available at:"
-    echo "  postgresql://jarvishub:jarvishub@127.0.0.1:5432/jarvishub?schema=public"
+    echo "  $DATABASE_URL"
     echo
     echo "[run.sh] Database container is running. Schema initialization is a separate step."
     exit 0
@@ -755,8 +831,53 @@ start_service "trace-api" env \
 start_service "trace-web" env \
   npx --prefix tools/trace-viewer vite tools/trace-viewer/web --port "$TRACE_WEB_PORT" --strictPort
 
+wait_for_services() {
+  local deadline=$((SECONDS + 120))
+  local index url ready
+  local web_host="$WEB_HOST"
+  [ "$web_host" != "0.0.0.0" ] || web_host=127.0.0.1
+  local urls=(
+    "http://${web_host}:${WEB_PORT}/"
+    "http://127.0.0.1:${API_PORT}/health/version"
+    "http://127.0.0.1:${AGENTS_PORT}/health"
+    "http://127.0.0.1:${TRACE_API_PORT}/api/health"
+    "http://127.0.0.1:${TRACE_WEB_PORT}/"
+  )
+  echo "[run.sh] Waiting for all five services to respond..."
+  while [ "$SECONDS" -lt "$deadline" ]; do
+    for index in "${!pids[@]}"; do
+      if ! kill -0 "${pids[$index]}" 2>/dev/null; then
+        echo "[run.sh] ${names[$index]} exited before becoming ready." >&2
+        return 1
+      fi
+    done
+    ready=1
+    for url in "${urls[@]}"; do
+      if ! curl --noproxy '*' --fail --silent --output /dev/null --max-time 2 "$url"; then
+        ready=0
+        break
+      fi
+    done
+    [ "$ready" -ne 1 ] || return 0
+    sleep 1
+  done
+  echo "[run.sh] Timed out waiting for ${url}. See service errors above." >&2
+  return 1
+}
+
+open_browser() {
+  local url="http://localhost:${WEB_PORT}"
+  case "$(uname -s)" in
+    Darwin) open "$url" ;;
+    MINGW*|MSYS*|CYGWIN*) cmd.exe /c start "" "$url" ;;
+    *) xdg-open "$url" ;;
+  esac
+}
+
+wait_for_services
+
 echo
-echo "[run.sh] Services started:"
+echo "[run.sh] Services ready:"
 echo "  Web:       http://localhost:${WEB_PORT}"
 echo "  API:       http://localhost:${API_PORT}"
 echo "  Agents:    http://localhost:${AGENTS_PORT}"
@@ -767,6 +888,7 @@ echo "  PPT Python: ${PPT_MASTER_PYTHON}"
 echo "  PPT Projects: ${PPT_MASTER_PROJECTS_ROOT}"
 echo
 echo "[run.sh] Press Ctrl+C to stop all services."
+open_browser
 
 while true; do
   for index in "${!pids[@]}"; do

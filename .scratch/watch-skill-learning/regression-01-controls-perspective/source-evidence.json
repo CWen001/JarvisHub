@@ -1,0 +1,10 @@
+{
+  "baseModel": "watch-base-model:concept-image@1.0.6",
+  "catalog": "watch-knowledge-catalog@0.2.0",
+  "atoms": [
+    "watch-atom:watch-control-protrusion-hierarchy@sha256:a8607f61300cb7dc0d111471cf5b92d8b8039d76f4ca2aa2ad9200f472eb0b9a",
+    "watch-atom:watch-physical-control-recovery@sha256:2ba17929113d5c011fb53636079ee9d7e6a5d25f016c83214d8dd64f08de08fe",
+    "watch-atom:watch-accessibility-multimodal@sha256:1e8169bab98dc09452d5cdfb10a0bc1747b1e4a17461983957ad20821c0a7cbd",
+    "watch-atom:watch-night-low-disturbance@sha256:f526f1552b98939edc1398f0ba923a91cdbeace234fa6306f5850ad814de9dbe"
+  ]
+}

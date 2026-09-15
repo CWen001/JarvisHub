@@ -1,14 +1,19 @@
 {
   "name": "watch-design-kernel",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "base_model": {
     "id": "concept-image",
-    "version": "1.0.0",
+    "version": "1.0.6",
     "resource": "references/concept-image-base-model.md",
     "source": "watch-openai/prototype/concept_image_basemodel_experiment.py",
     "source_status": "experimental source asset adapted for native Jarvis prompt authoring"
   },
+  "design_judgment_schema": {
+    "version": "0.6.0",
+    "resource": "references/design-judgment-schema.md"
+  },
   "design_dialogue": {
+    "version": "0.3.0",
     "resource": "references/design-dialogue.md"
   },
   "knowledge": {

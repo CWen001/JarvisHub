@@ -1,8 +1,8 @@
-# Concept Image BaseModel 1.0.0
+# Concept Image BaseModel 1.0.6
 
 This is the mandatory visual planning model for the first product-focused image of one future smartwatch. It is adapted from the `watch-openai` Concept Image BaseModel experiment for native Jarvis Prompt authoring.
 
-The final Prompt is the complete visible design specification. Resolve every applicable variable before generation. Describe visible results, not rationale, provenance, hidden engineering, manufacturability, performance, or medical validity.
+The final Prompt is a concise visible design specification. Resolve every applicable variable before generation, but let one sentence satisfy adjacent sections and omit non-applicable detail instead of padding. Describe visible results, not rationale, provenance, hidden engineering, manufacturability, performance, or medical validity. Prefer positive visible direction; use negatives only for likely high-cost failures.
 
 ## Frame invariant
 
@@ -60,7 +60,9 @@ Resolve:
 - visual thickness target and how layering produces it;
 - display-to-case ratio and corner-radius relationship;
 - case-to-strap width ratio;
-- control scale, attachment span, first strap drop, underside taper, and visual mass distribution.
+- control scale, attachment span, first strap drop, underside taper, and visual mass distribution;
+- visible part relationships required by the accepted direction and selected atoms;
+- clean alignment of every visible seam, fastener, control, and attachment without overlap or malformed junctions.
 
 Do not claim exact dimensions unless explicitly supplied by the user.
 
@@ -80,7 +82,9 @@ For every expected control or opening, explicitly state either its visible desig
 - type, position, geometry, scale/protrusion;
 - material, finish, colour, and boundary expression;
 - relationship to the case;
-- hierarchy and spacing rhythm between crown, buttons, speaker/microphone openings, or other visible elements.
+- hierarchy and spacing rhythm between crown, buttons, speaker/microphone openings, or other visible elements;
+- the task-specific role that earns each physical control its position, scale, and protrusion;
+- for bilateral or mirrored controls in a three-quarter view, one coherent case axis with apparent size, depth, and occlusion governed by perspective rather than forced visual symmetry.
 
 Never omit a difficult component merely to simplify the render.
 
@@ -109,21 +113,16 @@ Resolve at least these physical zones when visible:
 - strap outer and inner surfaces;
 - closure.
 
-For each zone specify material impression, colour, finish, texture scale, reflectivity, boundary with neighbours, and light response. Then define:
-
-- reflectivity hierarchy;
-- colour area budget and accent restraint;
-- texture-scale hierarchy;
-- continuity rules across seams and transitions.
+For each visible zone specify material impression, colour/finish, and boundary with neighbours. Add texture, reflectivity, and light response only where they carry identity or evidence. Define one reflectivity hierarchy, one restrained accent budget, and continuity across seams.
 
 ### 8. One visible interface state
 
 Resolve:
 
 - one screen state and background treatment;
-- 3–7 visible interface layers with geometry, position, relative scale, colour/luminance, and priority;
-- spacing rhythm, edge clearance, and information density;
-- at least one intentional visual echo between digital interface and hardware;
+- one primary status or action plus only the supporting information needed to understand it;
+- geometry, relative scale, colour/luminance, spacing, edge clearance, and information density;
+- a hardware/interface echo only when it strengthens the accepted direction rather than inventing decoration;
 - readable-content policy.
 
 Avoid logos, long copy, fake metrics, tiny pseudo-data, app-grid clutter, generic glowing rings, and visual claims unsupported by the brief.
@@ -135,9 +134,9 @@ Resolve:
 - first-read identity features;
 - product-distance features;
 - inspection-distance details;
-- 2–6 signature details;
+- only the signature details needed to preserve identity;
 - quiet zones;
-- repetition rule across geometry, openings, textures, or interface;
+- a repetition rule only when the direction needs one;
 - contrast budget so richness does not become random decoration.
 
 ### 10. Lighting and environment
@@ -154,14 +153,7 @@ Lighting must prove material and architecture rather than hide unresolved geomet
 
 ### 11. Forbidden visual outcomes
 
-End the Prompt with explicit negatives covering at least:
-
-- identity drift and generic smartwatch clichés;
-- incorrect silhouette, excess thickness, or broken case/strap continuity;
-- duplicated/missing controls, impossible attachment, incomplete strap, or absent closure;
-- plastic-looking premium materials, uncontrolled highlights, random accent colours;
-- unreadable or over-dense interface;
-- extra products, panels, crops, labels, logos, watermark, and unsupported claims.
+End with only the likely high-cost failures for this concept. Always cover incomplete product or closure, broken geometry or attachment, duplicated/missing controls, extra products or panels, logos/watermarks, and unsupported claims. Do not restate the full BaseModel as a generic negative list.
 
 ## Knowledge integration
 

@@ -72,7 +72,7 @@ const viewModel = {
     sending: true,
     ready: true,
     selectedSkill: null,
-    availableSkills: [{ id: 'skill-1', key: 'watch-design', name: '手表设计' }],
+    availableSkills: [{ id: 'skill-1', key: 'watch-design-kernel', name: '手表设计' }],
   },
 }
 
@@ -160,7 +160,7 @@ describe('Agent Workspace Product View', () => {
     expect(screen.queryByText('设计决策')).toBeNull()
     expect(screen.getByRole('button', { name: '添加参考图' })).toBeTruthy()
     expect(screen.getByRole('button', { name: '移除材料参考图' })).toBeTruthy()
-    expect(screen.getByRole('combobox', { name: '选择技能' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: '选择技能' })).toBeTruthy()
     expect(screen.getByRole('button', { name: '中断' })).toBeTruthy()
 
     fireEvent.click(screen.getByRole('button', { name: '打开资产' }))
@@ -179,8 +179,9 @@ describe('Agent Workspace Product View', () => {
     expect(runtimeDispatch).toHaveBeenLastCalledWith({ type: 'decision.answer', option: '轻薄佩戴' })
     fireEvent.click(screen.getByRole('button', { name: '移除材料参考图' }))
     expect(runtimeDispatch).toHaveBeenLastCalledWith({ type: 'chat.remove-reference', url: 'https://cdn.example/reference.png' })
-    fireEvent.change(screen.getByRole('combobox', { name: '选择技能' }), { target: { value: 'skill-1' } })
-    expect(runtimeDispatch).toHaveBeenLastCalledWith({ type: 'chat.select-skill', skill: { id: 'skill-1', key: 'watch-design', name: '手表设计' } })
+    fireEvent.click(screen.getByRole('button', { name: '选择技能' }))
+    fireEvent.click(await screen.findByRole('menuitem', { name: '手表设计' }))
+    expect(runtimeDispatch).toHaveBeenLastCalledWith({ type: 'chat.select-skill', skill: { id: 'skill-1', key: 'watch-design-kernel', name: '手表设计' } })
 
     fireEvent.click(screen.getByRole('button', { name: '预览GT Runner 概念图' }))
     expect(await screen.findByRole('dialog', { name: 'GT Runner 概念图' })).toBeTruthy()

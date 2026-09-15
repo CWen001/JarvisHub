@@ -1,0 +1,11 @@
+{
+  "sourceEvidence": [
+    "watch-base-model:concept-image@1.0.6",
+    "watch-design-judgment-schema@0.6.0",
+    "watch-knowledge-catalog@0.2.0",
+    "watch-atom:watch-visual-thickness-layering@sha256:ac9b5da6d6c685cde4dbc25f1df3365393ef4a4cd3341cfc5d3fe628598bf9a4",
+    "watch-atom:watch-glance-priority@sha256:12931c3996d1f7f81366c17faf890f7d6c109767911a1be23a045e89ae516fe8",
+    "watch-atom:watch-finish-hierarchy@sha256:c0a92334357b1172ce653dab17198363165462d401eff39ae190b60dee7b7871",
+    "watch-atom:watch-no-ornament-without-role@sha256:549e6a538c35a0d9431ec4a190d051d50c89c754a5e62f4973f287804bccf67d"
+  ]
+}

@@ -1,6 +1,6 @@
 import React from 'react'
-import { ActionIcon, Textarea, Tooltip } from '@mantine/core'
-import { IconPaperclip, IconSend2, IconX } from '@tabler/icons-react'
+import { ActionIcon, Button, Menu, Textarea, Tooltip } from '@mantine/core'
+import { IconCheck, IconChevronDown, IconChevronRight, IconPaperclip, IconSend2, IconX } from '@tabler/icons-react'
 import { MarkdownContent } from '../ui/MarkdownContent'
 import type {
   AgentWorkspaceIntent,
@@ -8,6 +8,7 @@ import type {
   AgentWorkspaceTimelineEntryFact,
 } from './agentWorkspaceProjection'
 import type { AgentWorkspaceRuntimeSnapshot } from './agentWorkspaceRuntime'
+import { installedVerticalSkills } from './installedVerticalSkills'
 
 const runStatusLabel = {
   running: '进行中',
@@ -182,21 +183,31 @@ export function ProductChat({
   const nearBottom = React.useRef(true)
   const composingDraft = React.useRef(false)
   const pendingDraft = React.useRef<string | null>(null)
+  const submittedDraft = React.useRef<string | null>(null)
   const lastDispatchedDraft = React.useRef(view.composer.draft)
   const sessionIdentity = `${view.current?.projectId || ''}:${view.current?.sessionId || ''}`
   const previousSessionIdentity = React.useRef(sessionIdentity)
   const [draftBuffer, setDraftBuffer] = React.useState(view.composer.draft)
+  const [autoSkillsExpanded, setAutoSkillsExpanded] = React.useState(false)
+  const availableSkills = view.composer.availableSkills ?? []
+  const verticalSkills = installedVerticalSkills.flatMap((key) => availableSkills.filter((skill) => skill.key === key))
+  const automaticSkills = availableSkills.filter((skill) => !installedVerticalSkills.some((key) => key === skill.key))
 
   React.useEffect(() => {
     if (previousSessionIdentity.current !== sessionIdentity) {
       previousSessionIdentity.current = sessionIdentity
       composingDraft.current = false
       pendingDraft.current = null
+      submittedDraft.current = null
       lastDispatchedDraft.current = view.composer.draft
       setDraftBuffer(view.composer.draft)
       return
     }
     if (composingDraft.current) return
+    if (submittedDraft.current !== null) {
+      if (view.composer.draft === submittedDraft.current) return
+      submittedDraft.current = null
+    }
     if (pendingDraft.current !== null) {
       if (view.composer.draft !== pendingDraft.current) return
       pendingDraft.current = null
@@ -211,6 +222,13 @@ export function ProductChat({
     if (lastDispatchedDraft.current === text) return
     lastDispatchedDraft.current = text
     onIntent({ type: 'chat.set-draft', text })
+  }
+
+  const submit = () => {
+    submittedDraft.current = draftBuffer
+    pendingDraft.current = null
+    setDraftBuffer('')
+    onIntent({ type: 'chat.submit' })
   }
 
   React.useEffect(() => {
@@ -265,18 +283,60 @@ export function ProductChat({
         <div className="product-composer">
           <div className="product-composer__tools">
             <Tooltip label="添加参考图"><ActionIcon variant="subtle" size={44} aria-label="添加参考图" onClick={() => fileInput.current?.click()}><IconPaperclip size={20} /></ActionIcon></Tooltip>
-            <select
-              className="product-composer__skill"
-              aria-label="选择技能"
-              value={view.composer.selectedSkill?.id || ''}
-              onChange={(event) => {
-                const skill = view.composer.availableSkills?.find((item) => item.id === event.currentTarget.value) ?? null
-                onIntent({ type: 'chat.select-skill', skill })
-              }}
-            >
-              <option value="">自动</option>
-              {view.composer.availableSkills?.map((skill) => <option key={skill.id} value={skill.id}>{skill.name}</option>)}
-            </select>
+            <Menu position="top-start" withinPortal shadow="md" zIndex={10050}>
+              <Menu.Target>
+                <Button
+                  className="product-composer__skill"
+                  variant="subtle"
+                  aria-label="选择技能"
+                  rightSection={<IconChevronDown size={14} />}
+                >
+                  {view.composer.selectedSkill?.name || '自动'}
+                </Button>
+              </Menu.Target>
+              <Menu.Dropdown className="product-skill-menu">
+                {verticalSkills.map((skill) => (
+                  <Menu.Item
+                    key={skill.id}
+                    aria-label={skill.name}
+                    rightSection={view.composer.selectedSkill?.id === skill.id ? <IconCheck size={14} /> : null}
+                    onClick={() => onIntent({ type: 'chat.select-skill', skill })}
+                  >
+                    {skill.name}
+                  </Menu.Item>
+                ))}
+                {verticalSkills.length ? <Menu.Divider /> : null}
+                <Menu.Item
+                  aria-label="自动"
+                  closeMenuOnClick={false}
+                  rightSection={autoSkillsExpanded ? <IconChevronDown size={14} /> : <IconChevronRight size={14} />}
+                  onClick={() => setAutoSkillsExpanded((expanded) => !expanded)}
+                >
+                  自动
+                </Menu.Item>
+                {autoSkillsExpanded ? (
+                  <div className="product-skill-menu__automatic">
+                    <Menu.Item
+                      aria-label="自动匹配"
+                      rightSection={!view.composer.selectedSkill ? <IconCheck size={14} /> : null}
+                      onClick={() => onIntent({ type: 'chat.select-skill', skill: null })}
+                    >
+                      自动匹配
+                    </Menu.Item>
+                    {automaticSkills.map((skill) => (
+                      <Menu.Item
+                        key={skill.id}
+                        aria-label={skill.name}
+                        rightSection={view.composer.selectedSkill?.id === skill.id ? <IconCheck size={14} /> : null}
+                        onClick={() => onIntent({ type: 'chat.select-skill', skill })}
+                      >
+                        {skill.name}
+                      </Menu.Item>
+                    ))}
+                  </div>
+                ) : null}
+              </Menu.Dropdown>
+            </Menu>
           </div>
           <div className="product-composer__input">
             <Textarea
@@ -294,7 +354,7 @@ export function ProductChat({
                 if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
                   event.preventDefault()
                   if (view.composer.sending) onIntent({ type: 'chat.interrupt' })
-                  else if (draftBuffer.trim() || view.composer.pendingReferences.length) onIntent({ type: 'chat.submit' })
+                  else if (draftBuffer.trim() || view.composer.pendingReferences.length) submit()
                 }
               }}
             />
@@ -303,7 +363,7 @@ export function ProductChat({
             <ActionIcon
               className="product-composer__send" variant="filled" aria-label={view.composer.sending ? '中断' : '发送'}
               disabled={!view.composer.sending && (!view.composer.ready || (!draftBuffer.trim() && !view.composer.pendingReferences.length))}
-              onClick={() => onIntent({ type: view.composer.sending ? 'chat.interrupt' : 'chat.submit' })}
+              onClick={() => view.composer.sending ? onIntent({ type: 'chat.interrupt' }) : submit()}
             >{view.composer.sending ? <IconX size={20} /> : <IconSend2 size={20} />}</ActionIcon>
           </Tooltip>
         </div>

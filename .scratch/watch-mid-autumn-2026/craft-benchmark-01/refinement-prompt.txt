@@ -1,0 +1,31 @@
+Edit the user-selected reference image into exactly ONE refined craftsmanship-benchmark image of the same complete DIGITAL smartwatch. Preserve the same thin softened-square silhouette, moon-white ceramic upper frame, midnight-blue structure, champagne accents, sparse digital moon-phase interface, complete dark-blue strap and buckle, open-loop pose, camera angle, lighting direction and warm-grey studio background. Do not redesign the product family or add another watch.
+
+REFINEMENT THESIS
+Increase visible manufacturing and assembly precision without making the watch bulky or decoratively busy. The result should prove four things at inspection distance: layered strap surfacing, sophisticated face-to-side transitions, a thinner assembled control, and a credible multi-part metal chassis with selective polygonal machining. These refinements define a quality floor for later diverse watches; they do not prescribe the same materials or geometry for every model.
+
+STRAP CRAFT
+Replace the plain strap surface with a controlled two-scale pattern. Use one broad shallow longitudinal centre plane as the primary structure. Inside that plane, add very fine low-relief diagonal moon-ray micro-ribs that fade out before the case joint, adjustment holes, keeper and buckle. Keep narrow smooth edge bands with a crisp moulded transition and continuously softened outer edges. Reveal a small portion of the underside with sparse open-ended curved ventilation channels and a smoother skin-contact finish. At each attachment, use a precisely moulded reinforced end block with one narrow seating seam around the metal pivot insert. Keep the complete keeper, holes and buckle geometrically clean; do not turn the strap into fabric, jewellery or an all-over tyre texture.
+
+FACE AND CASE TRANSITIONS
+Preserve the black glass and moon-white ceramic identity, but create a legible sequence of controlled turns from display to sidewall: black glass seated inside one thin midnight-blue satin inner ledge; a narrow ceramic inner bevel catching one soft highlight; a broad quiet ceramic top plane; a second soft outer bevel; then one crisp shadow seam into the metal chassis. Each transition is continuous through all four corners, with no doubled highlights, wavering seams or melted geometry. Keep the display large and the upper mass thin.
+
+MULTI-PART METAL ASSEMBLY
+Make the blue structure visibly assembled rather than monolithic. Directly below the ceramic, show a slim satin midnight-blue upper carrier following the full perimeter. Beneath it, show a slightly darker bead-blasted structural middle frame that extends into both strap forks. Finish with a visibly narrower dark-blue lower shell separated by one fine service seam. Use one narrow recessed champagne-metal support reveal only along the lower-right inner boundary, terminating cleanly at real joints. All four layers must have distinct but restrained finish and depth, uniform seams, aligned corner transitions and plausible load paths. No decorative screw field.
+
+SELECTIVE POLYGONAL MACHINING
+Keep the overall softened-square silhouette. Introduce polygonal precision only where parts meet: compact six-sided metal pivot bosses at the upper and lower strap axes, and short eight-sided chamfer transitions where the middle frame turns around each corner. The facets are small, consistent and connected to real structural parts; they never become a full octagonal case, applied decoration or repeating bezel pattern.
+
+THIN CONTROL ASSEMBLY
+Replace the thick pill button with one thin champagne-metal side paddle seated on a separate midnight-blue backing plate. The paddle has a shallow curved outer face, crisp upper and lower edges and minimal protrusion within a smooth chassis guard. Show one uniform dark seating gap around the backing plate and a narrow shadow below the paddle that implies short inward travel. Align paddle, backing plate and opening to the sidewall perspective. The control must not cross ceramic or chassis seams. No crown, front button, second control or bulky capsule.
+
+ATTACHMENT AND CLOSURE PRECISION
+Keep the structural middle frame extending into short centred forks. Seat each six-sided pivot boss concentrically around one champagne-grey transverse pin; the near-side pin may be fully visible while the far-side pin follows natural occlusion. Maintain consistent clearances with no floating, doubled or fused parts. Refine the buckle into separate frame, tongue and pivot components with matching finish hierarchy and accurate alignment to the strap holes.
+
+INTERFACE AND CMF
+Keep the sparse near-black digital state with large white “20:26”, one thin warm-white phase arc, one small champagne marker and “MID-AUTUMN”. No analogue hands or literal festival imagery. Preserve moon-white satin ceramic, two levels of midnight-blue metal finish, deepest black glass and matte blue elastomer. Champagne remains below five percent of visible area and is reserved for functional joints, the thin paddle, support reveal and one interface marker.
+
+RENDER INTEGRITY
+Retain one coherent three-quarter perspective: near right side clearly visible, far side naturally occluded. Use the existing soft cool key, neutral fill and narrow warm rim to reveal microtexture, bevel sequence, layer seams, button thinness, polygonal pivot bosses and buckle assembly. Keep the entire watch and closure inside frame.
+
+HIGH-COST FAILURES
+Avoid a second watch, changed silhouette, plain strap, coarse all-over texture, thick button, monolithic-looking chassis, fake stacked plates, excessive polygon decoration, irregular seam width, misaligned facets, floating inserts, malformed pivots, impossible buckle, incomplete strap, analogue cues, literal festival icons, logos, watermark or unsupported manufacturing claims.

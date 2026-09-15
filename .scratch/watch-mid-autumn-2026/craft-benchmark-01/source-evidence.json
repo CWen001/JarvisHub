@@ -1,0 +1,10 @@
+{
+  "baseModel": "watch-base-model:concept-image@1.0.6",
+  "catalog": "watch-knowledge-catalog@0.2.0",
+  "atoms": [
+    "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+    "watch-atom:watch-material-zoning-purpose@sha256:f6ad7222ffc44c364212f706cb9e5c5dc9e0960057fefabf91447da3b7ae496d",
+    "watch-atom:watch-finish-hierarchy@sha256:c0a92334357b1172ce653dab17198363165462d401eff39ae190b60dee7b7871",
+    "watch-atom:watch-seam-fastener-legibility@sha256:6b383e2bec93c11212a2982ecd84b85b2b552abe9f50c76ce4546055002b2aaf"
+  ]
+}

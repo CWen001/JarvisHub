@@ -8,8 +8,8 @@ import tls from "node:tls";
 import { fileURLToPath } from "node:url";
 import { performance } from "node:perf_hooks";
 
-const DEFAULT_API_BASE_URL = "https://right.codes/codex/v1";
-const DEFAULT_MODEL = "gpt-5.5";
+const DEFAULT_API_BASE_URL = "https://api.deepseek.com";
+const DEFAULT_MODEL = "deepseek-flash";
 const DEFAULT_COUNT = 5;
 const DEFAULT_TIMEOUT_MS = 30_000;
 

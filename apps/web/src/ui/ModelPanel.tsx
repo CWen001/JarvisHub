@@ -164,12 +164,12 @@ const AGENT_PROVIDER_PRESETS: Array<{
   {
     providerKey: 'rightcode',
     providerName: 'RightCode',
-    tagline: 'OpenAI 兼容聚合',
-    description: '通过 right.codes 以 OpenAI Chat 协议统一调用 GPT / Claude 等模型。',
-    baseUrl: 'https://right.codes/codex/v1',
+    tagline: 'Codex 聚合',
+    description: '通过 RightAPI 的 OpenAI Responses 兼容接口调用 Codex 模型。',
+    baseUrl: 'https://rightapi.ai/codex/v1',
     authType: 'bearer',
     authHeader: 'Authorization',
-    apiProtocol: 'openai-chat',
+    apiProtocol: 'openai-responses',
     models: [
       { modelKey: 'gpt-5.5', modelLabel: 'GPT-5.5' },
     ],
@@ -247,9 +247,9 @@ const AGENT_PROVIDER_PRESETS: Array<{
     baseUrl: 'https://api.deepseek.com',
     authType: 'bearer',
     authHeader: 'Authorization',
-    apiProtocol: 'openai-chat',
+    apiProtocol: 'openai-responses',
     models: [
-      { modelKey: 'deepseek-v4-flash', modelLabel: 'DeepSeek V4 Flash' },
+      { modelKey: 'deepseek-flash', modelLabel: 'DeepSeek V4.1 Flash' },
       { modelKey: 'deepseek-v4-pro', modelLabel: 'DeepSeek V4 Pro' },
       { modelKey: 'deepseek-chat', modelLabel: 'DeepSeek Chat' },
     ],
@@ -723,7 +723,7 @@ export default function ModelPanel(): JSX.Element | null {
   const [apiKey, setApiKey] = React.useState('')
   const [selectedImageModel, setSelectedImageModel] = React.useState('gpt-image-2')
   const [selectedVideoModel, setSelectedVideoModel] = React.useState('doubao-seedance-2.0')
-  const [selectedAgentModel, setSelectedAgentModel] = React.useState('gpt-5.5')
+  const [selectedAgentModel, setSelectedAgentModel] = React.useState('grok-4.6')
   const [selectedCriticModel, setSelectedCriticModel] = React.useState('')
   const [customProviderKey, setCustomProviderKey] = React.useState('')
   const [customProviderName, setCustomProviderName] = React.useState('')
@@ -908,7 +908,7 @@ export default function ModelPanel(): JSX.Element | null {
     setCustomAuthQueryParam('')
     setCustomApiProtocol(tab === 'critic' ? 'google-v1beta' : 'openai-chat')
     setModelDrafts([])
-    setCustomModelKey(tab === 'agent' ? 'gpt-5.5' : tab === 'critic' ? 'gemini-model-id' : '')
+    setCustomModelKey(tab === 'agent' ? 'grok-4.6' : tab === 'critic' ? 'gemini-model-id' : '')
     setAddModelOpen(false)
     setPresetSearch('')
     setPresetSearchOpen(false)
@@ -1204,7 +1204,7 @@ export default function ModelPanel(): JSX.Element | null {
         apiKey: credentialApiKey,
         models: modelsToSave,
         defaults: defaultsToApply,
-        preserveExistingConnection: true,
+        preserveExistingConnection: false,
       })
       notifications.show({
         title: '已保存',
@@ -1384,7 +1384,7 @@ export default function ModelPanel(): JSX.Element | null {
             <TextInput
               size="xs"
               label="模型 ID"
-              placeholder={tab === 'agent' ? 'gpt-5.5' : tab === 'critic' ? 'multimodal-model-id' : 'model-id'}
+              placeholder={tab === 'agent' ? 'grok-4.6' : tab === 'critic' ? 'multimodal-model-id' : 'model-id'}
               value={customModelKey}
               onChange={(e) => setCustomModelKey(e.currentTarget.value)}
               onKeyDown={(event) => {

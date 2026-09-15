@@ -1,0 +1,16 @@
+Edit the supplied reference into exactly ONE complete refined DIGITAL smartwatch image. Preserve the same watch silhouette, moon-white ceramic top, blue-and-champagne palette, digital “20:26” moon-phase screen, approved patterned strap, complete buckle, open-loop pose, camera angle, lighting and background. Change only the metal case assembly and side button.
+
+Make the blue case visibly consist of three real nested metal parts:
+1. a very slim satin midnight-blue upper carrier directly beneath the ceramic, following its full perimeter through one even recessed seam;
+2. a separate deeper bead-blasted blue structural middle frame, divided from the carrier by one continuous fine shadow seam and extending alone into both strap forks;
+3. a narrower matte dark-blue lower shell inset on every side and separated by one fine service seam.
+
+The side view must clearly read ceramic, upper carrier, structural frame and inset lower shell through actual depth, different finishes and uniform seams—not painted stripes, fake plates or screws. Keep the complete case thin.
+
+Add small eight-sided chamfer transitions only at the middle-frame corners. Shape each strap pivot seat as a compact six-sided boss integrated into the middle frame, centred around one champagne-grey pin. Preserve natural near/far perspective.
+
+Replace the thick gold button with one thin champagne-metal face plate mounted on a separate recessed dark-blue backing plate inside the middle frame. Show an even seating gap and a narrow travel shadow. Keep it within the case outline and clear of all layer seams.
+
+Preserve the reference strap texture and display-to-glass-to-ceramic transitions exactly. Keep champagne accents below five percent.
+
+Show one coherent complete watch only. Avoid changing the approved strap or face, monolithic blue sidewalls, painted seam lines, thick controls, excessive polygon decoration, uneven seams, malformed facets, floating inserts, misaligned pivots, impossible buckle, extra views, logos, watermark or unsupported manufacturing claims. Your first and only tool call must be image_gen exactly once; call it immediately.

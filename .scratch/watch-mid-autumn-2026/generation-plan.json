@@ -1,0 +1,147 @@
+[
+  {
+    "index": 1,
+    "model": "Lunar Halo",
+    "fit": "standard",
+    "prompt": "01-lunar-halo-standard.txt",
+    "output": "01-lunar-halo-standard.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-color-identity-restraint@sha256:bd94bc063c27cee202e59e54dbdbc55d4449c11c28446dfc6c29b936ce679b6c",
+      "watch-atom:watch-no-ornament-without-role@sha256:549e6a538c35a0d9431ec4a190d051d50c89c754a5e62f4973f287804bccf67d"
+    ]
+  },
+  {
+    "index": 2,
+    "model": "Lunar Halo",
+    "fit": "small",
+    "prompt": "02-lunar-halo-small.txt",
+    "output": "02-lunar-halo-small.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-mass-close-to-wrist@sha256:3040f824583bc46ab3bb131b65f9f8df1eed2d86646e9e1e8ff55ff88777bb4f",
+      "watch-atom:watch-small-wrist-articulation@sha256:4617708934a1d0a2e59ed3855c8362f440c1b06790b7f45e8d2667cd8ca66b10",
+      "watch-atom:watch-color-identity-restraint@sha256:bd94bc063c27cee202e59e54dbdbc55d4449c11c28446dfc6c29b936ce679b6c"
+    ]
+  },
+  {
+    "index": 3,
+    "model": "Moon Gate",
+    "fit": "standard",
+    "prompt": "03-moon-gate-standard.txt",
+    "output": "03-moon-gate-standard.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-color-identity-restraint@sha256:bd94bc063c27cee202e59e54dbdbc55d4449c11c28446dfc6c29b936ce679b6c",
+      "watch-atom:watch-no-ornament-without-role@sha256:549e6a538c35a0d9431ec4a190d051d50c89c754a5e62f4973f287804bccf67d"
+    ]
+  },
+  {
+    "index": 4,
+    "model": "Moon Gate",
+    "fit": "small",
+    "prompt": "04-moon-gate-small.txt",
+    "output": "04-moon-gate-small.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-mass-close-to-wrist@sha256:3040f824583bc46ab3bb131b65f9f8df1eed2d86646e9e1e8ff55ff88777bb4f",
+      "watch-atom:watch-small-wrist-articulation@sha256:4617708934a1d0a2e59ed3855c8362f440c1b06790b7f45e8d2667cd8ca66b10",
+      "watch-atom:watch-color-identity-restraint@sha256:bd94bc063c27cee202e59e54dbdbc55d4449c11c28446dfc6c29b936ce679b6c"
+    ]
+  },
+  {
+    "index": 5,
+    "model": "Tidal Ellipse",
+    "fit": "standard",
+    "prompt": "05-tidal-ellipse-standard.txt",
+    "output": "05-tidal-ellipse-standard.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-color-identity-restraint@sha256:bd94bc063c27cee202e59e54dbdbc55d4449c11c28446dfc6c29b936ce679b6c",
+      "watch-atom:watch-no-ornament-without-role@sha256:549e6a538c35a0d9431ec4a190d051d50c89c754a5e62f4973f287804bccf67d"
+    ]
+  },
+  {
+    "index": 6,
+    "model": "Tidal Ellipse",
+    "fit": "small",
+    "prompt": "06-tidal-ellipse-small.txt",
+    "output": "06-tidal-ellipse-small.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-mass-close-to-wrist@sha256:3040f824583bc46ab3bb131b65f9f8df1eed2d86646e9e1e8ff55ff88777bb4f",
+      "watch-atom:watch-small-wrist-articulation@sha256:4617708934a1d0a2e59ed3855c8362f440c1b06790b7f45e8d2667cd8ca66b10",
+      "watch-atom:watch-color-identity-restraint@sha256:bd94bc063c27cee202e59e54dbdbc55d4449c11c28446dfc6c29b936ce679b6c"
+    ]
+  },
+  {
+    "index": 7,
+    "model": "Osmanthus Octagon",
+    "fit": "standard",
+    "prompt": "07-osmanthus-octagon-standard.txt",
+    "output": "07-osmanthus-octagon-standard.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-color-identity-restraint@sha256:bd94bc063c27cee202e59e54dbdbc55d4449c11c28446dfc6c29b936ce679b6c",
+      "watch-atom:watch-no-ornament-without-role@sha256:549e6a538c35a0d9431ec4a190d051d50c89c754a5e62f4973f287804bccf67d"
+    ]
+  },
+  {
+    "index": 8,
+    "model": "Osmanthus Octagon",
+    "fit": "small",
+    "prompt": "08-osmanthus-octagon-small.txt",
+    "output": "08-osmanthus-octagon-small.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-mass-close-to-wrist@sha256:3040f824583bc46ab3bb131b65f9f8df1eed2d86646e9e1e8ff55ff88777bb4f",
+      "watch-atom:watch-small-wrist-articulation@sha256:4617708934a1d0a2e59ed3855c8362f440c1b06790b7f45e8d2667cd8ca66b10",
+      "watch-atom:watch-color-identity-restraint@sha256:bd94bc063c27cee202e59e54dbdbc55d4449c11c28446dfc6c29b936ce679b6c"
+    ]
+  },
+  {
+    "index": 9,
+    "model": "Night Passage",
+    "fit": "standard",
+    "prompt": "09-night-passage-standard.txt",
+    "output": "09-night-passage-standard.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-color-identity-restraint@sha256:bd94bc063c27cee202e59e54dbdbc55d4449c11c28446dfc6c29b936ce679b6c",
+      "watch-atom:watch-no-ornament-without-role@sha256:549e6a538c35a0d9431ec4a190d051d50c89c754a5e62f4973f287804bccf67d"
+    ]
+  },
+  {
+    "index": 10,
+    "model": "Night Passage",
+    "fit": "small",
+    "prompt": "10-night-passage-small.txt",
+    "output": "10-night-passage-small.png",
+    "sourceEvidence": [
+      "watch-base-model:concept-image@1.0.6",
+      "watch-knowledge-catalog@0.2.0",
+      "watch-atom:watch-family-fit-first@sha256:e71fe9cfc27f74bc27be0400912c9d9ec2a815ecb770daf4c233ece4d881faf4",
+      "watch-atom:watch-mass-close-to-wrist@sha256:3040f824583bc46ab3bb131b65f9f8df1eed2d86646e9e1e8ff55ff88777bb4f",
+      "watch-atom:watch-small-wrist-articulation@sha256:4617708934a1d0a2e59ed3855c8362f440c1b06790b7f45e8d2667cd8ca66b10",
+      "watch-atom:watch-color-identity-restraint@sha256:bd94bc063c27cee202e59e54dbdbc55d4449c11c28446dfc6c29b936ce679b6c"
+    ]
+  }
+]

@@ -1,0 +1,18 @@
+Edit the supplied reference into exactly ONE complete product image of the SAME DIGITAL smartwatch from a lower front-right three-quarter camera angle. Preserve the product design, patterned strap, complete buckle, moon-white ceramic top, blue three-level metal structure, thin champagne side button, digital “20:26” moon-phase interface, colours, materials and studio environment. Change only the camera and product orientation needed to expose the side assembly.
+
+CAMERA
+Lower the camera to approximately the height of the structural middle frame and rotate to a stronger front-right three-quarter view. The near right sidewall must occupy enough visible depth to inspect the full vertical case stack, while the digital face remains readable as a foreshortened top plane. Use moderate natural perspective: near-side parts are larger, the far side is naturally occluded, and no bilateral feature is forced into view. Keep the entire case, both strap attachments, full open-loop strap, keeper and complete buckle inside frame.
+
+ASSEMBLY EVIDENCE
+Use the lower angle to make the existing stack physically legible from top to bottom: moon-white ceramic frame; slim satin midnight-blue upper support carrier; deeper bead-blasted blue structural middle frame extending into the strap forks; narrower matte dark-blue lower shell inset beneath it. Show real stepped depth and one uniform seam between each neighbouring layer. Do not represent layers as painted stripes. The near-right corner should reveal the short eight-sided transition planes of the middle frame. The near strap pivot should show a compact six-sided boss centred around its champagne-grey pin.
+
+CONTROL
+Keep one thin champagne-metal button face on a separate recessed dark-blue backing plate located entirely within the structural middle frame. The low side angle must reveal the plate thinness, even seating gap and short travel shadow without enlarging the control.
+
+PRESERVE
+Keep the approved two-scale strap texture, smooth edge bands, underside pattern, moulded end blocks and refined buckle construction. Keep the approved glass, inner ledge and ceramic bevel sequence. Keep the sparse digital interface unchanged. Preserve restrained champagne accents.
+
+LIGHTING
+Retain the warm-grey studio background and moonlit cool/warm lighting, but place the rim so it separates all four vertical material levels, the thin button plate, corner facets and pivot boss. Keep one grounded shadow and controlled glass reflection.
+
+Show one coherent complete watch only. Avoid redesigning the watch, changing the strap or interface, collapsing the case into one blue slab, fake seam lines, excessive thickness, thick controls, malformed polygon details, distorted perspective, incomplete closure, extra views, panels, labels, logos, watermark or unsupported manufacturing claims. Call image_gen exactly once and immediately.

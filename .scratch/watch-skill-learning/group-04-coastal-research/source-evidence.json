@@ -1,0 +1,10 @@
+{
+  "baseModel": "watch-base-model:concept-image@1.0.5",
+  "catalog": "watch-knowledge-catalog@0.2.0",
+  "atoms": [
+    "watch-atom:watch-opening-drainage-logic@sha256:b3e5153d6d1c4f2d566917a9358893cecc4c5149b54b6c7686bca3e920c4fba7",
+    "watch-atom:watch-sweat-drain-cleanability@sha256:3436e7afec9a1d83225daea392108b524148098a49c6dca4a1092f45cbbce60b",
+    "watch-atom:watch-physical-control-recovery@sha256:2ba17929113d5c011fb53636079ee9d7e6a5d25f016c83214d8dd64f08de08fe",
+    "watch-atom:watch-outdoor-glare@sha256:d62bb96633a0ce0d0059c830c44f56592279837dc4acb8c7a68d6e04df469608"
+  ]
+}

@@ -151,9 +151,10 @@
     {
       "path": "apps/agents-cli/src/core/root-persona.ts",
       "classification": "integration-seam",
-      "purpose": "Keep Root Agent orchestration compatible with Product execution",
+      "purpose": "Keep Root instructions category-neutral and avoid extra planning or intermediate artifacts around Skill execution",
       "adapter": "Shared Product Trunk",
       "tests": [
+        "cd apps/agents-cli && tsc --pretty false && node --test dist/core/root-persona.test.js",
         "pnpm run test:upstream-compatibility",
         "pnpm --filter @jarvishub/web test"
       ],
@@ -163,10 +164,10 @@
     {
       "path": "apps/agents-cli/src/core/root-persona.test.ts",
       "classification": "integration-seam",
-      "purpose": "Protect Root Agent design-direction orchestration required by Vertical Skills",
+      "purpose": "Protect Skill-owned professional steps and native execution safeguards in Root instructions",
       "adapter": "Shared Product Trunk",
       "tests": [
-        "cd apps/agents-cli && node --loader ts-node/esm --test src/core/root-persona.test.ts",
+        "cd apps/agents-cli && tsc --pretty false && node --test dist/core/root-persona.test.js",
         "pnpm run test:upstream-compatibility"
       ],
       "upstreamDisposition": "permanent",
@@ -712,11 +713,70 @@
       "warningChangedLines": 80
     },
     {
-      "path": "apps/agents-cli/src/llm/client.ts",
+      "path": "run.sh",
       "classification": "upstream-patch",
-      "purpose": "General Jarvis model-client correction",
+      "purpose": "Recover local Docker/Postgres, gate browser opening on service readiness, and document LLM deadlines",
+      "adapter": "Native local launcher correction",
+      "tests": ["bash -n run.sh && node --test scripts/run-launcher.test.mjs"],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 180
+    },
+    {
+      "path": "scripts/run-launcher.test.mjs",
+      "classification": "upstream-patch",
+      "purpose": "Protect launcher dependency recovery and truthful readiness",
+      "adapter": "Native local launcher correction",
+      "tests": ["node --test scripts/run-launcher.test.mjs"],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 180
+    },
+    {
+      "path": "apps/agents-cli/scripts/check-llm-connectivity.mjs",
+      "classification": "integration-seam",
+      "purpose": "Align the connectivity probe defaults with the configured RightAPI provider",
+      "adapter": "Shared Product Trunk",
+      "tests": ["node --check apps/agents-cli/scripts/check-llm-connectivity.mjs"],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/web/src/ui/ModelPanel.tsx",
+      "classification": "integration-seam",
+      "purpose": "Expose configured RightAPI model presets through native Model Config",
+      "adapter": "Shared Product Trunk",
+      "tests": ["pnpm --filter @jarvishub/web test"],
+      "upstreamDisposition": "permanent",
+      "warningChangedLines": 80
+    },
+    {
+      "path": "apps/agents-cli/src/core/config.ts",
+      "classification": "upstream-patch",
+      "purpose": "Load workspace runtime environment when the CLI starts in a nested package",
       "adapter": "Native Jarvis correction",
       "tests": [
+        "cd apps/agents-cli && pnpm exec tsc && node --test dist/llm/client-runtime.test.js"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 100
+    },
+    {
+      "path": "apps/agents-cli/src/llm/client-runtime.test.ts",
+      "classification": "upstream-patch",
+      "purpose": "Protect effective reasoning configuration, response deadlines, and terminal timeout errors",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "cd apps/agents-cli && pnpm exec tsc && node --test dist/llm/client-runtime.test.js"
+      ],
+      "upstreamDisposition": "pending-upstream-review",
+      "warningChangedLines": 160
+    },
+    {
+      "path": "apps/agents-cli/src/llm/client.ts",
+      "classification": "upstream-patch",
+      "purpose": "General Jarvis model-client correction; bound response-header waits, keep timeouts terminal across retry layers, and surface terminal SSE errors",
+      "adapter": "Native Jarvis correction",
+      "tests": [
+        "cd apps/agents-cli && pnpm exec tsc && node --test dist/llm/client-runtime.test.js",
         "pnpm run test:upstream-compatibility"
       ],
       "upstreamDisposition": "pending-upstream-review",

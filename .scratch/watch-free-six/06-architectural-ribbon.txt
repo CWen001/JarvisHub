@@ -1,0 +1,25 @@
+Create exactly ONE premium industrial-design hero image containing exactly ONE complete DIGITAL smartwatch.
+
+VISUAL THESIS
+Architectural Ribbon: a tall ultra-thin digital watch designed as a silver architectural frame threaded by one cobalt structural ribbon, balancing strict geometry with vivid graphic colour. This is a free design study and must not resemble the other concepts in silhouette, CMF, interface or photographic mood.
+
+COMPOSITION AND CAMERA
+Show one complete connected watch with the entire case, glass, controls, lower-case transition, both attachment joints, both strap segments, adjustment system, keeper and complete closure inside frame. Arrange the strap as one natural open loop. Use a precise near-orthographic front view tilted slightly down and right on a pure light-grey background, broad even architectural light and one crisp short shadow. Maintain one coherent perspective and reveal every identity-bearing connection. No wearer, hand, second product, inset, exploded view, contact sheet, label, logo or watermark.
+
+CASE ARCHITECTURE
+Use a narrow vertical rectangular display with square-ish corners inside two separate brushed-silver side columns. Connect the columns only through slim top and bottom crossbars, creating a precise open frame around a floating-looking but physically seated black glass module. Run one cobalt-blue metal spine behind the display and visibly continue it into the upper and lower strap connectors. Use one tiny red square side key flush with the right column. Keep the lower case as a thin black inset tray. Use clean material boundaries, uniform intentional seams, a visible upper/middle/lower hierarchy and a coherent load path. Keep glass seated rather than floating.
+
+STRAP AND CLOSURE
+Use a complete cobalt-blue composite elastomer strap aligned exactly with the rear spine. The outer surface has a fine woven microtexture interrupted by one smooth central ribbon, the edges are sealed in black, and the underside carries sparse horizontal grip bars. Use rectangular adjustment holes, one yellow keeper and a complete minimalist brushed-silver pin buckle with a red tongue tip.
+
+CMF
+Use brushed silver metal, cobalt-blue satin spine and strap, black glass tray and sealed edges, off-white interface, one red control and one yellow closure accent. Give every material a distinct finish and scale of texture. Keep accents controlled and every transition tied to a real part.
+
+INTERFACE
+Use an off-white screen with large black time ‘12:04’, one cobalt vertical rule, one small red square and one small yellow circle in an asymmetrical grid; no decorative text. Preserve edge clearance and one primary read. No analogue hands, physical hour markers, app grid, dense pseudo-data or unsupported capability claim.
+
+DETAIL HIERARCHY
+First read is the unique silhouette; second is the case-to-strap construction; inspection details are surface turns, seam continuity, control seating, pivot alignment, strap edge finish and closure construction. Keep quiet surfaces between them.
+
+HIGH-COST FAILURES
+Avoid rounded generic smartwatch, miniature phone, floating glass without supports, thick columns, extra buttons, colour gradients, decorative screws, misaligned spine, incomplete strap or missing closure; also avoid broken perspective, duplicated or missing controls, impossible attachments, incomplete product, extra products, panels, brands, logos, watermark or engineering/medical claims.
